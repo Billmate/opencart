@@ -1,0 +1,30 @@
+#divFrameParent *{text-align:center;font-size:1em;font-family:tahoma}
+#divFrameParent p{padding-bottom:0px!important}
+
+.billmate_button{
+	text-align: center;
+	width: 84%;
+	padding: 0.5em;
+	cursor:pointer;
+	border-radius: 1em;
+	border: 0px;
+	background-color: #4EB0D8;
+	color: #fff;
+	font-weight: bold;
+	word-break:break-word;
+	margin-top:1em;
+}
+.linktag{
+	font-size: 0.8em!important;
+	text-decoration: none!important;
+}
+.billmate_button:hover{
+	background-color:#444444;
+}
+#divFrameParent .heading {
+    color: #000000;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 8px;
+}
