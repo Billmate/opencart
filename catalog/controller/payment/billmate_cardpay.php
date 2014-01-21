@@ -351,7 +351,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 					'artno'    => $product['model'],
 					'title'    => $product['name'],
 					'price'    => (int)$this->currency->format($product['price']*100, 'SEK', '', false),
-					'vat'      => (float)($product['tax_rate']/$product['quantity']),
+					'vat'      => (float)($product['tax_rate']),///$product['quantity']
 					'discount' => 0.0,
 					'flags'    => 0,
 				)
@@ -363,9 +363,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		} else {
 			$totals = array();
 		}
-		
-		var_dump($totals);
-		
+				
 		foreach ($totals as $total) {
 			if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
 				$flag = $total['code'] == 'handling' ? 16 : ( $total['code'] == 'shipping' ? 8 : 0);

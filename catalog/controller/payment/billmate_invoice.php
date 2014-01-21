@@ -337,6 +337,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				    );
 				}
 				$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
+
 				foreach ($product_query as $product) {
 
 					$goods_list[] = array(
@@ -345,7 +346,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 							'artno'    => $product['model'],
 							'title'    => $product['name'],
 							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
-							'vat'      => (float)($product['tax_rate']/$product['quantity']),
+							'vat'      => (float)($product['tax_rate']), ///$product['quantity'] in www.mobiltele24.se create issue in opencart.billmate.se
 							'discount' => 0.0,
 							'flags'    => 0,
 						)
@@ -361,6 +362,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				foreach ($totals as $total) {
 					if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
 					    $flag = $total['code'] == 'handling' ? 16 : ( $total['code'] == 'shipping' ? 8 : 0);
+						$total['value'] = round( $total['value'], 2 );
 						$goods_list[] = array(
 							'qty'   => 1,
 							'goods' => array(
@@ -559,9 +561,13 @@ $db->query($sql);
                     }
 					$func = create_function('','');
 					$oldhandler = set_error_handler($func);
+//echo '<pre>';
+//print_r($order_info);
+//print_r($goods_list);
 					
 					$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
- 
+//var_dump($result1);
+//die; 
 					if(!is_array($result1))
 					{ 
 						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();jQuery(\'#payment-method a\').first().trigger(\'click\')" class="button" />';
