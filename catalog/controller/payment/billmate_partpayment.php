@@ -443,7 +443,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 							'artno'    => $product['model'],
 							'title'    => $product['name'],
 							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
-							'vat'      => (float)$product['tax_rate'],
+							'vat'      => (float)($product['tax_rate']/$product['quantity']),
 							'discount' => 0.0,
 							'flags'    => 0,
 						)

@@ -341,7 +341,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 					'artno'    => $product['model'],
 					'title'    => $product['name'],
 					'price'    => (int)$this->currency->format($product['price']*100, 'SEK', '', false),
-					'vat'      => (float)$product['tax_rate'],
+					'vat'      => (float)(float)($product['tax_rate']/$product['quantity']),
 					'discount' => 0.0,
 					'flags'    => 0,
 				)

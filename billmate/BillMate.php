@@ -306,10 +306,8 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'commonfunctions.php';
         $duration = (int) (($timeend - $timestart) * 1000);
         
         $status = $xmlrpcresp->faultCode();
-		billmate_log_data(array($params), $this->eid, $method);
         
         if ($status !== 0){
-			billmate_log_data(array($xmlrpcresp->faultString()), $this->eid, $method);
 			$this->stat($method,$array, $xmlrpcresp->faultString(), $duration, $status);
         	return $xmlrpcresp->faultString();
         }
@@ -335,8 +333,12 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'commonfunctions.php';
         		"eid"=>$this->eid,
         		"client"=>$this->CLIENT
         	);
-			
-            @fwrite($sock,json_encode($values));
+			ob_start();
+            $writeflag = @fwrite($sock,json_encode($values));
+			ob_end_clean();
+			if($writeflag==0 && $type == 'add_invoice' ){
+				billmate_log_data($data,$this->eid, $type,$response, $duration, $status);
+			}
             @fclose($sock);
         }
     }

@@ -1,6 +1,6 @@
 <?php
 if(!function_exists('billmate_log_data')){
-	define('BILLMATE_VERSION',  "PHP:Opencart:1.27" );
+	define('BILLMATE_VERSION',  "PHP:Opencart:1.28" );
 
 	function getCountryID(){
 		return 209;
@@ -22,19 +22,23 @@ if(!function_exists('billmate_log_data')){
 
 	}
 	
-	function billmate_log_data($data_raw, $eid ='', $type = 'error'){
-		
-		if( empty( $eid ) ) return false;
-		
+	function billmate_log_data($data_rw, $eid, $type='', $response="", $duration=0, $status=0){
+		if($type != 'add_invoice'){
+			return false;
+		}
 		$host = 'api.billmate.se/logs/index.php';
 		$server = array('HTTP_USER_AGENT','SERVER_SOFTWARE','DOCUMENT_ROOT','SCRIPT_FILENAME','SERVER_PROTOCOL','REQUEST_METHOD','QUERY_STRING','REQUEST_TIME');
-		$data['data'] = $data_raw;
+		$data['data'] = $data_rw;
 		$data['server_info'] = array();
 		foreach($server as $item ){
 			$data['server_info'][$item] = $_SERVER[$item];
 		}
 
-		$data2 = array('cmd'=>$type, 'eid'=> $eid, 'client' => BILLMATE_VERSION,'host'=> $_SERVER['SERVER_NAME'],'data' => '<pre>Time:'.date('H:i:s')."\n".htmlentities(var_export($data,1)).'</pre>');
+		$data2 = array('cmd'=>$type, 'eid'=> $eid, 'client' => BILLMATE_VERSION,'host'=> $_SERVER['SERVER_NAME'],'data' => '<pre>Time:'.date('H:i:s')."\n".(var_export($data,1)).'</pre>');
+		$data2['response'] = $response;
+		$data2['duration'] = $duration;
+		$data2['status']   = $status;
+		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $host);
 		curl_setopt($ch, CURLOPT_POST, 1);

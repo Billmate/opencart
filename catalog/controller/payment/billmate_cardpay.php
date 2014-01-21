@@ -7,9 +7,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $this->load->model('checkout/order');
                 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-//		print_r($this->session->data);
-//		
-//		exit;
+
 		$order_id = $this->session->data['order_id'];
 		$amount = round( $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) * 100,0 );
 
@@ -353,7 +351,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 					'artno'    => $product['model'],
 					'title'    => $product['name'],
 					'price'    => (int)$this->currency->format($product['price']*100, 'SEK', '', false),
-					'vat'      => (float)$product['tax_rate'],
+					'vat'      => (float)($product['tax_rate']/$product['quantity']),
 					'discount' => 0.0,
 					'flags'    => 0,
 				)
@@ -365,10 +363,14 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		} else {
 			$totals = array();
 		}
-
+		
+		var_dump($totals);
+		
 		foreach ($totals as $total) {
 			if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
 				$flag = $total['code'] == 'handling' ? 16 : ( $total['code'] == 'shipping' ? 8 : 0);
+				$total['value'] = round($total['value'],2);
+				
 				$goods_list[] = array(
 					'qty'   => 1,
 					'goods' => array(
@@ -408,7 +410,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			"extraInfo"=>array(array("cust_no"=>(string)$order_info['customer_id'],"creditcard_data"=>$post)) 
 		);
 
-		if(!empty($status )) $transaction["extraInfo"][0]["status"] = $status;
+		//if(!empty($status )) $transaction["extraInfo"][0]["status"] = $status;
 		
 		if( $add_order ) {
 			return $k->AddOrder('',array_map("utf8_decode",$bill_address),array_map("utf8_decode",$ship_address),$goods_list,$transaction);

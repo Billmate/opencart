@@ -63,7 +63,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $this->response->setOutput($json['output']);
     }
 	public function getInfo(){
-		echo 'Billmate Plugin Version: 1.27'; 
+		echo 'Billmate Plugin Version: 1.28'; 
 		phpinfo();
 	}
     protected function index() {
@@ -338,19 +338,20 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				}
 				$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
 				foreach ($product_query as $product) {
+
 					$goods_list[] = array(
 						'qty'   => (int)$product['quantity'],
 						'goods' => array(
 							'artno'    => $product['model'],
 							'title'    => $product['name'],
 							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
-							'vat'      => (float)$product['tax_rate'],
+							'vat'      => (float)($product['tax_rate']/$product['quantity']),
 							'discount' => 0.0,
 							'flags'    => 0,
 						)
 					);
 				}
-				
+
 				if (isset($this->session->data['billmate'][$this->session->data['order_id']])) {
 					$totals = $this->session->data['billmate'][$this->session->data['order_id']];
 				} else {
