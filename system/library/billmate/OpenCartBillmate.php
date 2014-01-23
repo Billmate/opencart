@@ -23,7 +23,7 @@
 		$ssl = true;
 		$debug = false;
 		$eid = (int)$eid;
-		$key = (float)$key;
+		$key = (int)$key;
 
         $k = new BillMate( $eid ,$key,$ssl,$debug);
         

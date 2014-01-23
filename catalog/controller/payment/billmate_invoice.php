@@ -63,7 +63,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $this->response->setOutput($json['output']);
     }
 	public function getInfo(){
-		echo 'Billmate Plugin Version: 1.28'; 
+		echo 'Billmate Plugin Version: 1.29'; 
 		phpinfo();
 	}
     protected function index() {
@@ -237,7 +237,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
     				
 				$eid = (int)$billmate_invoice['SWE']['merchant'];
-				$key = (float)$billmate_invoice['SWE']['secret'];
+				$key = (int)$billmate_invoice['SWE']['secret'];
+				
 				$ssl = true;
 				$debug = false;
 				$k = new BillMate($eid,$key,$ssl,$debug, $billmate_invoice['SWE']['server'] == 'beta' );
@@ -336,9 +337,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
 					    'country'         => $country,
 				    );
 				}
-				$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
+				//$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
 
-				foreach ($product_query as $product) {
+				
+				$products = $this->cart->getProducts();
+
+/*				foreach ($product_query as $product) {
 
 					$goods_list[] = array(
 						'qty'   => (int)$product['quantity'],
@@ -347,6 +351,39 @@ class ControllerPaymentBillmateInvoice extends Controller {
 							'title'    => $product['name'],
 							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
 							'vat'      => (float)($product['tax_rate']), ///$product['quantity'] in www.mobiltele24.se create issue in opencart.billmate.se
+							'discount' => 0.0,
+							'flags'    => 0,
+						)
+					);
+				}
+
+*/
+				foreach ($products as $product) {
+					$product_total_qty = 0;
+					
+					foreach ($products as $product_2) {
+						if ($product_2['product_id'] == $product['product_id']) {
+							$product_total_qty += $product_2['quantity'];
+						}
+					}
+
+					if ($product['minimum'] > $product_total_qty) {
+						$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+					}
+					$rates=0;
+
+					$tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
+					foreach($tax_rates as $rate){
+						$rates+= $rate['rate'];
+					}
+					
+					$goods_list[] = array(
+						'qty'   => (int)$product_total_qty,
+						'goods' => array(
+							'artno'    => $product['model'],
+							'title'    => $product['name'],
+							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
+							'vat'      => (float)($rates),
 							'discount' => 0.0,
 							'flags'    => 0,
 						)
@@ -561,13 +598,9 @@ $db->query($sql);
                     }
 					$func = create_function('','');
 					$oldhandler = set_error_handler($func);
-//echo '<pre>';
-//print_r($order_info);
-//print_r($goods_list);
-					
+
 					$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
-//var_dump($result1);
-//die; 
+					
 					if(!is_array($result1))
 					{ 
 						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();jQuery(\'#payment-method a\').first().trigger(\'click\')" class="button" />';

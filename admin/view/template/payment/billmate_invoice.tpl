@@ -114,7 +114,8 @@
               </tr>
               <tr>
                 <td><?php echo $entry_sort_order ?></td>
-                <td><input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][sort_order]" value="<?php echo isset($billmate_invoice[$country['code']]) ? $billmate_invoice[$country['code']]['sort_order'] : ''; ?>" /></td>
+                <td>
+				<input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][sort_order]" value="<?php echo isset($billmate_invoice[$country['code']]) ? $billmate_invoice[$country['code']]['sort_order'] : ''; ?>" /></td>
               </tr>
             </table>
           </div>

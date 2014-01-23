@@ -1,6 +1,6 @@
 <?php
 if(!function_exists('billmate_log_data')){
-	define('BILLMATE_VERSION',  "PHP:Opencart:1.28" );
+	define('BILLMATE_VERSION',  "PHP:Opencart:1.29" );
 
 	function getCountryID(){
 		return 209;

@@ -337,7 +337,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
 				
 				$eid = (int)$billmate_partpayment['SWE']['merchant'];
-				$key = (float)$billmate_partpayment['SWE']['secret'];
+				$key = (int)$billmate_partpayment['SWE']['secret'];
 				$ssl = true;
 				$debug = false;
 				$k = new BillMate($eid,$key,$ssl,$debug, $billmate_partpayment['SWE']['server'] == 'beta');
@@ -435,7 +435,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				    );
 				}
 
-				$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
+				/*$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
 				foreach ($product_query as $product) {
 					$goods_list[] = array(
 						'qty'   => (int)$product['quantity'],
@@ -448,7 +448,41 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 							'flags'    => 0,
 						)
 					);
+				}*/
+
+				$products = $this->cart->getProducts();
+				foreach ($products as $product) {
+					$product_total_qty = 0;
+					
+					foreach ($products as $product_2) {
+						if ($product_2['product_id'] == $product['product_id']) {
+							$product_total_qty += $product_2['quantity'];
+						}
+					}
+
+					if ($product['minimum'] > $product_total_qty) {
+						$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+					}
+					$rates=0;
+
+					$tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
+					foreach($tax_rates as $rate){
+						$rates+= $rate['rate'];
+					}
+					
+					$goods_list[] = array(
+						'qty'   => (int)$product_total_qty,
+						'goods' => array(
+							'artno'    => $product['model'],
+							'title'    => $product['name'],
+							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
+							'vat'      => (float)($rates),
+							'discount' => 0.0,
+							'flags'    => 0,
+						)
+					);
 				}
+
 				
 				if (isset($this->session->data['billmate'][$this->session->data['order_id']])) {
 					$totals = $this->session->data['billmate'][$this->session->data['order_id']];

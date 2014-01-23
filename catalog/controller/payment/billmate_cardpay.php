@@ -2,8 +2,9 @@
 require_once dirname(DIR_APPLICATION).'/billmate/JSON.php';
 class ControllerPaymentBillmateCardpay extends Controller {
 	protected function index() {
+		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
+				
         $this->data['button_confirm'] = $this->language->get('button_confirm');
-
         $this->load->model('checkout/order');
                 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -256,6 +257,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 	}
 	public function billmate_transaction($add_order = false){
 
+		if( !empty($this->session->data['order_created']) ) return;
 		$post = empty($this->request->post)? $this->request->get : $this->request->post;
 		
 		$store_currency = $this->config->get('config_currency');
@@ -279,7 +281,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 		
-		$key = (float)$this->config->get('billmate_cardpay_secret');
+		$key = (int)$this->config->get('billmate_cardpay_secret');
 		$ssl = true;
 
 		$debug = false;
@@ -343,7 +345,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			'city'            => $order_info['payment_city'],
 			'country'         => $country,
 		);
-		$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
+		/*$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
 		foreach ($product_query as $product) {
 			$goods_list[] = array(
 				'qty'   => (int)$product['quantity'],
@@ -352,6 +354,39 @@ class ControllerPaymentBillmateCardpay extends Controller {
 					'title'    => $product['name'],
 					'price'    => (int)$this->currency->format($product['price']*100, 'SEK', '', false),
 					'vat'      => (float)($product['tax_rate']),///$product['quantity']
+					'discount' => 0.0,
+					'flags'    => 0,
+				)
+			);
+		}*/
+		
+		$products = $this->cart->getProducts();
+		foreach ($products as $product) {
+			$product_total_qty = 0;
+			
+			foreach ($products as $product_2) {
+				if ($product_2['product_id'] == $product['product_id']) {
+					$product_total_qty += $product_2['quantity'];
+				}
+			}
+
+			if ($product['minimum'] > $product_total_qty) {
+				$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+			}
+			$rates=0;
+
+			$tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
+			foreach($tax_rates as $rate){
+				$rates+= $rate['rate'];
+			}
+			
+			$goods_list[] = array(
+				'qty'   => (int)$product_total_qty,
+				'goods' => array(
+					'artno'    => $product['model'],
+					'title'    => $product['name'],
+					'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
+					'vat'      => (float)($rates),
 					'discount' => 0.0,
 					'flags'    => 0,
 				)
@@ -420,8 +455,10 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		{ 
 			$result1['error'] = utf8_encode($result1);
 			throw new Exception ($result1);
+		} else {
+			$this->session->data['order_created'] = $result1[0];			
+			$this->redirect($this->url->link('checkout/success'));
 		}
-		else $this->redirect($this->url->link('checkout/success'));
 	}
 }
 ?>
