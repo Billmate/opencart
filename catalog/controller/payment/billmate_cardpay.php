@@ -385,7 +385,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				'goods' => array(
 					'artno'    => $product['model'],
 					'title'    => $product['name'],
-					'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
+					'price'    => (int)$this->currency->format($product['price']*100, $this->currency->getCode(), '', false),
 					'vat'      => (float)($rates),
 					'discount' => 0.0,
 					'flags'    => 0,
@@ -409,7 +409,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 					'goods' => array(
 						'artno'    => '',
 						'title'    => $total['title'],
-						'price'    => (int)$this->currency->format($total['value']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
+						'price'    => (int)$this->currency->format($total['value']*100, $this->currency->getCode(), '', false),
 						'vat'      => (float)$total['tax_rate'],
 						'discount' => 0.0,
 						'flags'    => $flag,
