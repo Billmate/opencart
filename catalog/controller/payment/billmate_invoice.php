@@ -63,7 +63,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $this->response->setOutput($json['output']);
     }
 	public function getInfo(){
-		echo 'Billmate Plugin Version: 1.30'; 
+		echo 'Billmate Plugin Version: 1.31'; 
 		phpinfo();
 	}
     protected function index() {

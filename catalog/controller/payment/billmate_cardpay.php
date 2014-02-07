@@ -27,7 +27,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		} else {
 			$url = $prod_url;
 		}
-		$this->data['capture_now'] = $this->config->get('billmate_cardpay_transaction_method') == 'sale' ? 'YES':'NO';
+		$this->data['capture_now'] = $this->config->get('billmate_cardpay_transaction_method') == 'sale' ? 'NO':'YES';
 		$pay_method = 'CARD';
 		$callback_url = 'http://api.billmate.se/callback.php';
 		$request_method = 'GET';
