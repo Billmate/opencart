@@ -444,7 +444,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			"extraInfo"=>array(array("cust_no"=>(string)$order_info['customer_id'],"creditcard_data"=>$post)) 
 		);
 
-		//if(!empty($status )) $transaction["extraInfo"][0]["status"] = $status;
+		if(!empty($status )) $transaction["extraInfo"][0]["status"] = $status;
 		
 		if( $add_order ) {
 			return $k->AddOrder('',array_map("utf8_decode",$bill_address),array_map("utf8_decode",$ship_address),$goods_list,$transaction);
