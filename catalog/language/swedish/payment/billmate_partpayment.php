@@ -2,7 +2,7 @@
 // Text
 $_['text_title']           = 'Billmate delbetalning';
 $_['text_pay_month']  = 
-$_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning"><br>Billmate delbetalning - Betala från %s/månad <a id="terms-delbetalning">Köpvillkor delbetalning</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning" style="float: left;margin: 2px 6px;">Billmate delbetalning - Betala från %s/månad <a id="terms-delbetalning">Köpvillkor</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:29});
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %%, 
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: %s,effectiverate:34});

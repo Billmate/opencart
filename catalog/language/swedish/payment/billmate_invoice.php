@@ -1,10 +1,10 @@
 <?php
 // Text
 $_['text_title']          = 'Billmate faktura';
-$_['text_fee']            = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate faktura"><br>%s <a id="terms">Köpvillkor faktura</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_fee']            = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate faktura" style="float: left;margin: 2px 6px;">%s<a id="terms"> Köpvillkor </a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
-$_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate faktura"><br>%s <a id="terms">Köpvillkor faktura</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate faktura" style="float: left;margin: 2px 6px;">%s<a id="terms"> Köpvillkor </a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
 $_['text_additional']     = 'Billmate faktura behöver lite mer information för att processa din order.';
@@ -49,7 +49,7 @@ $_['li1'] = 'Få alltid hem varan innan du betalar';
 $_['li2'] = '14 dagar betalningstid';
 $_['li3'] = 'Du behöver aldrig lämna ut kortuppgifter';
 $_['li4'] = 'Alltid 14 dagars ångerrätt i enlighet med distans- och hemförsäljningslagen*';
-$_['li5'] = 'Tillgång till dina fakturor via BillMate online ';
+$_['li5'] = 'Tillgång till dina fakturor via Billmate online ';
 $_['li6'] = 'Möjlighet till delbetalning';
 $_['long_description'] = 'En aviavgift om xx kr per köp tillkommer. Vid försenad betalning tillkommer lagstadgad påminnelse-/
 förseningsavgift samt dröjsmålsränta om 2 % per månad. Vid utebliven betalning överlämnas fakturan

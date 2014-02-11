@@ -225,10 +225,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		
 		// Order must have identical shipping and billing address or have no shipping address at all
 		if ($order_info) {
-			if ($countryData['iso_code_3'] == 'DEU' && empty($this->request->post['deu_terms'])) {
-				$json['error'] =  $this->language->get('error_deu_terms');
-			}
-			
+
 			if (!$json) {
 				$billmate_invoice = $this->config->get('billmate_invoice');
 				
@@ -342,22 +339,6 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				
 				$products = $this->cart->getProducts();
 
-/*				foreach ($product_query as $product) {
-
-					$goods_list[] = array(
-						'qty'   => (int)$product['quantity'],
-						'goods' => array(
-							'artno'    => $product['model'],
-							'title'    => $product['name'],
-							'price'    => (int)$this->currency->format($product['price']*100, $country_to_currency[$countryData['iso_code_3']], '', false),
-							'vat'      => (float)($product['tax_rate']), ///$product['quantity'] in www.mobiltele24.se create issue in opencart.billmate.se
-							'discount' => 0.0,
-							'flags'    => 0,
-						)
-					);
-				}
-
-*/
 				foreach ($products as $product) {
 					$product_total_qty = 0;
 					
@@ -449,7 +430,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 					}
 
 					if(isset($addr['error']))
-						$json['address'] = $this->language->get('wrong_person_number').'<br/><br/>'.$this->language->get('close_other_payment').'<br/><input type="button" onclick="modalWin.HideModalPopUp();jQuery(\'#payment-method a\').first().trigger(\'click\');" class="billmate_button" value="'.$this->language->get('Close').'" />';
+						$json['address'] = $this->language->get('wrong_person_number').'<br/><br/>'.$this->language->get('close_other_payment').'<br/><input type="button" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="billmate_button" value="'.$this->language->get('Close').'" />';
 				} catch(Exception $e) {
 					//Something went wrong
 				   // echo "{$e->getMessage()} (#{$e->getCode()})\n";
@@ -524,7 +505,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     if(!(isset($this->request->get['geturl']) and $this->request->get['geturl']=="yes")){
 
 
-                    $json['address'] = $addr[0][0].' '.$addr[0][1].'<br>'.$addr[0][2].'<br>'.$addr[0][3].'<br>'.$addr[0][4].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();jQuery(\'#payment-method a\').first().trigger(\'click\');" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
+                    $json['address'] = $addr[0][0].' '.$addr[0][1].'<br>'.$addr[0][2].'<br>'.$addr[0][3].'<br>'.$addr[0][4].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
                     $json['error'] = "";
                     }
 
@@ -600,10 +581,9 @@ $db->query($sql);
 					$oldhandler = set_error_handler($func);
 
 					$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
-					
 					if(!is_array($result1))
 					{ 
-						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();jQuery(\'#payment-method a\').first().trigger(\'click\')" class="button" />';
+						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="button" />';
 						$json['title'] = 'Betalning med Billmate misslyckades.';
 						$json['height'] = 150;
 					}

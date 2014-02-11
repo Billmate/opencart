@@ -27,9 +27,11 @@ class ModelPaymentBillmateBankPay extends Model {
 		$method_data = array();
 	
 		if ($status) {  
+			$description = $this->config->get('billmate_bankpay_description');
+			$description = strlen( $description) ? $description : 'Betala med banköverföring.';
       		$method_data = array( 
         		'code'       => 'billmate_bankpay',
-        		'title'      => sprintf($this->language->get('text_title'),$this->config->get('billmate_bankpay_description')),
+        		'title'      => sprintf($this->language->get('text_title'),$description),
 				'sort_order' => $this->config->get('billmate_bankpay_sort_order')
       		);
     	}

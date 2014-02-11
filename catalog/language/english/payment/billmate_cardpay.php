@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_kort_l.png" alt="Billmate card"><br>Visa & MasterCard.';
+$_['text_title'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_kort_l.png" style="float: left;margin: 2px 6px;" alt="Billmate card">Visa & MasterCard.';
 
 $_['text_unable']         = 'Unable to locate or update your order status';
 $_['text_declined']       = 'Payment was declined by BillMate Card';

@@ -138,7 +138,10 @@
         <div id="tab-pclasses">
           <table class="form">
 			<?php
-			$head = array_keys($all_pclasses[0]);
+			$head = array();
+			if( is_array( $all_pclasses[0] )){
+				$head = array_keys($all_pclasses[0]);
+			}
 			?>
             <tr>
 				<?php foreach($head as $row) echo '<th>',ucfirst(str_replace('_',' ', $row)),'</th>'; ?>

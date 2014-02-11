@@ -343,11 +343,11 @@ class ModelPaymentBillmate extends Model {
         $data = array();
         foreach($modules AS $module) {
             // Check that module is enabled
-            if(!$this->config->get('billmate_' . $module . '_status')) {
-                continue;
-            }
-            $settings = $this->model_setting_setting->getSetting('billmate_' . $module);
-
+           // if(!$this->config->get('billmate_' . $module . '_status')) {
+            //    continue;
+           // }
+            //$settings = $this->model_setting_setting->getSetting('billmate_' . $module);
+			$settings = $_POST;
             /*if(!isset($settings['billmate_' . $module . '_enabled_countries'])) {
                 continue;
             }

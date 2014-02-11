@@ -35,7 +35,9 @@
 	        "language"=>(int)$countryInfo['language'],
         );
         $this->pclass = $k->FetchCampaigns($additionalinfo);
-        array_walk($this->pclass, 'correct_lang_billmate');
+		if( is_array( $this->pclass) ){
+			array_walk($this->pclass, 'correct_lang_billmate');
+		}
         
         return $this;
     }
