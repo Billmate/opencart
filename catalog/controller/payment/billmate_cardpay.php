@@ -1,5 +1,7 @@
 <?php
-require_once dirname(DIR_APPLICATION).'/billmate/JSON.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
+
 class ControllerPaymentBillmateCardpay extends Controller {
 	protected function index() {
 		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
@@ -62,7 +64,6 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $this->session->data['capture_now']=$this->config->get('billmate_cardpay_transaction_method');
 
 		$this->billmate_transaction(true); 
-		billmate_log_data($this->data, $merchant_id, 'Cardpay Redirect hidden form');
 
 		$this->data['mac'] = $mac;
 		$this->data['description'] = $this->config->get('billmate_cardpay_description');

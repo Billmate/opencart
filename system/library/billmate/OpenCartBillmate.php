@@ -11,10 +11,7 @@
         $pclasses = $this->getPCStorage();
  	    return array();
  	}
-    public function ocClearPClasses() {
-        $pclasses = $this->getPCStorage();
-        $pclasses->clear($this->pcURI);
-    }
+
     public function ocFetchPClasses($countryCode, $eid, $key, $server){
         $base = dirname(__FILE__);
 		require_once $base.'/BillMate.php';

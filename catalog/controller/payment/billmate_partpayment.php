@@ -1,6 +1,8 @@
 <?php
 
-require_once dirname(DIR_APPLICATION).'/billmate/JSON.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
+
 class ControllerPaymentBillmatePartpayment extends Controller {
     protected function index() {
 		$this->load->model('checkout/order');

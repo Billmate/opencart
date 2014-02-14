@@ -1,6 +1,8 @@
 <?php
 
-require_once dirname(DIR_APPLICATION).'/billmate/JSON.php';		
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
+
 class ControllerPaymentBillmateBankPay extends Controller {
 	protected function index() {
 		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
@@ -15,7 +17,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		$amount = round( $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) * 100,0 );
 
         $merchant_id = $this->config->get('billmate_bankpay_merchant_id');
-        $currency = $this->currency->getCode();
+        $currency = 'SEK'; //$this->currency->getCode();
         $accept_url = $this->url->link('payment/billmate_bankpay/accept');
         $cancel_url = $this->url->link('checkout/checkout');
        // $callback_url = $this->url->link('payment/billmate_bankpay/callback');
@@ -51,7 +53,6 @@ class ControllerPaymentBillmateBankPay extends Controller {
         $this->session->data['capture_now'] = 'Sale';
 		$_POST['order_id'] = $this->session->data['order_id'];
 		$this->billmate_transaction(true);
-		billmate_log_data($this->data, $merchant_id, 'Bank Redirect hidden form');
 
 		$this->data['description'] = $this->config->get('billmate_bankpay_description');
 		$this->data['mac'] = $mac;

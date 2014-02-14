@@ -1,6 +1,8 @@
 <?php
 
-require_once dirname(DIR_APPLICATION).'/billmate/JSON.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
+
 class ControllerPaymentBillmateInvoice extends Controller {
 	public function getDebugReport(){
 		$billmate_invoice = $this->config->get('billmate_invoice');
@@ -63,7 +65,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $this->response->setOutput($json['output']);
     }
 	public function getInfo(){
-		echo 'Billmate Plugin Version: 1.32'; 
+		echo 'Billmate Plugin Version: '.PLUGIN_VERSION; 
 		phpinfo();
 	}
     protected function index() {

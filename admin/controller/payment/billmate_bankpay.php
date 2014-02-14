@@ -1,4 +1,6 @@
 <?php 
+require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
+
 class ControllerPaymentBillmateBankpay extends Controller {
 	private $error = array(); 
 	 
