@@ -454,14 +454,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
 				$products = $this->cart->getProducts();
 				foreach ($products as $product) {
-					$product_total_qty = 0;
+					$product_total_qty = $product['quantity'];
 					
-					foreach ($products as $product_2) {
-						if ($product_2['product_id'] == $product['product_id']) {
-							$product_total_qty += $product_2['quantity'];
-						}
-					}
-
 					if ($product['minimum'] > $product_total_qty) {
 						$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
 					}

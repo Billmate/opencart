@@ -329,7 +329,7 @@
         	);
                 ob_start();
                 $writeflag = @fwrite($sock,json_encode($values));
-		ob_end_clean();
+				ob_end_clean();
                 if($writeflag==0 && $type == 'add_invoice' ){
                     $this->stat_post($data, $type,$response, $duration, $status);
                 }

@@ -353,15 +353,11 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		}*/
 
 		$products = $this->cart->getProducts();
+		$goods_list = array();
+		
 		foreach ($products as $product) {
-			$product_total_qty = 0;
+			$product_total_qty = $product['quantity'];
 			
-			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
-					$product_total_qty += $product_2['quantity'];
-				}
-			}
-
 			if ($product['minimum'] > $product_total_qty) {
 				$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
 			}
@@ -435,16 +431,36 @@ class ControllerPaymentBillmateBankPay extends Controller {
 			"extraInfo"=>array(array("cust_no"=>(string)$order_info['customer_id'],"creditcard_data"=>$post)) 
 		);
 		$transaction["extraInfo"][0]["status"] = 'Paid';
-		if( $add_order ) {
-			return $k->AddOrder('',array_map("utf8_decode",$bill_address),array_map("utf8_decode",$ship_address),$goods_list,$transaction);
+
+		if( empty( $goods_list ) ){
+			throw new Exception ('Unable to find product in cart');
+			return false;
 		}
-		$result1 = $k->AddInvoice('',array_map("utf8_decode",$bill_address),array_map("utf8_decode",$ship_address),$goods_list,$transaction);
+
+		$bill_address = array_map("utf8_decode",$bill_address);
+		$ship_address = array_map("utf8_decode",$ship_address);
+		$fingerprint = md5(serialize(array($bill_address, $ship_address,$goods_list)));
+
+		if( $add_order ) {
+			if( !isset($this->session->data['bankorder_api_called']) || $this->session->data['bankorder_api_called']!=$fingerprint) {
+				$this->session->data['bankorder_api_called'] = $fingerprint;
+				$result = $k->AddOrder('',$bill_address, $ship_address, $goods_list,$transaction);
+				return $result;
+			} else {
+				return;
+			}
+		}
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title_name')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+
+		$result1 = $k->AddInvoice('', $bill_address ,$ship_address ,$goods_list,$transaction);
+		
 		if(!is_array($result1))
 		{ 
 			$result1['error'] = utf8_encode($result1);
 			throw new Exception ($result1['error']);
 		} else {
 			$this->session->data['order_created'] = $result1[0];
+			$this->session->data['bankorder_api_called'] = false;
 			$this->redirect($this->url->link('checkout/success'));
 		}
 	}

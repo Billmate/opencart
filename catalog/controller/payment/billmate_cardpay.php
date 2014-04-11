@@ -364,13 +364,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$products = $this->cart->getProducts();
 		foreach ($products as $product) {
-			$product_total_qty = 0;
-			
-			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
-					$product_total_qty += $product_2['quantity'];
-				}
-			}
+			$product_total_qty = $product['quantity'];
 
 			if ($product['minimum'] > $product_total_qty) {
 				$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
@@ -446,19 +440,34 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		);
 
 		if(!empty($status )) $transaction["extraInfo"][0]["status"] = $status;
+		$bill_address = array_map("utf8_decode",$bill_address);
+		$ship_address = array_map("utf8_decode",$ship_address);
+		$fingerprint = md5(serialize(array($bill_address, $ship_address,$goods_list)));
+
+		if( empty( $goods_list ) ){
+			throw new Exception ('Unable to find product in cart');
+			return false;
+		}
 		
 		if( $add_order ) {
-			return $k->AddOrder('',array_map("utf8_decode",$bill_address),array_map("utf8_decode",$ship_address),$goods_list,$transaction);
+			if( !isset($this->session->data['order_api_called']) || $this->session->data['order_api_called']!=$fingerprint) {
+				$this->session->data['order_api_called'] = $fingerprint;
+				return $k->AddOrder('',$bill_address,$ship_address,$goods_list,$transaction);
+			} else {
+				return;
+			}
 		}
 
-		$result1 = $k->AddInvoice($pno,array_map("utf8_decode",$bill_address),array_map("utf8_decode",$ship_address),$goods_list,$transaction);
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title_name')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+		$result1 = $k->AddInvoice('',$bill_address,$ship_address,$goods_list,$transaction);
 
 		if(!is_array($result1))
 		{ 
 			$result1['error'] = utf8_encode($result1);
 			throw new Exception ($result1);
 		} else {
-			$this->session->data['order_created'] = $result1[0];			
+			$this->session->data['order_created'] = $result1[0];
+			$this->session->data['order_api_called'] = false;			
 			$this->redirect($this->url->link('checkout/success'));
 		}
 	}
