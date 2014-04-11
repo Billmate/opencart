@@ -433,8 +433,8 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		$transaction["extraInfo"][0]["status"] = 'Paid';
 
 		if( empty( $goods_list ) ){
-			throw new Exception ('Unable to find product in cart');
-			return false;
+			$result1 = 'Unable to find product in cart';
+			throw new Exception ($result1);
 		}
 
 		$bill_address = array_map("utf8_decode",$bill_address);
@@ -456,8 +456,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		
 		if(!is_array($result1))
 		{ 
-			$result1['error'] = utf8_encode($result1);
-			throw new Exception ($result1['error']);
+			throw new Exception (utf8_encode($result1));
 		} else {
 			$this->session->data['order_created'] = $result1[0];
 			$this->session->data['bankorder_api_called'] = false;

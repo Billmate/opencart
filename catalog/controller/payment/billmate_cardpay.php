@@ -363,6 +363,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}*/
 		
 		$products = $this->cart->getProducts();
+		$goods_list = array();
+		
 		foreach ($products as $product) {
 			$product_total_qty = $product['quantity'];
 
@@ -445,7 +447,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$fingerprint = md5(serialize(array($bill_address, $ship_address,$goods_list)));
 
 		if( empty( $goods_list ) ){
-			throw new Exception ('Unable to find product in cart');
+			$result1 = 'Unable to find product in cart';
+			throw new Exception ($result1);
 			return false;
 		}
 		
@@ -463,8 +466,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		if(!is_array($result1))
 		{ 
-			$result1['error'] = utf8_encode($result1);
-			throw new Exception ($result1);
+			throw new Exception (utf8_encode($result1));
 		} else {
 			$this->session->data['order_created'] = $result1[0];
 			$this->session->data['order_api_called'] = false;			

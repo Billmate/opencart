@@ -340,7 +340,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 				
 				$products = $this->cart->getProducts();
-
+				$goods_list = array();
+				
 				foreach ($products as $product) {
 					$product_total_qty = $product['quantity'];
 					
@@ -577,7 +578,11 @@ $db->query($sql);
 					$func = create_function('','');
 					$oldhandler = set_error_handler($func);
 
-					$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
+					if( empty( $goods_list ) ){
+						$result1 = 'Unable to find product in cart';
+					} else {
+						$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
+					}
 					if(!is_array($result1))
 					{ 
 						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="button" />';
