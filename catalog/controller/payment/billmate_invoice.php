@@ -149,7 +149,6 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				
 	
 		    // The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
-		    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
         	$this->document->addScript('catalog/view/javascript/jquery/social/init_socialbutton.js');
 
 		    $billmate_invoice = $this->config->get('billmate_invoice');
@@ -553,7 +552,11 @@ class ControllerPaymentBillmateInvoice extends Controller {
 					$data['lastname'] = $data['lname'];
 					
                     if( $this->session->data['mismatch'] ){
-                        $this->session->data['shipping_address_id'] = $this->model_account_address->addAddress($data);
+					
+						$this->session->data['shipping_address_id'] = 0;
+						if( $this->customer->getId() > 0 ){
+							$this->session->data['shipping_address_id'] = $this->model_account_address->addAddress($data);
+						}
                         $this->session->data['shipping_postcode']   = $data['postcode'];
 
                         $this->session->data['payment_address_id'] = $this->session->data['shipping_address_id'];
@@ -581,6 +584,8 @@ $db->query($sql);
 					if( empty( $goods_list ) ){
 						$result1 = 'Unable to find product in cart';
 					} else {
+						$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+						
 						$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
 					}
 					if(!is_array($result1))
