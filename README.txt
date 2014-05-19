@@ -24,13 +24,6 @@ This plugin does not currently support Campaigns or Mobile payments.
 
 The plugin only works if the currency is set to Swedish Krona and the Base country is set to Sweden.
 
-PCLASSES AND BILLMATE PART PAYMENT
-
-If you want to, you can also manually upload your billmatepclasses.json file via ftp.
-
 == INSTALLATION	 ==
 
 1. Download and unzip the latest release zip file.
-
-
-Note: billmatepclasses.json file must have 777 permission otherwise part payment option will not work.

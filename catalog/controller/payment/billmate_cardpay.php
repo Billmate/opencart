@@ -455,7 +455,11 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		if( $add_order ) {
 			if( !isset($this->session->data['order_api_called']) || $this->session->data['order_api_called']!=$fingerprint) {
 				$this->session->data['order_api_called'] = $fingerprint;
-				return $k->AddOrder('',$bill_address,$ship_address,$goods_list,$transaction);
+				$result =  $k->AddOrder('',$bill_address,$ship_address,$goods_list,$transaction);
+				$fp = fopen(DIR_LOGS.'/billmate.log','a+');
+				fwrite($fp, time().' Add_order : '. print_r($result,1));
+				fclose($fp);
+				return $result;
 			} else {
 				return;
 			}

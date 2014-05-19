@@ -106,6 +106,7 @@ class ModelPaymentBillmate extends Model {
         $data['pclass_description'] = $this->language->get('pclass_description');
         $data['pclass_interest_rate'] = $this->language->get('pclass_interest_rate');
         $data['pclass_minimum_amount'] = $this->language->get('pclass_minimum_amount');
+        $data['pclass_maximum_amount'] = $this->language->get('pclass_maximum_amount');		
         $data['pclass_invoice_fee'] = $this->language->get('pclass_invoice_fee');
         $data['pclass_starting_fee'] = $this->language->get('pclass_starting_fee');
         $data['pclass_expiry_date'] = $this->language->get('pclass_expiry_date');
@@ -176,6 +177,7 @@ class ModelPaymentBillmate extends Model {
         $data['pclass_description'] = $this->language->get('pclass_description');
         $data['pclass_interest_rate'] = $this->language->get('pclass_interest_rate');
         $data['pclass_minimum_amount'] = $this->language->get('pclass_minimum_amount');
+        $data['pclass_maximum_amount'] = $this->language->get('pclass_maximum_amount');		
         $data['pclass_invoice_fee'] = $this->language->get('pclass_invoice_fee');
         $data['pclass_starting_fee'] = $this->language->get('pclass_starting_fee');
         $data['pclass_expiry_date'] = $this->language->get('pclass_expiry_date');
@@ -321,6 +323,7 @@ class ModelPaymentBillmate extends Model {
                             'desc' => $pclass->getDescription(),
                             'interest_rate' => $pclass->getInterestRate() . '%',
                             'minimum_amount' => $this->currency->format($pclass->getMinAmount(), $currency, 1),
+							'maximum_amount' => $this->currency->format($pclass->getMaxAmount(), $currency, 1),
                             'invoice_fee' => $this->currency->format($pclass->getInvoiceFee(), $currency, 1),
                             'starting_fee' => $this->currency->format($pclass->getStartFee(), $currency, 1),
                             'expiry_date' => $expiryDate
@@ -342,26 +345,7 @@ class ModelPaymentBillmate extends Model {
         $countryData = array();
         $data = array();
         foreach($modules AS $module) {
-            // Check that module is enabled
-           // if(!$this->config->get('billmate_' . $module . '_status')) {
-            //    continue;
-           // }
-            //$settings = $this->model_setting_setting->getSetting('billmate_' . $module);
 			$settings = $_POST;
-            /*if(!isset($settings['billmate_' . $module . '_enabled_countries'])) {
-                continue;
-            }
-            $enabledCountries = $settings['billmate_' . $module . '_enabled_countries'];
-
-            // Starting with OpenCart v1.5.1.3 the variable may already be serialized
-            if(!is_array($enabledCountries)) {
-                $enabledCountries = unserialize($enabledCountries);
-            }
-
-            if(!array($enabledCountries)) {
-                continue;
-            }*/
-            
             foreach( array_keys($settings['billmate_partpayment']) AS $country) {
                 if( $settings['billmate_partpayment'][$country]['status'] != 1 ) continue;
 

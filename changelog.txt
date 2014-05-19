@@ -1,0 +1,7 @@
+Fix: Term and Conditions auto open in AjaxCheckout
+Fix: Warnings removed from models
+Fix: PClasses not generated in first update
+Fix: Removed Extra Breaks from payment method lists 
+Fix: CSS of popup is now with important so they can't be override by store's site
+Fix: Default Text of invoice
+Fix: Logo and text alignment of payment gateway

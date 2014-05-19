@@ -88,7 +88,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 				if ($pclass['Type'] == 2) {
 					$monthly_cost = -1;
 				} else {
-					if ($total < $pclass['mintotal']) {
+					if ($total < $pclass['mintotal'] || ($total > $pclass['maxtotal'] && $pclass['maxtotal'] > 0)) {
 						continue;
 					}
 

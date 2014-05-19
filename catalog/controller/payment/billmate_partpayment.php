@@ -1,12 +1,9 @@
 <?php
-
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
-
 class ControllerPaymentBillmatePartpayment extends Controller {
     protected function index() {
 		$this->load->model('checkout/order');
-
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 		
 		if ($order_info) {
@@ -14,7 +11,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$store_country  = $this->config->get('config_country_id');
 			$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 			$countryData    = $countryQuery->row;
-
 			$this->language->load('payment/billmate_partpayment');
 		   
 			$this->data['text_information'] = $this->language->get('text_information');
@@ -65,7 +61,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 					'value' => $i
 				);
 			}			
-
 			// Store Taxes to send to Billmate
 			$total_data = array();
 			$total = 0;
@@ -169,11 +164,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$this->data['iso_code_3'] = $countryData['iso_code_3'];
 			
 			$payment_option = array();
-
 			$total = $this->currency->format($order_info['total'], $country_to_currency[$countryData['iso_code_3']], '', false);
 			foreach ($countryRates as $pclass) {                
-
-
 				// 0 - Campaign
 				// 1 - Account
 				// 2 - Special
@@ -181,31 +173,23 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				if (!in_array($pclass['Type'], array(0, 1, 3))) {
 					continue;
 				}
-
 				if ($pclass['Type'] == 2) {
 					$monthly_cost = -1;
 				} else {
-					if ($total < $pclass['mintotal']) {
+					if ($total < $pclass['mintotal'] || ($total > $pclass['maxtotal'] && $pclass['maxtotal'] > 0)) {
 						continue;
 					}
-
 					if ($pclass['Type'] == 3) {
 						continue;
 					} else {
 						$sum = $total;
-
 						$lowest_payment = $this->getLowestPaymentAccount($countryData['iso_code_3']);
 						$monthly_cost = 0;
-
 						$monthly_fee = $pclass['invoice_fee'];
 						$start_fee = $pclass['start_fee'];
-
 						$sum += $start_fee;
-
 						$base = ($pclass['Type'] == 1);
-
 						$minimum_payment = ($pclass['Type'] === 1) ? $this->getLowestPaymentAccount($countryData['iso_code_3']) : 0;
-
 						if ($pclass['months'] == 0) {
 							$payment = $sum;
 						} elseif ($pclass['interest'] == 0) {
@@ -214,46 +198,36 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 							$interest = $pclass['interest'] / (100.0 * 12);
 							$payment = $sum * $interest / (1 - pow((1 + $interest), -$pclass['months']));
 						}
-
 						$payment += $monthly_fee;
-
 						$balance = $sum;
 						$pay_data = array();
-
 						$months = $pclass['months'];
 						
 						while (($months != 0) && ($balance > 0.01)) {
 							$interest = $balance * $pclass['interest'] / (100.0 * 12);
 							$new_balance = $balance + $interest + $monthly_fee;
-
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
 								$pay_data[] = $new_balance;
 								break;
 							}
-
 							$new_payment = max($payment, $minimum_payment);
 							
 							if ($base) {
 								$new_payment = max($new_payment, $balance / 24.0 + $monthly_fee + $interest);
 							}
-
 							$balance = $new_balance - $new_payment;
 							
 							$pay_data[] = $new_payment;
 								   
 							$months -= 1;
 						}
-
 						$monthly_cost = round(isset($pay_data[0]) ? ($pay_data[0]) : 0, 2);
-
 						if ($monthly_cost < 0.01) {
 							continue;
 						}
-
 						if ($pclass['Type'] == 1 && $monthly_cost < $lowest_payment) {
 							$monthly_cost = $lowest_payment;
 						}
-
 						if ($pclass['Type'] == 0 && $monthly_cost < $lowest_payment) {
 							continue;
 						}
@@ -272,7 +246,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$sort_order[$key] = $value['pclass_id'];
 			}
 		
-
 			$this->data['payment_options'] = array();
 			
 			foreach ($payment_option as $payment_option) {
@@ -281,7 +254,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['title'], $this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1))
 				);
 			}
-
 			//$this->document->addStyle($style);
 			//$this->document->addScript(HTTP_SERVER . 'catalog/view/javascript/module-tombola.js');
 			//$this->data['description'] = $billmate_partpayment['SWE']['description'];
@@ -295,7 +267,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$this->render();
 		}
     }
-
     public function send() {
 		$this->language->load('payment/billmate_partpayment');
 		
@@ -303,7 +274,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$store_country  = $this->config->get('config_country_id');
 		$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 		$countryData    = $countryQuery->row;
-
 		if(isset($_POST['pno'])) $_POST['pno'] = trim($_POST['pno']);
 		$json = array();
         if( empty( $_POST['pno'] ) ){
@@ -319,9 +289,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			return;
 		}
 		$this->load->model('checkout/order');
-
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-
         		
 		// Order must have identical shipping and billing address or have no shipping address at all
 		if ($order_info) {
@@ -341,7 +309,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$ssl = true;
 				$debug = false;
 				$k = new BillMate($eid,$key,$ssl,$debug, $billmate_partpayment['SWE']['server'] == 'beta');
-
 				$country_to_currency = array(
 					'NOR' => 'NOK',
 					'SWE' => 'SEK',
@@ -398,7 +365,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				}
 				
 				$ship_address = $bill_address = array();
-
 				if( !empty( $order_info['shipping_firstname'] ) ) {
 				    $ship_address = array(
 					    'email'           => $order_info['email'],
@@ -434,7 +400,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 					    'country'         => $country,
 				    );
 				}
-
 				/*$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
 				foreach ($product_query as $product) {
 					$goods_list[] = array(
@@ -449,7 +414,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						)
 					);
 				}*/
-
 				$products = $this->cart->getProducts();
 				$goods_list = array();
 				
@@ -460,7 +424,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
 					}
 					$rates=0;
-
 					$tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
 					foreach($tax_rates as $rate){
 						$rates+= $rate['rate'];
@@ -478,7 +441,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						)
 					);
 				}
-
 				
 				if (isset($this->session->data['billmate'][$this->session->data['order_id']])) {
 					$totals = $this->session->data['billmate'][$this->session->data['order_id']];
@@ -507,7 +469,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                 } else {
                     $pclass = -1;
                 }
-
 				$pno = trim($this->request->post['pno']);
 				
 				$transaction = array(
@@ -536,7 +497,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         return count($foundName ) > 0;                        
                     }
                 }
-
 				try {
 					$addr = $k->GetAddress($pno);
 					if( !is_array( $addr ) ){
@@ -553,13 +513,10 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 					//Something went wrong
 				   // echo "{$e->getMessage()} (#{$e->getCode()})\n";
 				}
-
 //				if(!$json['error']) //$order_info['shipping_firstname'] == $addr[0][0] and 
 				
-
                 $db = $this->registry->get('db');
                 if( $db == NULL ) $db = $this->db;
-
                 $countriesdata = array(209 =>'sweden', 73=> 'finland',59=> 'denmark', 164 => 'norway', 81 => 'germany', 15 => 'austria', 154 => 'netherlands' );
                 $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE LOWER(name) = '" . $countriesdata[$addr[0][5]]. "' AND status = '1'");
                 $countryinfo = $query->row;
@@ -568,7 +525,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				} else {
 					$countryname = '';
 				}
-
                 $fullname = $order_info['payment_firstname']. ' '.$order_info['payment_lastname'];
 				if( empty( $addr[0][0])){
 					$apiName = $fullname;
@@ -587,7 +543,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                 } else {
                     $address_same = true;
                 }
-
 				$firstArr = explode(' ', $order_info['shipping_firstname'] );
 				$lastArr  = explode(' ', $order_info['shipping_lastname'] );
 				
@@ -612,8 +567,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				) || !$address_same ){
 				    $this->session->data['mismatch'] = true;
                     if(!(isset($this->request->get['geturl']) and $this->request->get['geturl']=="yes")){
-
-
                     $json['address'] = $addr[0][0].' '.$addr[0][1].'<br>'.$addr[0][2].'<br>'.$addr[0][3].'<br>'.$addr[0][4].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() == 0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
                     $json['error'] = "";
                     }
@@ -651,31 +604,25 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                             'city'            => Encoding::fixUTF8($addr[0][4]),
                         );
                     }
-
                     $zonename = '';
-
                     $ship_address = array_merge($ship_address, $ship_api_address );
                     $bill_address = array_merge($bill_address, $ship_api_address );
 					
                     $this->load->model('account/address');
                     if( $this->session->data['mismatch'] ){
-
 						$data['firstname'] = $data['fname'];
 						$data['lastname'] = $data['lname'];
-
 						$this->session->data['shipping_address_id'] = 0;
 						if( $this->customer->getId() > 0 ){
 							$this->session->data['shipping_address_id'] = $this->model_account_address->addAddress($data);
 						}
                         $this->session->data['shipping_postcode']   = $data['postcode'];
-
                         $this->session->data['payment_address_id'] = $this->session->data['shipping_address_id'];
                         $this->session->data['payment_postcode']   = $data['postcode'];
 						
 $sql = "UPDATE `" . DB_PREFIX . "order` SET shipping_company='".$data['company']."', payment_company='".$data['company']."', shipping_firstname = '" . $db->escape($data['fname']) . "',firstname = '" . $db->escape($data['fname']) . "', lastname = '" . $db->escape($data['lastname']) . "', payment_firstname = '" . $db->escape($data['fname']) . "', payment_lastname = '" . $db->escape($data['lastname']) . "', payment_address_1 = '" . $db->escape($data['address_1']) . "', payment_address_2 = '', payment_city = '" . $db->escape($data['city']) . "', payment_postcode = '" . $db->escape($data['postcode']) . "', payment_zone = '" . $db->escape($zonename) . "', payment_zone_id = '" . (int)$data['zone_id'] . "', shipping_lastname = '" . $db->escape($data['lastname']) . "', shipping_address_1 = '" . $db->escape($data['address_1']) . "', shipping_address_2 = '', shipping_city = '" . $db->escape($data['city']) . "', shipping_postcode = '" . $db->escape($data['postcode']) . "', shipping_zone = '', shipping_zone_id = '0', date_modified = NOW(), shipping_country = '" . $this->db->escape($countryinfo['name']) . "', shipping_country_id = '" . (int)$countryinfo['country_id'] . "' where order_id = ". $this->session->data['order_id'];
 $db->query($sql);
                      }
-
 					 foreach($bill_address as $key => $col ){
 						$bill_address[$key] = utf8_decode($col);
 					 }
@@ -689,7 +636,6 @@ $db->query($sql);
 						$result1 = 'Unable to find product in cart';
 					} else {
 						$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int) $this->session->data['order_id']);						
-
 						$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
 					}
                     
@@ -730,7 +676,6 @@ $db->query($sql);
     
     private function constructXmlrpc($data) {
         $type = gettype($data);
-
         switch ($type) {
             case 'boolean':
                 if ($data == true) {
@@ -779,7 +724,6 @@ $db->query($sql);
         
         return $xml;
     }
-
     private function getLowestPaymentAccount($country) {
         switch ($country) {
             case 'SWE':
@@ -798,7 +742,6 @@ $db->query($sql);
             case 'NLD':
                 $amount = 6.95;
                 break;
-
             default:
                 $log = new Log('billmate.log');
 			    $log->write('Unknown country ' . $country);
@@ -821,30 +764,21 @@ $db->query($sql);
                         'X', 'Y', 'Z');
         
         $specialchars = array('-', '/', ' ', '#', '.');
-
         $num_pos = $this->strposArr($address, $numbers, 2);
-
         $street_name = substr($address, 0, $num_pos);
-
         $street_name = trim($street_name);
-
         $number_part = substr($address, $num_pos);
         
         $number_part = trim($number_part);
-
         $ext_pos = $this->strposArr($number_part, $characters, 0);
-
         if ($ext_pos != '') {
             $house_number = substr($number_part, 0, $ext_pos);
-
             $house_extension = substr($number_part, $ext_pos);
-
             $house_extension = str_replace($specialchars, '', $house_extension);
         } else {
             $house_number = $number_part;
             $house_extension = '';
         }
-
         return array($street_name, $house_number, $house_extension);
     }
     
@@ -854,7 +788,6 @@ $db->query($sql);
         if (!is_array($needle)) {
             $needle = array($needle);
         }
-
         foreach ($needle as $what) {
             if (($pos = strpos($haystack, $what, $where)) !== false) {
                 if ($pos < $defpos) {
@@ -885,14 +818,11 @@ $db->query($sql);
         return count($foundName)>0;
     }
 }
-
-
 if(!class_exists('Encoding')){
 class Encoding {
     
   protected static $win1252ToUtf8 = array(
         128 => "\xe2\x82\xac",
-
         130 => "\xe2\x80\x9a",
         131 => "\xc6\x92",
         132 => "\xe2\x80\x9e",
@@ -904,10 +834,7 @@ class Encoding {
         138 => "\xc5\xa0",
         139 => "\xe2\x80\xb9",
         140 => "\xc5\x92",
-
         142 => "\xc5\xbd",
-
-
         145 => "\xe2\x80\x98",
         146 => "\xe2\x80\x99",
         147 => "\xe2\x80\x9c",
@@ -920,7 +847,6 @@ class Encoding {
         154 => "\xc5\xa1",
         155 => "\xe2\x80\xba",
         156 => "\xc5\x93",
-
         158 => "\xc5\xbe",
         159 => "\xc5\xb8"
   );
@@ -994,7 +920,6 @@ class Encoding {
        "\xc5\xbe"     => "\x9e",
        "\xc5\xb8"     => "\x9f"
     );
-
   static function toUTF8($text){
   /**
    * Function Encoding::toUTF8
@@ -1020,7 +945,6 @@ class Encoding {
    * @return string  The same string, UTF8 encoded
    *
    */
-
     if(is_array($text))
     {
       foreach($text as $k => $v)
@@ -1087,7 +1011,6 @@ class Encoding {
       return $text;
     }
   }
-
   static function toWin1252($text) {
     if(is_array($text)) {
       foreach($text as $k => $v) {
@@ -1100,15 +1023,12 @@ class Encoding {
       return $text;
     }
   }
-
   static function toISO8859($text) {
     return self::toWin1252($text);
   }
-
   static function toLatin1($text) {
     return self::toWin1252($text);
   }
-
   static function fixUTF8($text){
     if(is_array($text)) {
       foreach($text as $k => $v) {
@@ -1116,7 +1036,6 @@ class Encoding {
       }
       return $text;
     }
-
     $last = "";
     while($last <> $text){
       $last = $text;
@@ -1163,14 +1082,11 @@ class Encoding {
    
     return $equivalences[$encoding];
   }
-
   public static function encode($encodingLabel, $text)
   {
     $encodingLabel = self::normalizeEncoding($encodingLabel);
     if($encodingLabel == 'UTF-8') return Encoding::toUTF8($text);
     if($encodingLabel == 'ISO-8859-1') return Encoding::toLatin1($text);
   }
-
 }
 }
-

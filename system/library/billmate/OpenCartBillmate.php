@@ -143,12 +143,13 @@
  }
  
 function correct_lang_billmate(&$item, $index){
-    $keys = array('pclassid', 'description','months', 'start_fee','invoice_fee','interest', 'mintotal', 'country', 'Type', 'expiry' );
+    $keys = array('pclassid', 'description','months', 'start_fee','invoice_fee','interest', 'mintotal', 'country', 'Type', 'expiry', 'maxtotal' );
     $item[1] = utf8_encode($item[1]);
     $item = array_combine( $keys, $item );
     $item['start_fee'] = $item['start_fee'] / 100;
     $item['invoice_fee'] = $item['invoice_fee'] / 100;
     $item['interest'] = $item['interest'] / 100;
     $item['mintotal'] = $item['mintotal'] / 100;
+    $item['maxtotal'] = $item['maxtotal'] / 100;	
 }
 ?>
