@@ -27,6 +27,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $this->data['text_yes'] = $this->language->get('text_yes');
         $this->data['text_no'] = $this->language->get('text_no');
 
+		$this->data['entry_order_cancel_status'] = $this->language->get('entry_order_cancel_status');		
 		$this->data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
 		$this->data['entry_secret'] = $this->language->get('entry_secret');
         $this->data['entry_test'] = $this->language->get('entry_test');				

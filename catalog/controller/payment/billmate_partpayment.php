@@ -12,7 +12,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 			$countryData    = $countryQuery->row;
 			$this->language->load('payment/billmate_partpayment');
-		   
+			$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$this->session->data['order_id']);		   
+			
 			$this->data['text_information'] = $this->language->get('text_information');
 			$this->data['text_additional'] = $this->language->get('text_additional');
 			$this->data['text_payment_option'] = $this->language->get('text_payment_option');	
@@ -34,7 +35,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			
 			$this->data['button_confirm'] = $this->language->get('button_confirm');
 			$this->data['wrong_person_number'] = $this->language->get('your_billing_wrong');
-			
+
 			$this->data['days'] = array();
 			
 			for ($i = 1; $i <= 31; $i++) {
@@ -274,6 +275,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$store_country  = $this->config->get('config_country_id');
 		$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 		$countryData    = $countryQuery->row;
+		
 		if(isset($_POST['pno'])) $_POST['pno'] = trim($_POST['pno']);
 		$json = array();
         if( empty( $_POST['pno'] ) ){

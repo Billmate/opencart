@@ -46,9 +46,6 @@ class ModelPaymentBillmateInvoice extends Model {
 				$status = true;
 
 			}
-			if (!isset($country_to_currency[$countryData['iso_code_3']]) || !$this->currency->has($country_to_currency[$countryData['iso_code_3']])) {
-				$status = false;
-			} 
 		}
 
 		if( $status){

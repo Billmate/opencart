@@ -79,6 +79,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			$store_country  = $this->config->get('config_country_id');
 			$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 			$countryData    = $countryQuery->row;
+			$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$this->session->data['order_id']);		   
 
 			$this->language->load('payment/billmate_invoice');
 

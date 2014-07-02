@@ -31,6 +31,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['entry_secret'] = $this->language->get('entry_secret');
         $this->data['entry_test'] = $this->language->get('entry_test');				
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');		
+		$this->data['entry_order_cancel_status'] = $this->language->get('entry_order_cancel_status');		
 		$this->data['entry_total'] = $this->language->get('entry_total');	
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$this->data['entry_description'] = $this->language->get('entry_description');

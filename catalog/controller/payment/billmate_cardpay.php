@@ -3,6 +3,13 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
 
 class ControllerPaymentBillmateCardpay extends Controller {
+	public function cancel(){
+		
+		$order_id = $this->session->data['order_id'];
+		$status = (int)$this->config->get('billmate_cardpay_order_cancel_status_id');
+		$this->db->query('update '.DB_PREFIX.'order set order_status_id = '.$status.' where order_id='.$order_id);
+		$this->redirect($this->url->link('checkout/checkout'));
+	}
 	protected function index() {
 		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
 				
@@ -15,9 +22,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$amount = round( $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) * 100,0 );
 
         $merchant_id = $this->config->get('billmate_cardpay_merchant_id');
-        $currency = $this->currency->getCode();
+        $currency = strtoupper($this->currency->getCode());
         $accept_url = $this->url->link('payment/billmate_cardpay/accept');
-        $cancel_url = $this->url->link('checkout/checkout');
+        $cancel_url = $this->url->link('payment/billmate_cardpay/cancel');
        // $callback_url = $this->url->link('payment/billmate_cardpay/callback');
         $secret = substr($this->config->get('billmate_cardpay_secret'),0,12);
 
@@ -62,6 +69,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['cancel_url'] = $cancel_url;
 		$this->data['pay_method'] = $pay_method;
         $this->session->data['capture_now']=$this->config->get('billmate_cardpay_transaction_method');
+		$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$order_id);
 
 		$this->billmate_transaction(true); 
 

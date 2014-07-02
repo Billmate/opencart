@@ -4,7 +4,15 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
 
 class ControllerPaymentBillmateBankPay extends Controller {
+	public function cancel(){
+		
+		$order_id = $this->session->data['order_id'];
+		$status = (int)$this->config->get('billmate_bankpay_order_cancel_status_id');
+		$this->db->query('update '.DB_PREFIX.'order set order_status_id = '.$status.' where order_id='.$order_id);
+		$this->redirect($this->url->link('checkout/checkout'));
+	}
 	protected function index() {
+	
 		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
 				
         $this->data['button_confirm'] = $this->language->get('button_confirm');
@@ -19,7 +27,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
         $merchant_id = $this->config->get('billmate_bankpay_merchant_id');
         $currency = 'SEK'; //$this->currency->getCode();
         $accept_url = $this->url->link('payment/billmate_bankpay/accept');
-        $cancel_url = $this->url->link('checkout/checkout');
+        $cancel_url = $this->url->link('payment/billmate_bankpay/cancel');
        // $callback_url = $this->url->link('payment/billmate_bankpay/callback');
         $secret = substr($this->config->get('billmate_bankpay_secret'),0,12);
 
@@ -53,7 +61,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
         $this->session->data['capture_now'] = 'Sale';
 		$_POST['order_id'] = $this->session->data['order_id'];
 		$this->billmate_transaction(true);
-
+		$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$order_id);
 		$this->data['description'] = $this->config->get('billmate_bankpay_description');
 		$this->data['mac'] = $mac;
 		

@@ -20,6 +20,7 @@ $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_description']     = 'Beskrivning:';
+$_['entry_order_cancel_status'] = 'Cancelled Order Status:';
 
 // Error
 $_['error_permission']   = 'Varning: Du har inte access till att ändra Billmate kort inställningar!';
