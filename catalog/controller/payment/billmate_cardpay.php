@@ -286,8 +286,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$shipping_method = $this->session->data["shipping_method"];
 		
 		require_once dirname(DIR_APPLICATION).'/billmate/BillMate.php';
-		include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
-		include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
+		include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
+		include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
 		
 		$eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 		
@@ -464,16 +464,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			if( !isset($this->session->data['order_api_called']) || $this->session->data['order_api_called']!=$fingerprint) {
 				$this->session->data['order_api_called'] = $fingerprint;
 				$result =  $k->AddOrder('',$bill_address,$ship_address,$goods_list,$transaction);
-				$fp = fopen(DIR_LOGS.'/billmate.log','a+');
-				fwrite($fp, time().' Add_order : '. print_r($result,1));
-				fclose($fp);
 				return $result;
 			} else {
 				return;
 			}
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title_name')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 		$result1 = $k->AddInvoice('',$bill_address,$ship_address,$goods_list,$transaction);
 
 		if(!is_array($result1))

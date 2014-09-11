@@ -453,15 +453,12 @@ class ControllerPaymentBillmateBankPay extends Controller {
 			if( !isset($this->session->data['bankorder_api_called']) || $this->session->data['bankorder_api_called']!=$fingerprint) {
 				$this->session->data['bankorder_api_called'] = $fingerprint;
 				$result = $k->AddOrder('',$bill_address, $ship_address, $goods_list,$transaction);
-				$fp = fopen(DIR_LOGS.'/billmate.log');
-				fwrite($fp, date('Y-m-d H:i:s').' Add_order : '. print_r($result,1));
-				fclose($fp);
 				return $result;
 			} else {
 				return;
 			}
 		}
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title_name')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
 		$result1 = $k->AddInvoice('', $bill_address ,$ship_address ,$goods_list,$transaction);
 		
