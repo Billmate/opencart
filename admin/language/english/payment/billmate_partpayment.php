@@ -1,7 +1,7 @@
 <?php
 $_['heading_title'] = 'Billmate Part Payment';
 $_['heading_partpayment'] = 'Billmate Part Payment';
-$_['text_billmate_partpayment'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/bm_delbetalning_l.png" alt="Billmate" title="BillMate" height="35px" />';
+$_['text_billmate_partpayment'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/bm_delbetalning_l.png" alt="Billmate" title="Billmate" height="35px" />';
 
 
 // Text

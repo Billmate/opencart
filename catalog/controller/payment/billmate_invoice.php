@@ -8,8 +8,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		$billmate_invoice = $this->config->get('billmate_invoice');
 		
 		require_once dirname(DIR_APPLICATION).'/billmate/billingapi/BillMate API/BillMate.php';
-		include(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpc.inc");
-		include(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpcs.inc");
+		include_once(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpc.inc");
+		include_once(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpcs.inc");
 			
 		$eid = 7270;//7320;
 		$key = 606250886062;//511461125114;
@@ -232,8 +232,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				$billmate_invoice = $this->config->get('billmate_invoice');
 				
 				require_once dirname(DIR_APPLICATION).'/billmate/BillMate.php';
-				include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
-				include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
+				include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
+				include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
     				
 				$eid = (int)$billmate_invoice['SWE']['merchant'];
 				$key = (int)$billmate_invoice['SWE']['secret'];

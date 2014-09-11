@@ -303,8 +303,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$billmate_partpayment = $this->config->get('billmate_partpayment');
 				
 				require_once dirname(DIR_APPLICATION).'/billmate/BillMate.php';
-				include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
-				include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
+				include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
+				include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
 				
 				$eid = (int)$billmate_partpayment['SWE']['merchant'];
 				$key = (int)$billmate_partpayment['SWE']['secret'];

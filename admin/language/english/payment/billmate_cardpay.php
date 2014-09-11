@@ -1,13 +1,13 @@
 <?php
 // Heading
 
-$_['heading_title']      = 'BillMate Card';
-$_['heading_cardpay'] = 'BillMate Card';
-$_['text_billmate_cardpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/bm_kort_l.png" alt="Billmate" title="BillMate" height="35px" />';
+$_['heading_title']      = 'Billmate Card';
+$_['heading_cardpay'] = 'Billmate Card';
+$_['text_billmate_cardpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/bm_kort_l.png" alt="Billmate" title="Billmate" height="35px" />';
 
 // Text
 $_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified BillMate Card payment module!';
+$_['text_success']       = 'Success: You have modified Billmate Card payment module!';
 
 // Entry
 $_['entry_merchant_id']     = 'Billmate ID:';
@@ -25,7 +25,7 @@ $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sort Order:';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment BillMate Card!';
+$_['error_permission']   = 'Warning: You do not have permission to modify payment Billmate Card!';
 $_['error_merchant_id']     = 'Billmate ID missing';
 $_['error_secret']     = 'Billmate key missing';
 

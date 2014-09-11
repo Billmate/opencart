@@ -276,8 +276,8 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		$shipping_method = $this->session->data["shipping_method"];
 		
 		require_once dirname(DIR_APPLICATION).'/billmate/BillMate.php';
-		include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
-		include(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
+		include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
+		include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
 		
 		$eid = (int)$this->config->get('billmate_bankpay_merchant_id');
 		

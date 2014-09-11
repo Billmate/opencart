@@ -2,11 +2,11 @@
 // Heading
 $_['heading_title']      = 'Billmate Bank';
 $_['heading_bankpay'] = 'Billmate Bank';
-$_['text_billmate_bankpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/billmate_bank_s.png" alt="Billmate" title="BillMate" height="35px" />';
+$_['text_billmate_bankpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/billmate_bank_s.png" alt="Billmate" title="Billmate" height="35px" />';
 
 // Text
 $_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified BillMate Bank payment module!';
+$_['text_success']       = 'Success: You have modified Billmate Bank payment module!';
 
 // Entry
 $_['entry_merchant_id']     = 'Billmate ID:';

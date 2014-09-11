@@ -30,7 +30,7 @@
  */
  class BillMate{
  	var $SERVER = "1.0";
- 	var $CLIENT = "PHP:BillMate:0.1";
+ 	var $CLIENT = "PHP:Billmate:0.1";
  	var $URL = "api.billmate.se";
  	
  	protected $ssl;

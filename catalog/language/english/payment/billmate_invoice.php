@@ -41,7 +41,7 @@ $_['page_title'] = 'Köpvillkor';
 $_['body_title'] = 'Köpvillkor';
 $_['subtitle']   = 'Handla nu - betala först efter leverans!';
 $_['short_description'] = '
-        När du betalar via faktura administreras detta av eFinance Nordic AB under varumärket BillMate. Detta
+        När du betalar via faktura administreras detta av eFinance Nordic AB under varumärket Billmate. Detta
 innebär att du handlar tryggt och enkelt. Du slipper uppge dina kortuppgifter, och betalar först efter det
 att du mottagit dina varor.';
 $_['subline'] = 'Detta erbjuder vi dig:';
@@ -49,7 +49,7 @@ $_['li1'] = 'Få alltid hem varan innan du betalar';
 $_['li2'] = '14 dagar betalningstid';
 $_['li3'] = 'Du behöver aldrig lämna ut kortuppgifter';
 $_['li4'] = 'Alltid 14 dagars ångerrätt i enlighet med distans- och hemförsäljningslagen*';
-$_['li5'] = 'Tillgång till dina fakturor via BillMate online ';
+$_['li5'] = 'Tillgång till dina fakturor via Billmate online ';
 $_['li6'] = 'Möjlighet till delbetalning';
 $_['long_description'] = 'En aviavgift om xx kr per köp tillkommer. Vid försenad betalning tillkommer lagstadgad påminnelse-/
 förseningsavgift samt dröjsmålsränta om 2 % per månad. Vid utebliven betalning överlämnas fakturan

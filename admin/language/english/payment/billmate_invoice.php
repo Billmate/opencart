@@ -6,7 +6,7 @@ echo '</pre>';
 */
 // Heading
 $_['heading_title']         = 'Billmate Invoice';
-$_['text_billmate_invoice'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice" title="BillMate Invoice" height="35px" />';
+$_['text_billmate_invoice'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice" title="Billmate Invoice" height="35px" />';
 
 // Text
 $_['text_payment']          = 'Payment';

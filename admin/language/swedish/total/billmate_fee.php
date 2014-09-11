@@ -1,10 +1,10 @@
 <?php
 // Heading
-$_['heading_title']    = 'BillMate Fakturaavgift';
+$_['heading_title']    = 'Billmate Fakturaavgift';
 
 // Text
 $_['text_total']       = 'Order Total';
-$_['text_success']     = 'Sparat: Du har modifierat BillMate Fakturaavgift!';
+$_['text_success']     = 'Sparat: Du har modifierat Billmate Fakturaavgift!';
 $_['text_sweden']      = 'Sverige';
 $_['text_norway']      = 'Norge';
 $_['text_finland']     = 'Finland';

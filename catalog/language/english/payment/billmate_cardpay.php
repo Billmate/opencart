@@ -4,9 +4,9 @@ $_['text_title'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTT
 $_['text_title_name'] = 'Billmate Card';
 
 $_['text_unable']         = 'Unable to locate or update your order status';
-$_['text_declined']       = 'Payment was declined by BillMate Card';
-$_['text_failed']         = 'BillMate Card Transaction Failed';
-$_['text_com']		= 'BillMate Card Communication Error';	
+$_['text_declined']       = 'Payment was declined by Billmate Card';
+$_['text_failed']         = 'Billmate Card Transaction Failed';
+$_['text_com']		= 'Billmate Card Communication Error';	
 $_['text_error_msg']	= '<p>Unfortunately there was an error processing your payment.</p><p><b>Warning: </b>%s</p>';
 
 ?>

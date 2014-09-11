@@ -1,7 +1,7 @@
 <?php
 // Heading
 $_['heading_title']      = 'Billmate Bank';
-$_['text_billmate_bankpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/billmate_bank_s.png" alt="Billmate" title="BillMate" height="35px" />';
+$_['text_billmate_bankpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_CATALOG).'/billmate/images/billmate_bank_s.png" alt="Billmate" title="Billmate" height="35px" />';
 
 // Text
 $_['text_payment']       = 'Betalning';
