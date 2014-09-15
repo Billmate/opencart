@@ -608,7 +608,11 @@ $db->query($sql);
 						
 						$comment = sprintf($this->language->get('text_comment'), $result1[0]);
 						
-						$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+						if( !$order_status ) {
+							$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+						} else {
+							$this->model_checkout_order->update($this->session->data['order_id'], $order_status, $comment, 1);
+						}
 						
 						$json['redirect'] = $this->url->link('checkout/success'); 
 					}

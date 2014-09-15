@@ -28,7 +28,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
         $currency = 'SEK'; //$this->currency->getCode();
         $accept_url = $this->url->link('payment/billmate_bankpay/accept');
         $cancel_url = $this->url->link('payment/billmate_bankpay/cancel');
-       // $callback_url = $this->url->link('payment/billmate_bankpay/callback');
+		//$callback_url = $this->url->link('payment/billmate_bankpay/callback');
         $secret = substr($this->config->get('billmate_bankpay_secret'),0,12);
 
 		$prod_url = 'https://cardpay.billmate.se/pay';
@@ -41,7 +41,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		}
 		$this->data['capture_now'] = 'YES';
 		$pay_method = 'BANK';
-		$callback_url = 'http://api.billmate.se/callback.php';
+		$callback_url = 'http://api.billmate.se/callback.php';		
 		$request_method = 'GET';
 		
         $mac_str = $accept_url . $amount . $callback_url .  $cancel_url . $this->data['capture_now'] . $currency . $merchant_id . $order_id . $pay_method . $request_method. $secret;
