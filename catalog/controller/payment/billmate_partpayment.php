@@ -12,7 +12,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 			$countryData    = $countryQuery->row;
 			$this->language->load('payment/billmate_partpayment');
-			$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$this->session->data['order_id']);		   
+			//$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$this->session->data['order_id']);		   
 			
 			$this->data['text_information'] = $this->language->get('text_information');
 			$this->data['text_additional'] = $this->language->get('text_additional');
@@ -660,11 +660,7 @@ $db->query($sql);
 					
 					    $comment = sprintf($this->language->get('text_comment'), $result1[0]);
 					
-						if( !$order_status ) {
-							$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
-						} else {
-							$this->model_checkout_order->update($this->session->data['order_id'], $order_status, $comment, 1);
-						}
+						$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
 
 					    $json['redirect'] = $this->url->link('checkout/success'); 
 				    }
