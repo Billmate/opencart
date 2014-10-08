@@ -1,9 +1,9 @@
-<script type="text/javascript" src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/js/billmatepopup.js"></script>
-<link rel="stylesheet" href="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/css/billmatepopup.css"/>
+<script type="text/javascript" src="billmate/js/billmatepopup.js"></script>
+<link rel="stylesheet" href="billmate/css/billmatepopup.css"/>
 <?php if ($error_warning) { ?>
 <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
-<div style="margin-bottom: 10px;"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/images/bm_delbetalning_l.png" /></div>
+<div style="margin-bottom: 10px;"><img src="billmate/images/bm_delbetalning_l.png" /></div>
 <div id="payment">
   <div style="margin-bottom: 3px;"><b><?php echo $text_payment_option; ?></b></div>
   <div class="content"> 
