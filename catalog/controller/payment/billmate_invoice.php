@@ -440,8 +440,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $db = $this->registry->get('db');
                 if( $db == NULL ) $db = $this->db;
 
-                $countriesdata = array(209 =>'sweden', 73=> 'finland',59=> 'denmark', 164 => 'norway', 81 => 'germany', 15 => 'austria', 154 => 'netherlands' );
-                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE LOWER(name) = '" . $countriesdata[$addr[0][5]]. "' AND status = '1'");
+                $countriesdata = array(209 =>'se', 73=> 'fi',59=> 'dk', 164 => 'no', 81 => 'de', 15 => 'at', 154 => 'nl' );
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE LOWER(iso_code_2) = '" . $countriesdata[$addr[0][5]]. "' AND status = '1' LIMIT 1");
                 $countryinfo = $query->row;
 				
 				if( $addr[0][5] != 209 ){
