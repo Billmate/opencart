@@ -377,7 +377,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 				foreach ($totals as $total) {
 					if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
-					    $flag = $total['code'] == 'handling' ? 16 : ( $total['code'] == 'shipping' ? 8 : 0);
+					    $flag = $total['code'] == 'billmate_fee' ? 16 : ( $total['code'] == 'shipping' ? 8 : 0);
 						$total['value'] = round( $total['value'], 2 );
 						$goods_list[] = array(
 							'qty'   => 1,
