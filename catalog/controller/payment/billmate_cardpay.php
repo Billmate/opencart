@@ -77,7 +77,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['description'] = $this->config->get('billmate_cardpay_description');
 
 		// Store Taxes to send to Billmate
-		$total_data = array();
+		/** Taxes is calculated in @$this->billmateTransaction() from now on */
+		/*$total_data = array();
 		$total = 0;
 		 
 		$this->load->model('setting/extension');
@@ -91,7 +92,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}
 
 		array_multisort($sort_order, SORT_ASC, $results);
-			
+		*/
+		/*
 		$billmate_tax = array();
 
 		foreach ($results as $result) {
@@ -130,7 +132,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}
 
 		$this->session->data['billmate'][$this->session->data['order_id']] = $total_data;
-		
+		*/
         
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl';
@@ -267,7 +269,6 @@ class ControllerPaymentBillmateCardpay extends Controller {
 	}
 	public function billmate_transaction($add_order = false){
 
-		if( !empty($this->session->data['order_created']) ) return;
 		$post = empty($this->request->post)? $this->request->get : $this->request->post;
 		
 		$store_currency = $this->config->get('config_currency');
@@ -280,6 +281,11 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		} else {
 			$order_id = $this->session->data['order_id'];
 		}
+		if( !empty($this->session->data['order_created']) && isset($this->session->data['old_order_id']) && $this->session->data['old_order_id'] == $order_id ) return;
+		if(isset($this->session->data['old_order_id']) && $this->session->data['old_order_id'] != $order_id){
+			$this->session->data['order_api_called'] = '';
+		}
+
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 
 		if( !empty( $this->session->data["shipping_method"] ) )
@@ -398,11 +404,46 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				)
 			);
 		}
-		
-		if (isset($this->session->data['billmate'][$this->session->data['order_id']])) {
-			$totals = $this->session->data['billmate'][$this->session->data['order_id']];
-		} else {
-			$totals = array();
+
+		$totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$order_id);
+		$billmate_tax = array();
+		$total_data = array();
+		$total = 0;
+		$totals = $totals->rows;
+
+		foreach ($totals as $result) {
+			if ($this->config->get($result['code'] . '_status')) {
+				$this->load->model('total/' . $result['code']);
+
+				$taxes = array();
+
+				$func = create_function('','');
+				$oldhandler = set_error_handler($func);
+				@$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+				set_error_handler($oldhandler);
+
+				$amount = 0;
+
+				foreach ($taxes as $tax_id => $value) {
+					$amount += $value;
+				}
+
+				$billmate_tax[$result['code']] = $amount;
+			}
+		}
+
+		foreach ($totals as $key => $value) {
+			$sort_order[$key] = $value['sort_order'];
+
+			if (isset($billmate_tax[$value['code']])) {
+				if ($billmate_tax[$value['code']]) {
+					$totals[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
+				} else {
+					$totals[$key]['tax_rate'] = 0;
+				}
+			} else {
+				$totals[$key]['tax_rate'] = '0';
+			}
 		}
 				
 		foreach ($totals as $total) {
@@ -464,6 +505,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			if( !isset($this->session->data['order_api_called']) || $this->session->data['order_api_called']!=$fingerprint) {
 				$this->session->data['order_api_called'] = $fingerprint;
 				$result =  $k->AddOrder('',$bill_address,$ship_address,$goods_list,$transaction);
+				$this->session->data['old_order_id'] = $order_id;
 				return $result;
 			} else {
 				return;
