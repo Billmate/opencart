@@ -288,6 +288,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				$goods_list = array();
 				
 				foreach ($products as $product) {
+                    $this->log->write(print_r($product,true));
 					$product_total_qty = $product['quantity'];
 					
 
@@ -300,12 +301,18 @@ class ControllerPaymentBillmateInvoice extends Controller {
 					foreach($tax_rates as $rate){
 						$rates+= $rate['rate'];
 					}
+                    $title = $product['name'];
+                    if(count($product['option']) > 0){
+                        foreach($product['option'] as $option){
+                            $title .= ' - '.$option['name'].': '.$option['option_value'];
+                        }
+                    }
 					
 					$goods_list[] = array(
 						'qty'   => (int)$product_total_qty,
 						'goods' => array(
 							'artno'    => $product['model'],
-							'title'    => $product['name'],
+							'title'    => $title,
 							'price'    => (int)$this->currency->format($product['price']*100,$this->currency->getCode(), '', false),
 							'vat'      => (float)($rates),
 							'discount' => 0.0,
