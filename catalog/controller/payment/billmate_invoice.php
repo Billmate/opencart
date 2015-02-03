@@ -92,62 +92,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		    $this->data['button_confirm'] = $this->language->get('button_confirm');
 			$this->data['wrong_person_number'] = $this->language->get('your_billing_wrong');
 			
-		    // Store Taxes to send to Billmate
-		    $total_data = array();
-		    $total = 0;
-		     
-		    $this->load->model('setting/extension');
-	
-		    $sort_order = array(); 
-	
-		    $results = $this->model_setting_extension->getExtensions('total');
-	
-		    foreach ($results as $key => $value) {
-			    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-		    }
-	
-		    array_multisort($sort_order, SORT_ASC, $results);
-				
-        	$billmate_tax = array();
 
-		    foreach ($results as $result) {
-			    if ($this->config->get($result['code'] . '_status')) {
-				    $this->load->model('total/' . $result['code']);
-		                
-                    $taxes = array();
-
-//                    @$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-					$func = create_function('','');
-					$oldhandler = set_error_handler($func);
-					@$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-					set_error_handler($oldhandler);
-
-                    $amount = 0;
-
-                    foreach ($taxes as $tax_id => $value) {
-                        $amount += $value;
-                    }
-
-                    $billmate_tax[$result['code']] = $amount;
-			    }
-		    }
-				
-		    foreach ($total_data as $key => $value) {
-			    $sort_order[$key] = $value['sort_order'];
-
-	            if (isset($billmate_tax[$value['code']])) {
-	                if ($billmate_tax[$value['code']]) {
-		            $total_data[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
-	                } else {
-		            $total_data[$key]['tax_rate'] = 0;
-	                }
-	            } else {
-	                $total_data[$key]['tax_rate'] = '0';
-	            }
-		    }
-
-	        $this->session->data['billmate'][$this->session->data['order_id']] = $total_data;
-				
 	
 		    // The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
         	$this->document->addScript('catalog/view/javascript/jquery/social/init_socialbutton.js');
@@ -369,11 +314,39 @@ class ControllerPaymentBillmateInvoice extends Controller {
 					);
 				}
 
-				if (isset($this->session->data['billmate'][$this->session->data['order_id']])) {
-					$totals = $this->session->data['billmate'][$this->session->data['order_id']];
-				} else {
-					$totals = array();
-				}
+                $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$this->session->data['order_id']);
+                $billmate_tax = array();
+                $total_data = array();
+                $total = 0;
+                $totals = $totals->rows;
+                foreach ($totals as $result) {
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('total/' . $result['code']);
+                        $taxes = array();
+                        $func = create_function('','');
+                        $oldhandler = set_error_handler($func);
+                        @$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                        set_error_handler($oldhandler);
+                        $amount = 0;
+                        foreach ($taxes as $tax_id => $value) {
+                            $amount += $value;
+                        }
+                        $billmate_tax[$result['code']] = $amount;
+                    }
+                }
+                foreach ($totals as $key => $value) {
+                    $sort_order[$key] = $value['sort_order'];
+                    if (isset($billmate_tax[$value['code']])) {
+                        if ($billmate_tax[$value['code']]) {
+                            $totals[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
+                        } else {
+                            $totals[$key]['tax_rate'] = 0;
+                        }
+                    } else {
+                        $totals[$key]['tax_rate'] = '0';
+                    }
+                }
+
 
 				foreach ($totals as $total) {
 					if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {

@@ -76,64 +76,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['mac'] = $mac;
 		$this->data['description'] = $this->config->get('billmate_cardpay_description');
 
-		// Store Taxes to send to Billmate
-		/** Taxes is calculated in @$this->billmateTransaction() from now on */
-		/*$total_data = array();
-		$total = 0;
-		 
-		$this->load->model('setting/extension');
 
-		$sort_order = array(); 
-
-		$results = $this->model_setting_extension->getExtensions('total');
-
-		foreach ($results as $key => $value) {
-			$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-		}
-
-		array_multisort($sort_order, SORT_ASC, $results);
-		*/
-		/*
-		$billmate_tax = array();
-
-		foreach ($results as $result) {
-			if ($this->config->get($result['code'] . '_status')) {
-				$this->load->model('total/' . $result['code']);
-					
-				$taxes = array();
-				
-				$func = create_function('','');
-				$oldhandler = set_error_handler($func);
-				@$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-				set_error_handler($oldhandler);
-
-				$amount = 0;
-
-				foreach ($taxes as $tax_id => $value) {
-					$amount += $value;
-				}
-
-				$billmate_tax[$result['code']] = $amount;
-			}
-		}
-			
-		foreach ($total_data as $key => $value) {
-			$sort_order[$key] = $value['sort_order'];
-
-			if (isset($billmate_tax[$value['code']])) {
-				if ($billmate_tax[$value['code']]) {
-				$total_data[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
-				} else {
-				$total_data[$key]['tax_rate'] = 0;
-				}
-			} else {
-				$total_data[$key]['tax_rate'] = '0';
-			}
-		}
-
-		$this->session->data['billmate'][$this->session->data['order_id']] = $total_data;
-		*/
-        
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl';
 		} else {
