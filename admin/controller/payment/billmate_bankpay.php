@@ -118,7 +118,13 @@ class ControllerPaymentBillmateBankpay extends Controller {
 			$this->data['billmate_bankpay_order_status_id'] = $this->request->post['billmate_bankpay_order_status_id'];
 		} else {
 			$this->data['billmate_bankpay_order_status_id'] = $this->config->get('billmate_bankpay_order_status_id'); 
-		} 
+		}
+
+        if (isset($this->request->post['billmate_bankpay_order_cancel_status_id'])) {
+            $this->data['billmate_bankpay_order_cancel_status_id'] = $this->request->post['billmate_bankpay_order_cancel_status_id'];
+        } else {
+            $this->data['billmate_bankpay_order_cancel_status_id'] = $this->config->get('billmate_bankpay_order_cancel_status_id');
+        }
 		
 		$this->load->model('localisation/order_status');
 		
