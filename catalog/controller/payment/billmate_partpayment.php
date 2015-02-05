@@ -183,7 +183,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$payment_option[$pclass['pclassid']]['pclass_id'] = $pclass['pclassid'];
 				$payment_option[$pclass['pclassid']]['title'] = $pclass['description'];
 				$payment_option[$pclass['pclassid']]['months'] = $pclass['months'];
-				$payment_option[$pclass['pclassid']]['monthly_cost'] = $monthly_cost;
+				$payment_option[$pclass['pclassid']]['monthly_cost'] = round($monthly_cost,0);
 			}
 			
 			$sort_order = array(); 
@@ -197,7 +197,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			foreach ($payment_option as $payment_option) {
 				$this->data['payment_options'][] = array(
 					'code'  => $payment_option['pclass_id'],
-					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['title'], $this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1))
+					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['title'],
+                        preg_replace('/[.,].0+/','',$this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)))
 				);
 			}
 			//$this->document->addStyle($style);

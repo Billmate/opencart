@@ -164,7 +164,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 					}
 				}
 
-				$payment_option[$pclass['pclassid']]['monthly_cost'] = $monthly_cost;
+				$payment_option[$pclass['pclassid']]['monthly_cost'] = round($monthly_cost,0);
 				$payment_option[$pclass['pclassid']]['pclass_id'] = $pclass['pclassid'];
 				$payment_option[$pclass['pclassid']]['months'] = $pclass['months'];
 			}
@@ -187,7 +187,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 		if ($status) {
 			$method = array(
 				'code'       => 'billmate_partpayment',
-				'title'      => sprintf($this->language->get('text_no_fee'), $this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
+				'title'      => sprintf($this->language->get('text_no_fee'), preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
 				'sort_order' => $billmate_partpayment['SWE']['sort_order']
 			);
 		}
