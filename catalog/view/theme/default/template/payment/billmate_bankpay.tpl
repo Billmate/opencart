@@ -4,6 +4,7 @@
   	<input type="hidden" name="amount" value="<?php echo $amount; ?>" />
 	<input type="hidden" name="currency" value="<?php echo $currency; ?>" />
 	<input type="hidden" name="accept_url" value="<?php echo $accept_url; ?>" />
+    <input type="hidden" name="language" value="<?php echo $language; ?>" />
 	<input type="hidden" name="callback_url" value="<?php echo $callback_url; ?>" />
 	<input type="hidden" name="capture_now" value="<?php echo $capture_now; ?>" />
 	<input type="hidden" name="pay_method" value="<?php echo $pay_method; ?>" />

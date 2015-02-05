@@ -43,8 +43,13 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		$pay_method = 'BANK';
 		$callback_url = 'http://api.billmate.se/callback.php';		
 		$request_method = 'GET';
+        $languageCode = strtoupper( $this->language->get('code') );
+
+        $languageCode = $languageCode == 'DA' ? 'DK' : $languageCode;
+        $languageCode = $languageCode == 'SV' ? 'SE' : $languageCode;
+        $languageCode = $languageCode == 'EN' ? 'GB' : $languageCode;
 		
-        $mac_str = $accept_url . $amount . $callback_url .  $cancel_url . $this->data['capture_now'] . $currency . $merchant_id . $order_id . $pay_method . $request_method. $secret;
+        $mac_str = $accept_url . $amount . $callback_url .  $cancel_url . $this->data['capture_now'] . $currency .$languageCode. $merchant_id . $order_id . $pay_method . $request_method. $secret;
 
         $mac = hash ( "sha256", $mac_str );
 
@@ -58,6 +63,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		$this->data['callback_url'] = $callback_url;
 		$this->data['cancel_url'] = $cancel_url;
 		$this->data['pay_method'] = $pay_method;
+        $this->data['language'] = $languageCode;
         $this->session->data['capture_now'] = 'Sale';
 		$_POST['order_id'] = $this->session->data['order_id'];
 		$this->billmate_transaction(true);

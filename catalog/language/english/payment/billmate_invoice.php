@@ -35,6 +35,7 @@ $_['error_address_match'] = 'Billing and Shipping addresses must match if you wa
 $_['error_network']       = 'Error occurred while connecting to Billmate. Please try again later.';
 $_['requried_pno'] = 'Not valid organisation number/personal number. Please check the number.';
 $_['requried_confirm_verify_email']='Please check the checkbox for confirm email is valid';
+$_['payment_error'] = 'The payment with Billmate failed';
 
 // terms and conditions
 $_['page_title'] = 'Köpvillkor';

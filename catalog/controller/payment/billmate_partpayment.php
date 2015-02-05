@@ -622,7 +622,7 @@ $db->query($sql);
 					if(!is_array($result1))
 					{ 
 						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="button" />';
-						$json['title'] = 'Betalning med Billmate misslyckades.';
+						$json['title'] = $this->language->get('payment_error');
 						$json['height'] = 150;
 					}
 				    else

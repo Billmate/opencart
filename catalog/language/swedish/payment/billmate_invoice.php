@@ -34,6 +34,7 @@ $_['error_address_match'] = 'Faktura och leveransadress måste vara samma om du 
 $_['error_network']       = 'Ingen kontakt med billmate server. Försök igen senare.';
 $_['required_pno']        = 'Personnummer krävs.';
 $_['requried_confirm_verify_email']='Vänligen kryssa i rutan för att bekräfta att er e-postadress är giltig.';
+$_['payment_error'] = 'Betalning med Billmate misslyckades';
 
 
 // terms and conditions
