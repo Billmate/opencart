@@ -197,7 +197,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			foreach ($payment_option as $payment_option) {
 				$this->data['payment_options'][] = array(
 					'code'  => $payment_option['pclass_id'],
-					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['title'],
+					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['months'],
                         preg_replace('/[.,].0+/','',$this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)))
 				);
 			}
