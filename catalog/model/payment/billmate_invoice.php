@@ -65,7 +65,7 @@ class ModelPaymentBillmateInvoice extends Model {
         
         if ($status) {
             $billmate_fee = $this->config->get('billmate_fee');
-			$description = empty($billmate_invoice['SWE']['description']) ?'Billmate Faktura - Betala inom 14-dagar' : $billmate_invoice['SWE']['description'];
+			$description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee') : $billmate_invoice['SWE']['description'];
 			
             if ($billmate_fee[$countryData['iso_code_3']]['status']) {
                 $title = sprintf($this->language->get('text_fee'),$description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
