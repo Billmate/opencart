@@ -409,7 +409,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 						'price'    => (int)$this->currency->format($total['value']*100, $this->currency->getCode(), '', false),
 						'vat'      => (float)$total['tax_rate'],
 						'discount' => 0.0,
-						'flags'    => $flag,
+						'flags'    => ((int)$total['tax_rate'] != 25) ? 0 : $flag,
 					)
 				);
 			}
