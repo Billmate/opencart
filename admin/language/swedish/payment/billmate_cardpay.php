@@ -21,6 +21,7 @@ $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_description']     = 'Beskrivning:';
 $_['entry_order_cancel_status'] = 'Cancelled Order Status:';
+$_['entry_available_countries'] = 'Tillgängliga länder (autocomplete)';
 
 // Error
 $_['error_permission']   = 'Varning: Du har inte access till att ändra Billmate kort inställningar!';

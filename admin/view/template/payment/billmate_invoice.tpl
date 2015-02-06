@@ -87,20 +87,70 @@
                     <?php } ?>
                   </select></td>
               </tr>
-              <tr>
-                <td><?php echo $entry_geo_zone; ?></td>
-                <td><select name="billmate_invoice[<?php echo $country['code']; ?>][geo_zone_id]">
-                    <option value="0"><?php echo $text_all_zones; ?></option>
-                    <?php foreach ($geo_zones as $geo_zone) { ?>
-                    <?php if (isset($billmate_invoice[$country['code']]) && $geo_zone['geo_zone_id'] == $billmate_invoice[$country['code']]['geo_zone_id']) {  ?>
-                    <option value="<?php echo $geo_zone['geo_zone_id'] ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
-                    <?php } else { ?>
-                    <option value="<?php echo $geo_zone['geo_zone_id'] ?>"><?php echo $geo_zone['name']; ?></option>
-                    <?php } ?>
-                    <?php } ?>
-                  </select></td>
-              </tr>
-              <tr>
+
+                <tr>
+                    <td><?php echo $entry_available_countries; ?></td>
+                    <td><input type="text" name="billmate-country" value="" /></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><div id="billmate-country" class="scrollbox">
+                            <?php $class = 'odd'; ?>
+                            <?php if(isset($billmate_country) && is_array($billmate_country)){ ?>
+                            <?php foreach ($billmate_country as $key => $b_country) { ?>
+                            <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                            <div id="billmate-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
+                                <input type="hidden" name="billmate-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
+
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                        </div></td>
+                </tr>
+                <script type="text/javascript">
+
+                    $('input[name=\'billmate-country\']').autocomplete({
+                        delay: 500,
+                        source: function(request, response) {
+                            $.ajax({
+                                url: 'index.php?route=payment/billmate_invoice/country_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+                                dataType: 'json',
+                                success: function(json) {
+                                    console.log(json);
+                                    response($.map(json, function(item) {
+                                        return {
+                                            label: item.name,
+                                            value: item.country_id
+                                        }
+                                    }));
+                                }
+                            });
+                        },
+                        select: function(event, ui) {
+                            $('#billmate-country' + ui.item.value).remove();
+
+                            $('#billmate-country').append('<div id="billmate-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmate-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
+
+                            $('#billmate-country div:odd').attr('class', 'odd');
+                            $('#billmate-country div:even').attr('class', 'even');
+
+                            return false;
+                        },
+                        focus: function(event, ui) {
+                            return false;
+                        }
+                    }).autocomplete("instance")._renderItem = function(ul, item){
+                        return $("<li>").append("<a>"+item.label +"</a>").appendTo(ul);
+                    };
+
+                    $('#billmate-country div img').live('click', function() {
+                        $(this).parent().remove();
+
+                        $('#billmate-country div:odd').attr('class', 'odd');
+                        $('#billmate-country div:even').attr('class', 'even');
+                    });
+                </script>
+                <tr>
                 <td><?php echo $entry_status; ?></td>
                 <td><select name="billmate_invoice[<?php echo $country['code']; ?>][status]">
                     <?php if (isset($billmate_invoice[$country['code']]) && $billmate_invoice[$country['code']]['status']) { ?>

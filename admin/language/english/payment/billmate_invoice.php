@@ -35,6 +35,7 @@ $_['entry_status']          = 'Status:';
 $_['entry_sort_order']      = 'Sort Order:';
 $_['entry_invoice_fee']      = 'Invoice fee:';
 $_['entry_invoice_fee_tax']      = 'Invoice fee tax class';
+$_['entry_available_countries'] = 'Available countries (autocomplete)';
 
 // Error
 $_['error_permission']      = 'Warning: You do not have permission to modify payment Billmate Part Payment!';

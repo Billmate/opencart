@@ -49,17 +49,13 @@ class ModelPaymentBillmateInvoice extends Model {
 		}
 
 		if( $status){
-			//$sql = 'select * from '. DB_PREFIX . 'geo_zone where geo_zone_id = '.(int)$billmate_invoice['SWE']['geo_zone_id'];
-			$sql = 'select * from ' . DB_PREFIX . 'zone_to_geo_zone where country_id='.(int)$address['country_id'].' and geo_zone_id = '.(int)$billmate_invoice['SWE']['geo_zone_id'];
-			$query2 = $this->db->query($sql);
-				
-			if( $billmate_invoice['SWE']['geo_zone_id'] == 0  ){
-				$status = true;
-			}elseif($query2->num_rows){ ///* && $address['iso_code_2'] == 'SE' && $query2->row['name'] == 'Inom Sverige' 
-				$status = true;
-			}else{
-				$status = false;
-			}
+            $available_countries = array_keys($this->config->get('billmate-country'));
+            if(in_array($address['country_id'],$available_countries)){
+                $status = true;
+            } else {
+                $status = false;
+            }
+
 		}
         $method = array();
         

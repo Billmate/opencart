@@ -68,10 +68,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$this->data['entry_maxtotal'] = $this->language->get('entry_maxtotal');	
 		$this->data['entry_pending_status'] = $this->language->get('entry_pending_status');
 		$this->data['entry_accepted_status'] = $this->language->get('entry_accepted_status');		
-		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
+
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 		$this->data['entry_description'] = $this->language->get('entry_description');
+        $this->data['entry_available_countries'] = $this->language->get('entry_available_countries');
 		
 		$this->data['entry_invoice_fee'] = $this->language->get('entry_invoice_fee');
 		$this->data['entry_invoice_fee_tax'] = $this->language->get('entry_invoice_fee_tax');
@@ -164,15 +165,18 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		} else {
 			$this->data['billmate_partpayment'] = $this->config->get('billmate_partpayment');
 		}
-		
-		$this->load->model('localisation/geo_zone');
-			
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+        if(isset($this->request->post['billmatepart-country'])){
+
+            $this->data['billmate_country'] = $this->request->post['billmatepart-country'];
+
+        } else {
+            $this->data['billmate_country'] = $this->config->get('billmatepart-country');
+        }
 
 		$this->load->model('localisation/order_status');
 			
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-        
+        $this->data['token'] = $this->session->data['token'];
 		$file = DIR_LOGS . 'billmate_partpayment.log';
         
         if (file_exists($file)) {

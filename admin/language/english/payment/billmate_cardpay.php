@@ -23,6 +23,7 @@ $_['entry_order_cancel_status'] = 'Cancelled Order Status:';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sort Order:';
+$_['entry_available_countries'] = 'Available countries (autocomplete)';
 
 // Error
 $_['error_permission']   = 'Warning: You do not have permission to modify payment Billmate Card!';

@@ -42,6 +42,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['entry_billmate_cardpay_sale'] = $this->language->get('entry_billmate_cardpay_sale');
 		$this->data['prompt_name_entry'] = $this->language->get('entry_prompt_name');
 		$this->data['enable_3dsecure'] = $this->language->get('entry_3dsecure');
+        $this->data['entry_available_countries'] = $this->language->get('entry_available_countries');
 		
 		$this->data['billmate_cardpay_transaction_method'] = $this->config->get('billmate_cardpay_transaction_method');
 		
@@ -147,16 +148,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		
-		if (isset($this->request->post['billmate_cardpay_geo_zone_id'])) {
-			$this->data['billmate_cardpay_geo_zone_id'] = $this->request->post['billmate_cardpay_geo_zone_id'];
-		} else {
-			$this->data['billmate_cardpay_geo_zone_id'] = $this->config->get('billmate_cardpay_geo_zone_id'); 
-		} 
-		
-		$this->load->model('localisation/geo_zone');						
-		
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
-		
+
+
 		if (isset($this->request->post['billmate_cardpay_status'])) {
 			$this->data['billmate_cardpay_status'] = $this->request->post['billmate_cardpay_status'];
 		} else {
@@ -169,6 +162,14 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			$this->data['billmate_cardpay_sort_order'] = $this->config->get('billmate_cardpay_sort_order');
 		}
 
+        if(isset($this->request->post['billmatecard-country'])){
+
+            $this->data['billmate_country'] = $this->request->post['billmatecard-country'];
+
+        } else {
+            $this->data['billmate_country'] = $this->config->get('billmatecard-country');
+        }
+        $this->data['token'] = $this->session->data['token'];
 		$this->template = 'payment/billmate_cardpay.tpl';
 		$this->children = array(
 			'common/header',

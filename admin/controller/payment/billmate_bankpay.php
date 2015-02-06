@@ -33,13 +33,14 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $this->data['entry_test'] = $this->language->get('entry_test');				
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');		
 		$this->data['entry_total'] = $this->language->get('entry_total');	
-		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
+
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 		
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		$this->data['entry_description'] = $this->language->get('entry_description');
+        $this->data['entry_available_countries'] = $this->language->get('entry_available_countries');
 
 		$this->data['tab_general'] = $this->language->get('tab_general');
 
@@ -130,16 +131,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		
-		if (isset($this->request->post['billmate_bankpay_geo_zone_id'])) {
-			$this->data['billmate_bankpay_geo_zone_id'] = $this->request->post['billmate_bankpay_geo_zone_id'];
-		} else {
-			$this->data['billmate_bankpay_geo_zone_id'] = $this->config->get('billmate_bankpay_geo_zone_id'); 
-		} 
-		
-		$this->load->model('localisation/geo_zone');						
-		
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
-		
+
 		if (isset($this->request->post['billmate_bankpay_status'])) {
 			$this->data['billmate_bankpay_status'] = $this->request->post['billmate_bankpay_status'];
 		} else {
@@ -151,7 +143,14 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		} else {
 			$this->data['billmate_bankpay_sort_order'] = $this->config->get('billmate_bankpay_sort_order');
 		}
+        if(isset($this->request->post['billmatebank-country'])){
 
+            $this->data['billmate_country'] = $this->request->post['billmatebank-country'];
+
+        } else {
+            $this->data['billmate_country'] = $this->config->get('billmatebank-country');
+        }
+        $this->data['token'] = $this->session->data['token'];
 		$this->template = 'payment/billmate_bankpay.tpl';
 		$this->children = array(
 			'common/header',

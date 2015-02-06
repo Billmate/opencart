@@ -12,16 +12,12 @@ class ModelPaymentBillmateBankPay extends Model {
 		} 
 		
 		if( $status){
-			$sql = 'select * from ' . DB_PREFIX . 'zone_to_geo_zone where country_id='.(int)$address['country_id'].' and geo_zone_id = '.(int)$zone_id ;
-			$query2 = $this->db->query($sql);
-			
-			if( $zone_id == 0  ){
-				$status = true;
-			}elseif($query2->num_rows){
-				$status = true;
-			}else{
-				$status = false;
-			}
+            $available_countries = array_keys($this->config->get('billmatebank-country'));
+            if(in_array($address['country_id'],$available_countries)){
+                $status = true;
+            } else {
+                $status = false;
+            }
 		} 
 
 		$method_data = array();
