@@ -16,10 +16,14 @@ class ModelPaymentBillmateCardpay extends Model {
 		
 		if( $status){
             $available_countries = array_keys($this->config->get('billmatecard-country'));
+
             if(in_array($address['country_id'],$available_countries)){
                 $status = true;
             } else {
                 $status = false;
+            }
+            if(in_array(0,$available_countries)){
+                $status = true;
             }
 
 		}

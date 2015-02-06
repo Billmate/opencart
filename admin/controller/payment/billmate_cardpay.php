@@ -178,6 +178,96 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				
 		$this->response->setOutput($this->render());
 	}
+    public function country_autocomplete(){
+        $this->load->language('payment/billmate_cardpay');
+        $json = array();
+        if(isset($this->request->get['filter_name'])){
+
+            $data = array(
+                'filter_name' => $this->request->get['filter_name'],
+                'start' => 0,
+                'limit' => 20
+            );
+            $results = $this->getCountries($data);
+            foreach($results as $result){
+                $json[] = array(
+                    'country_id' => $result['country_id'],
+                    'name' => $result['name']
+                );
+            }
+            $json[] = array(
+                'country_id' => 0,
+                'name' => $this->language->get('text_all_countries')
+            );
+
+            $sort_order = array();
+            foreach($json as $key => $value){
+                $sort_order[$key] = $value['name'];
+            }
+
+            array_multisort($sort_order,SORT_ASC,$json);
+
+            $this->response->setOutput(json_encode($json));
+
+        }
+    }
+
+    private function getCountries($data){
+        if ($data) {
+            $sql = "SELECT * FROM " . DB_PREFIX . "country";
+
+            $sort_data = array(
+                'name',
+                'iso_code_2',
+                'iso_code_3'
+            );
+            if(!empty($data['filter_name'])){
+                $sql .= " WHERE LOWER(name) LIKE '".$this->db->escape(strtolower($data['filter_name']))."%'";
+            }
+
+
+            if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+                $sql .= " ORDER BY " . $data['sort'];
+            } else {
+                $sql .= " ORDER BY name";
+            }
+
+            if (isset($data['order']) && ($data['order'] == 'DESC')) {
+                $sql .= " DESC";
+            } else {
+                $sql .= " ASC";
+            }
+
+
+            if (isset($data['start']) || isset($data['limit'])) {
+                if ($data['start'] < 0) {
+                    $data['start'] = 0;
+                }
+
+                if ($data['limit'] < 1) {
+                    $data['limit'] = 20;
+                }
+
+                $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+            }
+
+            $query = $this->db->query($sql);
+
+            return $query->rows;
+        } else {
+            $country_data = $this->cache->get('country');
+
+            if (!$country_data) {
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country ORDER BY name ASC");
+
+                $country_data = $query->rows;
+
+                $this->cache->set('country', $country_data);
+            }
+
+            return $country_data;
+        }
+    }
 	
 	private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/billmate_cardpay')) {

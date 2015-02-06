@@ -145,7 +145,7 @@
                     delay: 500,
                     source: function(request, response) {
                         $.ajax({
-                            url: 'index.php?route=payment/billmate_invoice/country_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+                            url: 'index.php?route=payment/billmate_cardpay/country_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
                             dataType: 'json',
                             success: function(json) {
                                 console.log(json);

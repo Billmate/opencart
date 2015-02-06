@@ -27,26 +27,7 @@ class ModelPaymentBillmateInvoice extends Model {
 			'NLD' => 'EUR',
 		);				
         
-		if ($status) {  
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$billmate_invoice['SWE']['geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
-			$billmate_fee = $this->config->get('billmate_fee');
-		//echo	$total = $total - $billmate_fee['SWE']['fee'];
-			
-			if ($billmate_invoice['SWE']['mintotal'] > 0 && $billmate_invoice['SWE']['mintotal'] > $total) {
-
-				$status = false;
-			} elseif (  
-			            !empty($billmate_invoice['SWE']['maxtotal']) && 
-			            $billmate_invoice['SWE']['maxtotal'] > 0 && $billmate_invoice['SWE']['maxtotal'] < $total
-			       ) {
-				$status = false;
-
-			} elseif (!$billmate_invoice['SWE']['geo_zone_id']) {
-				$status = true;
-
-			}
-		}
 
 		if( $status){
             $available_countries = array_keys($this->config->get('billmate-country'));

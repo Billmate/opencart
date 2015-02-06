@@ -8,6 +8,7 @@ $_['text_billmate_cardpay'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_I
 // Text
 $_['text_payment']       = 'Payment';
 $_['text_success']       = 'Success: You have modified Billmate Card payment module!';
+$_['text_all_countries'] = 'All countries';
 
 // Entry
 $_['entry_merchant_id']     = 'Billmate ID:';
