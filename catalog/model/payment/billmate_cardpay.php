@@ -3,16 +3,13 @@ class ModelPaymentBillmateCardpay extends Model {
   	public function getMethod($address, $total) {
 		$this->load->language('payment/billmate_cardpay');
 		
-		//$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('billmate_cardpay_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 		$status = true;
-		$zone_id = $this->config->get('billmate_cardpay_geo_zone_id');
+
 		if ($this->config->get('billmate_cardpay_total') > $total) {
 			$status = false;
-		} elseif (!$this->config->get('billmate_cardpay_geo_zone_id')) {
-			$status = true;
-		} /*elseif ($query->num_rows) {
-			$status = true;
-		} */
+		} elseif (!$this->config->get('billmate_cardpay_status')) {
+			$status = false;
+		}
 		
 		if( $status){
             $available_countries = array_keys($this->config->get('billmatecard-country'));

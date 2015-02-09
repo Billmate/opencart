@@ -7,8 +7,8 @@ class ModelPaymentBillmateBankPay extends Model {
 		$zone_id = $this->config->get('billmate_bankpay_geo_zone_id');
 		if ($this->config->get('billmate_bankpay_total') > $total) {
 			$status = false;
-		} elseif (!$this->config->get('billmate_bankpay_geo_zone_id')) {
-			$status = true;
+		} elseif (!$this->config->get('billmate_bankpay_status')) {
+			$status = false;
 		} 
 		
 		if( $status){

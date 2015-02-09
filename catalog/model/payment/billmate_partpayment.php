@@ -17,24 +17,6 @@ class ModelPaymentBillmatePartpayment extends Model {
 			$status = false;
 		}
         
-		if ($status) {  
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$billmate_partpayment['SWE']['geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
-			
-			if ($billmate_partpayment['SWE']['mintotal'] > 0 && $billmate_partpayment['SWE']['mintotal'] > $total) {
-				$status = false;
-			} elseif (  
-			            !empty($billmate_partpayment['SWE']['maxtotal']) && 
-			            $billmate_partpayment['SWE']['maxtotal'] > 0 && $billmate_partpayment['SWE']['maxtotal'] < $total
-			       ) {
-				$status = false;
-			} elseif (!$billmate_partpayment['SWE']['geo_zone_id']) {
-				$status = true;
-			}/* elseif ($query->num_rows) {
-				$status = true;
-			} else {
-				$status = false;
-			}	*/
-        }
 		if( $status){
             $available_countries = array_keys($this->config->get('billmatepart-country'));
             if(in_array($address['country_id'],$available_countries)){
