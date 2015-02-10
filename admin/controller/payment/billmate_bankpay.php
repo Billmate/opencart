@@ -185,6 +185,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $country = $query->row;
         $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
+        $this->model_setting_setting->editSetting('billmate_bankpay',array('version' => PLUGIN_VERSION));
         $this->model_setting_setting->editSetting('billmate_bankpay',array('billmatebank-country' =>array($country['country_id'] => array('name' => $country['name']))));
     }
 }

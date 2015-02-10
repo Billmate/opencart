@@ -214,7 +214,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
         $country = $query->row;
         $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_bankpay',array('billmatepart-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_partpayment',array('version' => PLUGIN_VERSION));
+        $this->model_setting_setting->editSetting('billmate_partpayment',array('billmatepart-country' =>array($country['country_id'] => array('name' => $country['name']))));
     }
     
     private function parseResponse($node, $document) {

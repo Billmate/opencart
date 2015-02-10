@@ -272,7 +272,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $country = $query->row;
         $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_bankpay',array('billmate-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_invoice',array('version' => PLUGIN_VERSION));
+        $this->model_setting_setting->editSetting('billmate_invoice',array('billmate-country' =>array($country['country_id'] => array('name' => $country['name']))));
     }
     
     private function parseResponse($node, $document) {
