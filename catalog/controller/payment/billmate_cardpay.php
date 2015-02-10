@@ -25,7 +25,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $currency = strtoupper($this->currency->getCode());
         $accept_url = $this->url->link('payment/billmate_cardpay/accept');
         $cancel_url = $this->url->link('payment/billmate_cardpay/cancel');
-       // $callback_url = $this->url->link('payment/billmate_cardpay/callback');
+        $callback_url = $this->url->link('payment/billmate_cardpay/callback');
         $secret = substr($this->config->get('billmate_cardpay_secret'),0,12);
 
 		$prod_url = 'https://cardpay.billmate.se/pay';
@@ -39,7 +39,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['capture_now'] = $this->config->get('billmate_cardpay_transaction_method') == 'sale' ? 'YES':'NO';
 		
 		$pay_method = 'CARD';
-		$callback_url = 'http://api.billmate.se/callback.php';
+		//$callback_url = 'http://api.billmate.se/callback.php';
 		$request_method = 'GET';
 		$do3dsecure     = $this->config->get('billmate_enable_3dsecure') == 'NO' ? 'NO' : 'YES';
 		$promptname     = $this->config->get('billmate_prompt_name') == 'YES' ? 'YES' : 'NO';
@@ -123,21 +123,22 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         	$order_info = $this->model_checkout_order->getOrder($order_id);
                         
                         	if ($order_info) {
-                                	if ($post['status'] == '0') {
-                                        	$this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
+                                	if ($post['status'] == '0' && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
+                                        $this->cache->set('order'.$order_id,1);
+                                        $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
-                        			$msg = '';
-                        			if (isset($post['trans_id'])) {
-                                			$msg .= 'trans_id: ' . $post['trans_id'] . "\n";
-                        			}
-                        			if( isset($post['status'])) {
-                                			$msg .= 'status: '. $post['status'] . "\n";
-                        			}
+                                        $msg = '';
+                                        if (isset($post['trans_id'])) {
+                                                $msg .= 'trans_id: ' . $post['trans_id'] . "\n";
+                                        }
+                                        if( isset($post['status'])) {
+                                                $msg .= 'status: '. $post['status'] . "\n";
+                                        }
                         		
-						$this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
-					} else {
-						$error_msg = $this->language->get('text_declined');
-					}
+                                        $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
+                                    } else {
+                                        $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
+                                    }
                         	} else {
 					$error_msg = $this->language->get('text_unable');
 				}
@@ -175,8 +176,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         $this->response->setOutput($this->render());
 		} else {
 			try{
-				$this->billmate_transaction();			
-			}catch(Exception $ex ){
+				$this->billmate_transaction();
+                $this->cache->delete('order'.$order_id);
+            }catch(Exception $ex ){
 					$this->data['heading_title'] = $this->language->get('text_failed');
 					$this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $ex->getMessage(), $this->url->link('information/contact'));
 					$this->data['button_continue'] = $this->language->get('button_continue');
@@ -203,6 +205,25 @@ class ControllerPaymentBillmateCardpay extends Controller {
 	}
 
 	public function callback() {
+        $post = json_decode(file_get_contents('php://input'),true);
+        $this->request->post = $post;
+        $this->load->model('checkout/order');
+        if(isset($post['order_id']) && isset($post['status']) && isset($post['trans_id'])){
+            $order_info = $this->checkout_model->getOrder($post['order_id']);
+            if($post['status'] == 0 && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['order_id'])){
+                $this->cache->set('order'.$post['order_id'],1);
+                $order_id = $post['order_id'];
+                $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
+
+                $msg = '';
+                $msg .= 'trans_id: ' . $post['trans_id'] . "\n";
+                $msg .= 'status: '. $post['status'] . "\n";
+                $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
+                $this->billmate_transaction();
+
+                $this->cache->delete('order'.$post['order_id']);
+            }
+        }
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay_callback.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/payment/billmate_cardpay_callback.tpl';
 		} else {
