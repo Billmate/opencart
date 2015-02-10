@@ -2,16 +2,25 @@
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
 
 class ControllerPaymentBillmateBankpay extends Controller {
-	private $error = array(); 
+	private $error = array();
+
 	 
-	public function index() { 
+	public function index() {
+
 		$this->load->language('payment/billmate_bankpay');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
 		$this->load->model('setting/setting');
-				
+        $billmatebank = $this->model_setting_setting->getSetting('billmate_bankpay');
+        if(!isset($billmatebank['version']) || $billmatebank['version'] != PLUGIN_VERSION){
+            include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
+            echo 'plugin_version'. PLUGIN_VERSION;
+            echo 'Updated module<script>document.reload()</script>';
+            die();
+        }
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            $this->request->post['version'] = PLUGIN_VERSION;
 			$this->model_setting_setting->editSetting('billmate_bankpay', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -183,10 +192,8 @@ class ControllerPaymentBillmateBankpay extends Controller {
     {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
-        $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_bankpay',array('version' => PLUGIN_VERSION));
-        $this->model_setting_setting->editSetting('billmate_bankpay',array('billmatebank-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_bankpay',array('version' => PLUGIN_VERSION,'billmatebank-country' =>array($country['country_id'] => array('name' => $country['name']))));
     }
 }
 ?>

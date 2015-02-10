@@ -12,6 +12,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		
 		$this->load->model('setting/setting');
 
+        $billmatepart = $this->model_setting_setting->getSetting('billmate_pankpay');
+        if(!isset($billmatepart['version']) || $billmatepart['version'] != PLUGIN_VERSION){
+            include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
+            echo '<script>document.reload()</script>';
+        }
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$status = false;
 			
@@ -28,6 +33,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				'billmate_partpayment_country', 
 				array()
 			);
+            $this->request->post['version'] = PLUGIN_VERSION;
 			$this->model_setting_setting->editSetting('billmate_partpayment', $this->request->post);
 		
 			$numFoundPClasses = $this->model_payment_billmate->updatePClasses();
@@ -212,10 +218,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
     {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
-        $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_partpayment',array('version' => PLUGIN_VERSION));
-        $this->model_setting_setting->editSetting('billmate_partpayment',array('billmatepart-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_partpayment',array('version' => PLUGIN_VERSION,'billmatepart-country' =>array($country['country_id'] => array('name' => $country['name']))));
+
     }
     
     private function parseResponse($node, $document) {

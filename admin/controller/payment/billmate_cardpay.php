@@ -10,8 +10,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 		
 		$this->load->model('setting/setting');
+        $billmatecard = $this->model_setting_setting->getSetting('billmate_cardpay');
+        if(!isset($billmatecard['version']) || $billmatecard['version'] != PLUGIN_VERSION){
+            include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
+        }
 				
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            $this->request->post['version'] = PLUGIN_VERSION;
 			$this->model_setting_setting->editSetting('billmate_cardpay', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -184,8 +189,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $country = $query->row;
         $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_cardpay',array('version' => PLUGIN_VERSION));
-        $this->model_setting_setting->editSetting('billmate_cardpay',array('billmatecard-country' =>array(0 => array('name' => 'All countries'))));
+        $this->model_setting_setting->editSetting('billmate_cardpay',array('version' => PLUGIN_VERSION,'billmatecard-country' =>array($country['country_id'] => array('name' => $country['name']))));
+
     }
 
     public function country_autocomplete(){

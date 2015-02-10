@@ -10,7 +10,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 		
 		$this->load->model('setting/setting');
-
+        $billmateinvoice = $this->model_setting_setting->getSetting('billmate_invoice');
+        if(!isset($billmateinvoice['version']) || $billmateinvoice['version'] != PLUGIN_VERSION){
+            include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
+        }
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$status = false;
 			
@@ -24,7 +27,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			
 			$data = array(
 				'billmate_invoice_pclasses' => $this->pclasses,
-				'billmate_invoice_status'   => $status
+				'billmate_invoice_status'   => $status,
+                'version' => PLUGIN_VERSION
 			);
 			
 			$this->model_setting_setting->editSetting('billmate_invoice', array_merge($this->request->post, $data));
@@ -270,10 +274,9 @@ class ControllerPaymentBillmateInvoice extends Controller {
     {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
-        $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_invoice',array('version' => PLUGIN_VERSION));
-        $this->model_setting_setting->editSetting('billmate_invoice',array('billmate-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_invoice',array('version' => PLUGIN_VERSION,'billmate-country' =>array($country['country_id'] => array('name' => $country['name']))));
+
     }
     
     private function parseResponse($node, $document) {
