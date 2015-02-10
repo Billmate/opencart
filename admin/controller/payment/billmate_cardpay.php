@@ -178,6 +178,15 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				
 		$this->response->setOutput($this->render());
 	}
+    public function install()
+    {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
+        $country = $query->row;
+        $this->log->write(print_r($country,true));
+        $this->load->model('setting/setting');
+        $this->model_setting_setting->editSetting('billmate_bankpay',array('billmatecard-country' =>array(0 => array('name' => 'All countries'))));
+    }
+
     public function country_autocomplete(){
         $this->load->language('payment/billmate_cardpay');
         $json = array();

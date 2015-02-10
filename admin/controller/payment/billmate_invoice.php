@@ -265,6 +265,15 @@ class ControllerPaymentBillmateInvoice extends Controller {
             return false;
         }
     }
+
+    public function install()
+    {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
+        $country = $query->row;
+        $this->log->write(print_r($country,true));
+        $this->load->model('setting/setting');
+        $this->model_setting_setting->editSetting('billmate_bankpay',array('billmate-country' =>array($country['country_id'] => array('name' => $country['name']))));
+    }
     
     private function parseResponse($node, $document) {
         $child = $node;
