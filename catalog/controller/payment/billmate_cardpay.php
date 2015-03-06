@@ -7,7 +7,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$order_id = $this->session->data['order_id'];
 		$status = (int)$this->config->get('billmate_cardpay_order_cancel_status_id');
-		$this->db->query('update '.DB_PREFIX.'order set order_status_id = '.$status.' where order_id='.$order_id);
+		$this->db->query('update `'.DB_PREFIX.'order` set order_status_id = '.$status.' where order_id='.$order_id);
 		$this->redirect($this->url->link('checkout/checkout'));
 	}
 	protected function index() {
