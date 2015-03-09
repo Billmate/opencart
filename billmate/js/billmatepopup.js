@@ -237,6 +237,7 @@ function reviewstep(){
 }
 
 function ShowMessage(content,wtitle){
+    
     if(typeof modalWin == 'undefined'){
         modalWin = new CreateModalPopUpObject();
     }
@@ -244,7 +245,9 @@ function ShowMessage(content,wtitle){
 		modalWin.ShowMessage(content,370,250,wtitle);
 	}else if(matchMedia('(min-width: 800px)').matches){
 		modalWin.ShowMessage(content,260,500,wtitle);
-	}
+	} else {
+        modalWin.ShowMessage(content,400,250,wtitle);
+    }
 }
 match_media_mount();
 AddEvent(window,'resize',function(){
