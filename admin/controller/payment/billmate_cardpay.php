@@ -35,8 +35,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
 		$this->data['entry_secret'] = $this->language->get('entry_secret');
         $this->data['entry_test'] = $this->language->get('entry_test');				
-		$this->data['entry_order_status'] = $this->language->get('entry_order_status');		
-		$this->data['entry_order_cancel_status'] = $this->language->get('entry_order_cancel_status');		
+		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
 		$this->data['entry_total'] = $this->language->get('entry_total');	
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$this->data['entry_description'] = $this->language->get('entry_description');
@@ -144,11 +143,6 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			$this->data['billmate_cardpay_order_status_id'] = $this->config->get('billmate_cardpay_order_status_id'); 
 		}
 
-        if (isset($this->request->post['billmate_cardpay_order_cancel_status_id'])) {
-            $this->data['billmate_cardpay_order_cancel_status_id'] = $this->request->post['billmate_cardpay_order_cancel_status_id'];
-        } else {
-            $this->data['billmate_cardpay_order_cancel_status_id'] = $this->config->get('billmate_cardpay_order_cancel_status_id');
-        }
         $this->load->model('localisation/order_status');
 		
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
