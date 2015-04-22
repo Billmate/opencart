@@ -357,7 +357,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 				foreach ($totals as $total) {
 					if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
-					    $flag = $total['code'] == 'billmate_fee' ? 16 : ( $total['code'] == 'shipping' ? 8 : 0);
+					    $flag = $total['code'] == 'billmate_fee' ? 16 : ( $total['code'] == 'shipping' && $total['tax_rate'] == 25 ? 8 : 0);
 						$total['value'] = round( $total['value'], 2 );
 						$goods_list[] = array(
 							'qty'   => 1,
@@ -367,7 +367,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 								'price'    => (int)$this->currency->format($total['value']*100, $this->currency->getCode(), '', false),
 								'vat'      => (float)$total['tax_rate'],
 								'discount' => 0.0,
-								'flags'    => ((int)$total['tax_rate'] != 25) ? 0 : $flag,
+								'flags'    => $flag,
 							)
 						);
 					}
