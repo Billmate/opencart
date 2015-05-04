@@ -344,7 +344,8 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
 		$products = $this->cart->getProducts();
 		$goods_list = array();
-		
+		$prepareDiscount = array();
+		$subtotal = 0;
 		foreach ($products as $product) {
 
 			$product_total_qty = $product['quantity'];
@@ -376,6 +377,13 @@ class ControllerPaymentBillmateBankPay extends Controller {
 					'flags'    => 0,
 				)
 			);
+
+			$subtotal += ($product['price'] * 100) * $product_total_qty;
+			if(isset($prepareDiscount[$rates])){
+				$prepareDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
+			} else {
+				$prepareDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
+			}
 		}
 
 
@@ -421,7 +429,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		}
 
 		foreach ($totals as $total) {
-			if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
+			if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total' && $total['code'] != 'coupon') {
 				$flag = $total['code'] == 'handling' ? 16 : ( $total['code'] == 'shipping'  && $total['tax_rate'] == 25 ? 8 : 0);
 				$goods_list[] = array(
 					'qty'   => 1,
@@ -434,6 +442,66 @@ class ControllerPaymentBillmateBankPay extends Controller {
 						'flags'    => $flag,
 					)
 				);
+			}else if ($total['code'] == 'coupon'){
+				$this->load->model('checkout/coupon');
+				$coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+				if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 0)
+				{
+					foreach ($prepareDiscount as $tax => $value)
+					{
+
+						$percent      = $value / $subtotal;
+						$discount     = $percent * ($total['value'] * 100);
+						$goods_list[] = array(
+							'qty'   => 1,
+							'goods' => array(
+								'artno'    => '',
+								'title'    => $total['title'].' '.$tax.'% tax',
+								'price'    => (int)$this->currency->format($discount, $this->currency->getCode(), '', false),
+								'vat'      => $tax,
+								'discount' => 0.0,
+								'flags'    => 0
+							)
+						);
+
+					}
+				} else if($coupon_info['type'] == 'P' && $coupon_info['shipping'] == 1){
+					$shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$order_id);
+					$ship = $shipping->row;
+					$shiptotal = 0;
+					$tax = 0;
+					$shiptotal_data = array();
+					$shiptax = array();
+					if($this->config->get($ship['code'] . '_status')){
+						$this->load->model('total/'.$ship['code']);
+
+						$this->{'model_total_'.$ship['code']}->getTotal($shiptotal_data, $shiptotal,$shiptax);
+
+						foreach($shiptax as $key => $value){
+							$tax += $value;
+						}
+
+						$tax = ($tax / $shiptotal) * 100;
+
+						$goods_list[] = array(
+							'qty' => 1,
+							'goods' => array(
+								'artno' => '',
+								'title' => $total['title'],
+								'price' => -$this->currency->format($shiptotal * 100, $this->currency->getCode(), '', false),
+								'vat' => $tax,
+								'discount' => 0.0,
+								'flags' => 0
+							)
+						);
+					}
+
+
+
+
+
+
+				}
 			}
 		}
 		
