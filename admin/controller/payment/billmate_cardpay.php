@@ -13,6 +13,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $billmatecard = $this->model_setting_setting->getSetting('billmate_cardpay');
         if(!isset($billmatecard['version']) || $billmatecard['version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
+	        echo '<script>document.reload()</script>';
         }
 				
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {

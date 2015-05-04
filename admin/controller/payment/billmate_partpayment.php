@@ -12,10 +12,10 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		
 		$this->load->model('setting/setting');
 
-        $billmatepart = $this->model_setting_setting->getSetting('billmate_pankpay');
+        $billmatepart = $this->model_setting_setting->getSetting('billmate_partpayment');
         if(!isset($billmatepart['version']) || $billmatepart['version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
-            echo '<script>document.reload()</script>';
+	        echo '<script>document.reload()</script>';
         }
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$status = false;

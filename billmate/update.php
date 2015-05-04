@@ -8,6 +8,11 @@
 $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
 $country = $query->row;
 //$this->load->model('setting/setting');
+$billmatebank = $this->model_setting_setting->getSetting('billmate_bankpay');
+$billmatecard = $this->model_setting_setting->getSetting('billmate_cardpay');
+$billmateinvoice = $this->model_setting_setting->getSetting('billmate_invoice');
+$billmatepart = $this->model_setting_setting->getSetting('billmate_partpayment');
+
 $billmatebank['version'] = PLUGIN_VERSION;
 $billmatecard['version'] = PLUGIN_VERSION;
 $billmateinvoice['version'] = PLUGIN_VERSION;
