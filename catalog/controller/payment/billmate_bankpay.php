@@ -496,12 +496,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
 						$discountValue = $total['value'] + $shipping['value'];
 						$percent       = $value / $productTotal;
-						$this->log->write('tt'.$total['value']);
-						$this->log->write('s'.$shipping['value']);
-						$this->log->write('cp'.$discountValue);
-						$this->log->write('total'.$productTotal);
-						$this->log->write('tax'.$tax.' percent'.$percent);
-						$this->log->write('val'.$value);
+
 						$discountIncl = $percent * ($discountValue * 100);
 
 						$discountExcl = $discountIncl / (1 + $tax / 100);
