@@ -409,7 +409,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 						$shiptotal = 0;
 						$shiptotal_data = array();
 						$shippingtax = 0;
-						if($this->config->get($shipping['code'].'_status')){
+						if ($this->config->get($shipping['code'].'_status'))
+						{
 							$this->load->model('total/'.$shipping['code']);
 
 							$this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
@@ -418,36 +419,40 @@ class ControllerPaymentBillmateInvoice extends Controller {
 							{
 								$shippingtax += $value;
 							}
-							$shippingtax = $shippingtax/$shipping['value'];
+							$shippingtax = $shippingtax / $shipping['value'];
 
 						}
-						foreach ($prepareProductDiscount as $tax => $value)
+						if($total['value'] < $shipping['value'])
 						{
 
-							$discountValue = $total['value'] + $shipping['value'];
-							$percent      = $value / $productTotal;
-							$this->log->write('tt'.$total['value']);
-							$this->log->write('s'.$shipping['value']);
-							$this->log->write('cp'.$discountValue);
-							$this->log->write('total'.$productTotal);
-							$this->log->write('tax'.$tax.' percent'.$percent);
-							$this->log->write('val'.$value);
-							$discountIncl     = $percent * ($discountValue * 100);
+							foreach ($prepareProductDiscount as $tax => $value)
+							{
 
-							$discountExcl = $discountIncl /(1 + $tax/100);
-							$goods_list[] = array(
-								'qty'   => 1,
-								'goods' => array(
-									'artno'    => '',
-									'title'    => $total['title'].' '.$tax.'% tax',
-									'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
-									'vat'      => $tax,
-									'discount' => 0.0,
-									'flags'    => 0
-								)
-							);
+								$discountValue = $total['value'] + $shipping['value'];
+								$percent       = $value / $productTotal;
+								$this->log->write('tt'.$total['value']);
+								$this->log->write('s'.$shipping['value']);
+								$this->log->write('cp'.$discountValue);
+								$this->log->write('total'.$productTotal);
+								$this->log->write('tax'.$tax.' percent'.$percent);
+								$this->log->write('val'.$value);
+								$discountIncl = $percent * ($discountValue * 100);
+
+								$discountExcl = $discountIncl / (1 + $tax / 100);
+								$goods_list[] = array(
+									'qty'   => 1,
+									'goods' => array(
+										'artno'    => '',
+										'title'    => $total['title'].' '.$tax.'% tax',
+										'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
+										'vat'      => $tax,
+										'discount' => 0.0,
+										'flags'    => 0
+									)
+								);
 
 
+							}
 						}
 						$goods_list[] = array(
 							'qty'   => 1,
