@@ -13,7 +13,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $billmateinvoice = $this->model_setting_setting->getSetting('billmate_invoice');
         if(!isset($billmateinvoice['version']) || $billmateinvoice['version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
-	        echo '<script>document.reload()</script>';
+
         }
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$status = false;

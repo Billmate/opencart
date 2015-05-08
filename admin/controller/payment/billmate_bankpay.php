@@ -15,7 +15,6 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $billmatebank = $this->model_setting_setting->getSetting('billmate_bankpay');
         if(!isset($billmatebank['version']) || $billmatebank['version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
-	        echo '<script>document.reload()</script>';
         }
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->request->post['version'] = PLUGIN_VERSION;
