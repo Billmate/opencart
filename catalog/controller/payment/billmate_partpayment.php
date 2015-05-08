@@ -470,6 +470,107 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 					}
 				}
 
+				if(isset($this->session->data['advanced_coupon'])){
+					$coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'advanced_coupon' AND order_id = ".$this->session->data['order_id']);
+					$total = $coupon->row;
+
+					$this->load->model('checkout/advanced_coupon');
+					$codes = array_unique($this->session->data['advanced_coupon']);
+					foreach ($codes as $code) {
+						# code...
+						$coupons_info[] = $this->model_checkout_advanced_coupon->getAdvancedCoupon($code);
+					}
+
+					if(isset($coupons_info)){
+						foreach($coupons_info as $coupon_info){
+							if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 1)
+							{
+								$shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
+								$shipping = $shipping->row;
+								$shiptax = array();
+								$shiptotal = 0;
+								$shiptotal_data = array();
+								$shippingtax = 0;
+								if ($this->config->get($shipping['code'].'_status'))
+								{
+									$this->load->model('total/'.$shipping['code']);
+
+									$this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+
+									foreach ($shiptax as $key => $value)
+									{
+										$shippingtax += $value;
+									}
+									$shippingtax = $shippingtax / $shipping['value'];
+
+								}
+								if($total['value'] < $shipping['value'])
+								{
+
+									foreach ($prepareProductDiscount as $tax => $value)
+									{
+
+										$discountValue = $total['value'] + $shipping['value'];
+										$percent       = $value / $productTotal;
+
+										$discountIncl = $percent * ($discountValue * 100);
+
+										$discountExcl = $discountIncl / (1 + $tax / 100);
+										$goods_list[] = array(
+											'qty'   => 1,
+											'goods' => array(
+												'artno'    => '',
+												'title'    => $total['title'].' '.$tax.'% tax',
+												'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
+												'vat'      => $tax,
+												'discount' => 0.0,
+												'flags'    => 0
+											)
+										);
+
+
+									}
+								}
+								$goods_list[] = array(
+									'qty'   => 1,
+									'goods' => array(
+										'artno'    => '',
+										'title'    => $total['title'].' Free Shipping',
+										'price'    => $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false),
+										'vat'      => $shippingtax * 100,
+										'discount' => 0.0,
+										'flags'    => 0
+									)
+								);
+
+							} else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 0){
+
+
+									foreach ($prepareProductDiscount as $tax => $value)
+									{
+
+										$percent      = $value / $productTotal;
+										$discount     = $percent * ($total['value'] * 100);
+
+										$goods_list[] = array(
+											'qty'   => 1,
+											'goods' => array(
+												'artno'    => '',
+												'title'    => $total['title'].' '.$tax.'% tax',
+												'price'    => (int)$this->currency->format($discount, $this->currency->getCode(), '', false),
+												'vat'      => $tax,
+												'discount' => 0.0,
+												'flags'    => 0
+											)
+										);
+
+									}
+							}
+						}
+					}
+					
+				}
+
 				if(isset($this->session->data['coupon'])){
 					$coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
 					$total = $coupon->row;
@@ -731,7 +832,7 @@ $db->query($sql);
 					if( empty( $goods_list ) ){
 						$result1 = 'Unable to find product in cart';
 					} else {
-						$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int) $this->session->data['order_id']);						
+						$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_partpayment',  `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int) $this->session->data['order_id']);						
 						$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
 					}
                     
