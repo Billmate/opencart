@@ -417,7 +417,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                             $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
                         }
                         if($total['code'] == 'shipping'){
-                            $values['Cart']['shipping'] = array(
+                            $values['Cart']['Shipping'] = array(
                                 'withouttax' => $total['value'] * 100,
                                 'taxrate' => $total['tax_rate']
                             );
@@ -425,7 +425,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                             $taxTotal += ($total['value'] * 100) * ($total['tax_rate']/100);
                         }
                         if($total['code'] == 'billmate_fee'){
-                            $values['Cart']['handling'] = array(
+                            $values['Cart']['Handling'] = array(
                                 'withouttax' => $total['value'] * 100,
                                 'taxrate' => $total['tax_rate']
                             );
@@ -639,8 +639,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                 } // End discount isset
 
-                $round = $order_info['total'] - $orderTotal + $taxTotal;
-                $values['Cart']['total'] = array(
+                $round = ($order_info['total']*100) - ($orderTotal + $taxTotal);
+                $values['Cart']['Total'] = array(
                     'withouttax' => $orderTotal,
                     'tax' => $taxTotal,
                     'rounding' => $round,
