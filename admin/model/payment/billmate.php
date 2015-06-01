@@ -306,7 +306,7 @@ class ModelPaymentBillmate extends Model {
                 $this->currency->set($currency);
                 foreach($EIDs AS $eid => $PIDs) {
                     foreach($PIDs AS $pid => $pclass) {
-                        $expiryDate = $pclass->getExpire();
+                        $expiryDate = $pclass->getExpirydate();
                         if($expiryDate) {
                             $expiryDate = date('Y-m-d', $expiryDate);
                         } else {
@@ -321,11 +321,11 @@ class ModelPaymentBillmate extends Model {
                             'country' => $country,
                             'pid' => $pid,
                             'desc' => $pclass->getDescription(),
-                            'interest_rate' => $pclass->getInterestRate() . '%',
-                            'minimum_amount' => $this->currency->format($pclass->getMinAmount(), $currency, 1),
-							'maximum_amount' => $this->currency->format($pclass->getMaxAmount(), $currency, 1),
-                            'invoice_fee' => $this->currency->format($pclass->getInvoiceFee(), $currency, 1),
-                            'starting_fee' => $this->currency->format($pclass->getStartFee(), $currency, 1),
+                            'interest_rate' => $pclass->getInterestrate() . '%',
+                            'minimum_amount' => $this->currency->format($pclass->getMinamount(), $currency, 1),
+							'maximum_amount' => $this->currency->format($pclass->getMaxamount(), $currency, 1),
+                            'invoice_fee' => $this->currency->format($pclass->getHandlingfee(), $currency, 1),
+                            'starting_fee' => $this->currency->format($pclass->getStartfee(), $currency, 1),
                             'expiry_date' => $expiryDate
                         );
                     }

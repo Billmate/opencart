@@ -265,451 +265,410 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$ssl = true;
 
 		$debug = false;
-		$k = new BillMate($eid,$key,$ssl,$debug, $this->config->get('billmate_cardpay_test') == 1 );
-		
-		$country_to_currency = array(
-			'NOR' => 'NOK',
-			'SWE' => 'SEK',
-			'FIN' => 'EUR',
-			'DNK' => 'DKK',
-			'DEU' => 'EUR',
-			'NLD' => 'EUR',
-		);
-		$shippiISO = !empty( $order_info['shipping_iso_code_3'] ) ? $order_info['shipping_iso_code_3'] : $order_info['payment_iso_code_3'];
-		
-		switch ($shippiISO) {
-			// Sweden
-			case 'SWE':
-				$country = 209;
-				$language = 138;
-				$encoding = 2;
-				$currency = 0;
-				break;
-			// Finland
-			default:
-				$country = $order_info['payment_country'];
-				$language = 138;
-				$encoding = 2;
-				$currency = 0;
-				break;
-		}
-		
-		$ship_address = array(
-			'email'           => $order_info['email'],
-			'telno'           => '',
-			'cellno'          => '',
-			'fname'           => $order_info['shipping_firstname'],
-			'lname'           => $order_info['shipping_lastname'],
-			'company'         => $order_info['shipping_company'],
-			'careof'          => '',
-			'street'          => $order_info['shipping_address_1'],
-			'house_number'    => '',
-			'house_extension' => '',
-			'zip'             => $order_info['shipping_postcode'],
-			'city'            => $order_info['shipping_city'],
-			'country'         => $country,
-		);
-		
-		$bill_address = array(
-			'email'           => $order_info['email'],
-			'telno'           => '',
-			'cellno'          => '',
-			'fname'           => $order_info['payment_firstname'],
-			'lname'           => $order_info['payment_lastname'],
-			'company'         => $order_info['payment_company'],
-			'careof'          => '',
-			'street'          => $order_info['payment_address_1'],
-			'house_number'    => '',
-			'house_extension' => '',
-			'zip'             => $order_info['payment_postcode'],
-			'city'            => $order_info['payment_city'],
-			'country'         => $country,
-		);
-		/*$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
-		foreach ($product_query as $product) {
-			$goods_list[] = array(
-				'qty'   => (int)$product['quantity'],
-				'goods' => array(
-					'artno'    => $product['model'],
-					'title'    => $product['name'],
-					'price'    => (int)$this->currency->format($product['price']*100, 'SEK', '', false),
-					'vat'      => (float)($product['tax_rate']),///$product['quantity']
-					'discount' => 0.0,
-					'flags'    => 0,
-				)
-			);
-		}*/
-		
-		$products = $this->cart->getProducts();
-		$goods_list = array();
-		$prepareDiscount = array();
-		$subtotal = 0;
-		$prepareProductDiscount = array();
-		$productTotal = 0;
-		foreach ($products as $product) {
-			$product_total_qty = $product['quantity'];
+        $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
+        $values['PaymentData'] = array(
+            'method' => 8,
+            'currency' => $this->currency->getCode(),
+            'language' => $this->language->get('code'),
+            'country' => 'SE',
+            'autoactivate' => 0,
+            'orderid' => $order_id
+        );
 
-			if ($product['minimum'] > $product_total_qty) {
-				$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
-			}
-			$rates=0;
+        $values['PaymentInfo'] = array(
+            'paymentdate' => date('Y-m-d')
+        );
 
-			$tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
-			foreach($tax_rates as $rate){
-				$rates+= $rate['rate'];
-			}
+        $values['Card'] = array(
+            'callbackurl' => $this->url->link('payment/billmate_cardpay/callback'),
+            'accepturl' => $this->url->link('payment/billmate_cardpay/accept'),
+            'cancelurl' => $this->url->link('payment/billmate_cardpay/cancel'),
+            'returnmethod' => 'GET'
+        );
+        $values['Customer']['nr'] = $this->customer->getId();
+        $values['Customer']['Shipping'] = array(
+            'email'           => $order_info['email'],
+            'firstname'           => $order_info['shipping_firstname'],
+            'lastname'           => $order_info['shipping_lastname'],
+            'company'         => $order_info['shipping_company'],
+            'street'          => $order_info['shipping_address_1'],
+            'zip'             => $order_info['shipping_postcode'],
+            'city'            => $order_info['shipping_city'],
+            'country'         => $order_info['shipping_iso_code_2'],
+        );
 
+        $values['Customer']['Billing'] = array(
+            'email'           => $order_info['email'],
+            'firstname'           => $order_info['payment_firstname'],
+            'lastname'           => $order_info['payment_lastname'],
+            'company'         => $order_info['payment_company'],
+            'street'          => $order_info['payment_address_1'],
+            'zip'             => $order_info['payment_postcode'],
+            'city'            => $order_info['payment_city'],
+            'country'         => $order_info['payment_iso_code_2'],
+        );
+
+        $products = $this->cart->getProducts();
+        $prepareDiscount = array();
+        $subtotal = 0;
+        $prepareProductDiscount = array();
+        $productTotal = 0;
+        $orderTotal = 0;
+        $taxTotal = 0;
+
+        foreach ($products as $product) {
+
+            $product_total_qty = $product['quantity'];
+
+            if ($product['minimum'] > $product_total_qty) {
+                $this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+            }
+            $rates=0;
+
+            $tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
+            foreach($tax_rates as $rate){
+                $rates+= $rate['rate'];
+            }
             $title = $product['name'];
             if(count($product['option']) > 0){
                 foreach($product['option'] as $option){
                     $title .= ' - '.$option['name'].': '.$option['option_value'];
                 }
             }
+            $productValue = $this->currency->format($product['price']*100, $this->currency->getCode(), '', false);
+            $values['Articles'][] = array(
+                'quantity'   => (int)$product_total_qty,
+                'artnr'    => $product['model'],
+                'title'    => $title,
+                'aprice'    => (int)$productValue,
+                'taxrate'      => (float)($rates),
+                'discount' => 0.0,
+                'withouttax'    => $product_total_qty * $productValue,
+
+            );
+            $orderTotal += $product_total_qty * $productValue;
+            $taxTotal += ($product_total_qty * $productValue) * ($rates/100);
+
+            $subtotal += ($product['price'] * 100) * $product_total_qty;
+            $productTotal += ($product['price'] * 100) * $product_total_qty;
+            if(isset($prepareDiscount[$rates])){
+                $prepareDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
+            } else {
+                $prepareDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
+            }
+            if(isset($prepareProductDiscount[$rates])){
+                $prepareProductDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
+            } else {
+                $prepareProductDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
+            }
+        }
 
 
-            $goods_list[] = array(
-				'qty'   => (int)$product_total_qty,
-				'goods' => array(
-					'artno'    => $product['model'],
-					'title'    => $title,
-					'price'    => (int)$this->currency->format($product['price']*100, $this->currency->getCode(), '', false),
-					'vat'      => (float)($rates),
-					'discount' => 0.0,
-					'flags'    => 0,
-				)
-			);
-			$subtotal += ($product['price'] * 100) * $product_total_qty;
-			$productTotal += ($product['price'] * 100) * $product_total_qty;
-			if(isset($prepareDiscount[$rates])){
-				$prepareDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
-			} else {
-				$prepareDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
-			}
-			if(isset($prepareProductDiscount[$rates])){
-				$prepareProductDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
-			} else {
-				$prepareProductDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
-			}
-		}
+        $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$order_id);
+        $billmate_tax = array();
+        $total_data = array();
+        $total = 0;
+        $totals = $totals->rows;
 
-		$totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$order_id);
-		$billmate_tax = array();
-		$total_data = array();
-		$total = 0;
-		$totals = $totals->rows;
+        foreach ($totals as $result) {
+            if ($this->config->get($result['code'] . '_status')) {
+                $this->load->model('total/' . $result['code']);
 
-		foreach ($totals as $result) {
-			if ($this->config->get($result['code'] . '_status')) {
-				$this->load->model('total/' . $result['code']);
+                $taxes = array();
 
-				$taxes = array();
+                $func = create_function('','');
+                $oldhandler = set_error_handler($func);
+                @$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                set_error_handler($oldhandler);
 
-				$func = create_function('','');
-				$oldhandler = set_error_handler($func);
-				@$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-				set_error_handler($oldhandler);
+                $amount = 0;
 
+                foreach ($taxes as $tax_id => $value) {
+                    $amount += $value;
+                }
 
-				$amount = 0;
+                $billmate_tax[$result['code']] = $amount;
+            }
+        }
 
-				foreach ($taxes as $tax_id => $value) {
-					$amount += $value;
-				}
+        foreach ($totals as $key => $value) {
+            $sort_order[$key] = $value['sort_order'];
 
-				$billmate_tax[$result['code']] = $amount;
-			}
-		}
+            if (isset($billmate_tax[$value['code']])) {
+                if ($billmate_tax[$value['code']]) {
+                    $totals[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
+                } else {
+                    $totals[$key]['tax_rate'] = 0;
+                }
+            } else {
+                $totals[$key]['tax_rate'] = '0';
+            }
+        }
 
-		foreach ($totals as $key => $value) {
-			$sort_order[$key] = $value['sort_order'];
+        foreach ($totals as $total) {
+            if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total' && $total['code'] != 'coupon') {
 
-			if (isset($billmate_tax[$value['code']])) {
-				if ($billmate_tax[$value['code']]) {
-					$totals[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
-				} else {
-					$totals[$key]['tax_rate'] = 0;
-				}
-			} else {
-				$totals[$key]['tax_rate'] = '0';
-			}
-		}
+                $total['value'] = round( $total['value'], 2 );
+                $totalTypeTotal = $this->currency->format($total['value']*100, $this->currency->getCode(), '', false);
+                if($total['code'] != 'billmate_fee' && $total['code'] != 'shipping'){
+                    $values['Articles'][] = array(
+                        'quantity' => 1,
+                        'artnr' => '',
+                        'title' => $total['title'],
+                        'aprice' => $totalTypeTotal,
+                        'taxrate' => (float)$total['tax_rate'],
+                        'discount' => 0.0,
+                        'withouttax' => $totalTypeTotal,
+                    );
+                    $orderTotal += $totalTypeTotal;
+                    $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
+                }
+                if($total['code'] == 'shipping'){
+                    $values['Cart']['shipping'] = array(
+                        'withouttax' => $total['value'] * 100,
+                        'taxrate' => $total['tax_rate']
+                    );
+                    $orderTotal += $total['value'] * 100;
+                    $taxTotal += ($total['value'] * 100) * ($total['tax_rate']/100);
+                }
+                if($total['code'] == 'billmate_fee'){
+                    $values['Cart']['handling'] = array(
+                        'withouttax' => $total['value'] * 100,
+                        'taxrate' => $total['tax_rate']
+                    );
+                    $orderTotal += $total['value'] * 100;
+                    $taxTotal += ($total['value'] * 100) * ($total['tax_rate']/100);
+                }
+                if($total['code'] != 'myoc_price_rounding' )
+                {
+                    if (isset($prepareDiscount[$total['tax_rate']]))
+                        $prepareDiscount[$total['tax_rate']] += $total['value'] * 100;
+                    else
+                        $prepareDiscount[$total['tax_rate']] = $total['value'] * 100;
+                    $subtotal += $total['value'] * 100;
+                }
+            }
+        }
 
-		foreach ($totals as $total) {
-			if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total' && $total['code'] != 'coupon') {
-				$flag = $total['code'] == 'billmate_fee' ? 16 : ( $total['code'] == 'shipping' && $total['tax_rate'] == 25 ? 8 : 0);
-				$total['value'] = round( $total['value'], 2 );
-				$goods_list[] = array(
-					'qty'   => 1,
-					'goods' => array(
-						'artno'    => '',
-						'title'    => $total['title'],
-						'price'    => $this->currency->format($total['value']*100, $this->currency->getCode(), '', false),
-						'vat'      => (float)$total['tax_rate'],
-						'discount' => 0.0,
-						'flags'    => $flag,
-					)
-				);
-				if($total['code'] != 'myoc_price_rounding' )
-				{
-					if (isset($prepareDiscount[$total['tax_rate']]))
-						$prepareDiscount[$total['tax_rate']] += $total['value'] * 100;
-					else
-						$prepareDiscount[$total['tax_rate']] = $total['value'] * 100;
-					$subtotal += $total['value'] * 100;
-				}
-			}
-		}
+        if(isset($this->session->data['advanced_coupon'])){
+            $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'advanced_coupon' AND order_id = ".$this->session->data['order_id']);
+            $total = $coupon->row;
 
-		if(isset($this->session->data['advanced_coupon'])){
-					$coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'advanced_coupon' AND order_id = ".$this->session->data['order_id']);
-					$total = $coupon->row;
+            $this->load->model('checkout/advanced_coupon');
+            $codes = array_unique($this->session->data['advanced_coupon']);
+            foreach ($codes as $code) {
+                # code...
+                $coupons_info[] = $this->model_checkout_advanced_coupon->getAdvancedCoupon($code);
+            }
 
-					$this->load->model('checkout/advanced_coupon');
-					$codes = array_unique($this->session->data['advanced_coupon']);
-					foreach ($codes as $code) {
-						# code...
-						$coupons_info[] = $this->model_checkout_advanced_coupon->getAdvancedCoupon($code);
-					}
+            if(isset($coupons_info)){
+                foreach($coupons_info as $coupon_info){
+                    if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 1)
+                    {
+                        $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
+                        $shipping = $shipping->row;
+                        $shiptax = array();
+                        $shiptotal = 0;
+                        $shiptotal_data = array();
+                        $shippingtax = 0;
+                        if ($this->config->get($shipping['code'].'_status'))
+                        {
+                            $this->load->model('total/'.$shipping['code']);
 
-					if(isset($coupons_info)){
-						foreach($coupons_info as $coupon_info){
-							if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 1)
-							{
-								$shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
-								$shipping = $shipping->row;
-								$shiptax = array();
-								$shiptotal = 0;
-								$shiptotal_data = array();
-								$shippingtax = 0;
-								if ($this->config->get($shipping['code'].'_status'))
-								{
-									$this->load->model('total/'.$shipping['code']);
+                            $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
 
-									$this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+                            foreach ($shiptax as $key => $value)
+                            {
+                                $shippingtax += $value;
+                            }
+                            $shippingtax = $shippingtax / $shipping['value'];
 
-									foreach ($shiptax as $key => $value)
-									{
-										$shippingtax += $value;
-									}
-									$shippingtax = $shippingtax / $shipping['value'];
+                        }
+                        if($total['value'] < $shipping['value'])
+                        {
 
-								}
-								if($total['value'] < $shipping['value'])
-								{
+                            foreach ($prepareProductDiscount as $tax => $value)
+                            {
 
-									foreach ($prepareProductDiscount as $tax => $value)
-									{
+                                $discountValue = $total['value'] + $shipping['value'];
+                                $percent       = $value / $productTotal;
 
-										$discountValue = $total['value'] + $shipping['value'];
-										$percent       = $value / $productTotal;
+                                $discountIncl = $percent * ($discountValue * 100);
 
-										$discountIncl = $percent * ($discountValue * 100);
+                                $discountExcl = $discountIncl / (1 + $tax / 100);
+                                $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                                $values['Articles'][] = array(
+                                    'quantity'   => 1,
+                                    'artnr'    => '',
+                                    'title'    => $total['title'].' '.$tax.'% tax',
+                                    'aprice'    => $discountToArticle,
+                                    'taxrate'      => $tax,
+                                    'discount' => 0.0,
+                                    'withouttax'    => $discountToArticle
 
-										$discountExcl = $discountIncl / (1 + $tax / 100);
-										$goods_list[] = array(
-											'qty'   => 1,
-											'goods' => array(
-												'artno'    => '',
-												'title'    => $total['title'].' '.$tax.'% tax',
-												'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
-												'vat'      => $tax,
-												'discount' => 0.0,
-												'flags'    => 0
-											)
-										);
+                                );
 
 
-									}
-								}
-								$goods_list[] = array(
-									'qty'   => 1,
-									'goods' => array(
-										'artno'    => '',
-										'title'    => $total['title'].' Free Shipping',
-										'price'    => $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false),
-										'vat'      => $shippingtax * 100,
-										'discount' => 0.0,
-										'flags'    => 0
-									)
-								);
+                            }
+                        }
+                        $freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                        $values['Articles'] = array(
+                            'quantity'   => 1,
+                            'artnr'    => '',
+                            'title'    => $total['title'].' Free Shipping',
+                            'aprice'    => $freeshipTotal,
+                            'taxrate'      => $shippingtax * 100,
+                            'discount' => 0.0,
+                            'withouttax'    => $freeshipTotal
+                        );
+                        $orderTotal += $freeshipTotal;
+                        $taxTotal += $freeshipTotal * $shippingtax;
 
-							} else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 0){
-
-
-									foreach ($prepareProductDiscount as $tax => $value)
-									{
-
-										$percent      = $value / $productTotal;
-										$discount     = $percent * ($total['value'] * 100);
-
-										$goods_list[] = array(
-											'qty'   => 1,
-											'goods' => array(
-												'artno'    => '',
-												'title'    => $total['title'].' '.$tax.'% tax',
-												'price'    => (int)$this->currency->format($discount, $this->currency->getCode(), '', false),
-												'vat'      => $tax,
-												'discount' => 0.0,
-												'flags'    => 0
-											)
-										);
-
-									}
-							}
-						}
-					}
-					
-				}
-
-		if(isset($this->session->data['coupon'])){
-			$coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
-			$total = $coupon->row;
-			$this->load->model('checkout/coupon');
-			$coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-			if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 1)
-			{
-				$shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
-				$shipping = $shipping->row;
-				$shiptax = array();
-				$shiptotal = 0;
-				$shiptotal_data = array();
-				$shippingtax = 0;
-				if ($this->config->get($shipping['code'].'_status'))
-				{
-					$this->load->model('total/'.$shipping['code']);
-
-					$this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
-
-					foreach ($shiptax as $key => $value)
-					{
-						$shippingtax += $value;
-					}
-					$shippingtax = $shippingtax / $shipping['value'];
-
-				}
-				if($total['value'] < $shipping['value'])
-				{
-
-					foreach ($prepareProductDiscount as $tax => $value)
-					{
-
-						$discountValue = $total['value'] + $shipping['value'];
-						$percent       = $value / $productTotal;
-
-						$discountIncl = $percent * ($discountValue * 100);
-
-						$discountExcl = $discountIncl / (1 + $tax / 100);
-						$goods_list[] = array(
-							'qty'   => 1,
-							'goods' => array(
-								'artno'    => '',
-								'title'    => $total['title'].' '.$tax.'% tax',
-								'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
-								'vat'      => $tax,
-								'discount' => 0.0,
-								'flags'    => 0
-							)
-						);
+                    } else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 0){
 
 
-					}
-				}
-				$goods_list[] = array(
-					'qty'   => 1,
-					'goods' => array(
-						'artno'    => '',
-						'title'    => $total['title'].' Free Shipping',
-						'price'    => $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false),
-						'vat'      => $shippingtax * 100,
-						'discount' => 0.0,
-						'flags'    => 0
-					)
-				);
+                        foreach ($prepareProductDiscount as $tax => $value)
+                        {
 
-			} else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 0){
+                            $percent      = $value / $productTotal;
+                            $discount     = $percent * ($total['value'] * 100);
+                            $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+                            $values['Articles'][] = array(
+                                'quantity'   => 1,
+                                'artnr'    => '',
+                                'title'    => $total['title'].' '.$tax.'% tax',
+                                'aprice'    => (int)$discountToArticle,
+                                'taxrate'      => $tax,
+                                'discount' => 0.0,
+                                'withouttax'    => $discountToArticle
+                            );
+                            $orderTotal += $discountToArticle;
+                            $taxTotal += $discountToArticle * ($tax/100);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        if(isset($this->session->data['coupon'])){
+            $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
+            $total = $coupon->row;
+            $this->load->model('checkout/coupon');
+            $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+            if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 1)
+            {
+                $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
+                $shipping = $shipping->row;
+                $shiptax = array();
+                $shiptotal = 0;
+                $shiptotal_data = array();
+                $shippingtax = 0;
+                if ($this->config->get($shipping['code'].'_status'))
+                {
+                    $this->load->model('total/'.$shipping['code']);
+
+                    $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+
+                    foreach ($shiptax as $key => $value)
+                    {
+                        $shippingtax += $value;
+                    }
+                    $shippingtax = $shippingtax / $shipping['value'];
+
+                }
+                if($total['value'] < $shipping['value'])
+                {
+
+                    foreach ($prepareProductDiscount as $tax => $value)
+                    {
+
+                        $discountValue = $total['value'] + $shipping['value'];
+                        $percent       = $value / $productTotal;
+
+                        $discountIncl = $percent * ($discountValue * 100);
+
+                        $discountExcl = $discountIncl / (1 + $tax / 100);
+                        $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                        $values['Articles'] = array(
+                            'quantity'   => 1,
+                            'artnr'    => '',
+                            'title'    => $total['title'].' '.$tax.'% tax',
+                            'aprice'    => $discountToArticle,
+                            'taxrate'      => $tax,
+                            'discount' => 0.0,
+                            'withouttax'    => $discountToArticle
+
+                        );
+                        $orderTotal += $discountToArticle;
+                        $taxTotal += $discountToArticle * ($tax/100);
+
+                    }
+                }
+                $freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                $values['Articles'] = array(
+                    'quantity'   => 1,
+                    'artnr'    => '',
+                    'title'    => $total['title'].' Free Shipping',
+                    'aprice'    => $freeshipTotal,
+                    'taxrate'      => $shippingtax * 100,
+                    'discount' => 0.0,
+                    'withouttax'    => $freeshipTotal
+
+                );
+                $orderTotal += $freeshipTotal;
+                $taxTotal += $freeshipTotal * $shippingtax;
+
+            } else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 0){
 
 
-				foreach ($prepareProductDiscount as $tax => $value)
-				{
+                foreach ($prepareProductDiscount as $tax => $value)
+                {
 
-					$percent      = $value / $productTotal;
-					$discount     = $percent * ($total['value'] * 100);
+                    $percent      = $value / $productTotal;
+                    $discount     = $percent * ($total['value'] * 100);
+                    $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+                    $values['Articles'] = array(
+                        'quantity'   => 1,
+                        'artnr'    => '',
+                        'title'    => $total['title'].' '.$tax.'% tax',
+                        'aprice'    => (int)$discountToArticle,
+                        'taxrate'      => $tax,
+                        'discount' => 0.0,
+                        'withouttax'    => $discountToArticle
 
-					$goods_list[] = array(
-						'qty'   => 1,
-						'goods' => array(
-							'artno'    => '',
-							'title'    => $total['title'].' '.$tax.'% tax',
-							'price'    => (int)$this->currency->format($discount, $this->currency->getCode(), '', false),
-							'vat'      => $tax,
-							'discount' => 0.0,
-							'flags'    => 0
-						)
-					);
+                    );
+                    $orderTotal += $discountToArticle;
+                    $taxTotal += $discountToArticle * ($tax/100);
 
-				}
-			}
+                }
+            }
 
-		} // End discount isset
-		
-		
-		$pno = '';
-		$pclass = -1;
-		$status = $this->session->data['capture_now'] == 'sale' ? 'Paid':'';
-		
-		$transaction = array(
-			"order1"=>(string)$this->session->data['order_id'],
-			'order2'=>'',
-			"comment"=>'',
-			"flags"=>0,
-			"gender"=>0,
-			"reference"=>"",
-			"reference_code"=>"",
-			"currency"=>$this->currency->getCode(),//$currency,
-			"country"=>209, //$this->config->get('config_country_id')
-			"language"=>$this->language->get('code'),//$language,
-			"pclass"=>$pclass,
-			"shipInfo"=>array("delay_adjust"=>"1"),
-			"travelInfo"=>array(),
-			"incomeInfo"=>array(),
-			"bankInfo"=>array(),
-			"sid"=>array("time"=>microtime(true)),
-			"extraInfo"=>array(array("cust_no"=>(string)$order_info['customer_id'],"creditcard_data"=>$post)) 
-		);
+        } // End discount isset
 
-		if(!empty($status )) $transaction["extraInfo"][0]["status"] = $status;
-		$bill_address = array_map("utf8_decode",$bill_address);
-		$ship_address = array_map("utf8_decode",$ship_address);
-		$fingerprint = md5(serialize(array($bill_address, $ship_address,$goods_list)));
+        $round = $order_info['total'] - $orderTotal + $taxTotal;
+        $values['Cart']['total'] = array(
+            'withouttax' => $orderTotal,
+            'tax' => $taxTotal,
+            'rounding' => $round,
+            'withtax' => $orderTotal + $taxTotal + $round
+        );
 
-		if( empty( $goods_list ) ){
-			$result1 = 'Unable to find product in cart';
-			throw new Exception ($result1);
-			return false;
-		}
-		
-		if( $add_order ) {
-			if( !isset($this->session->data['order_api_called']) || $this->session->data['order_api_called']!=$fingerprint) {
-				$this->session->data['order_api_called'] = $fingerprint;
-				$result =  $k->AddOrder('',$bill_address,$ship_address,$goods_list,$transaction);
-				$this->session->data['old_order_id'] = $order_id;
-				return $result;
-			} else {
-				return;
-			}
-		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_cardpay',  `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
-		$result1 = $k->AddInvoice('',$bill_address,$ship_address,$goods_list,$transaction);
 
-		if(!is_array($result1))
-		{ 
-			throw new Exception (utf8_encode($result1));
-		} else {
-			$this->session->data['order_created'] = $result1[0];
-			$this->session->data['order_api_called'] = false;			
-			$this->redirect($this->url->link('checkout/success'));
-		}
+        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_cardpay',  `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+
+        $result1 = $k->addPayment($values);
+        if(isset($result1['code'])){
+            $response['success'] = false;
+            $response['message'] = $result1['message'];
+        } else {
+            $this->session->data['order_created'] = $result1['orderid'];
+            $this->session->data['order_api_called'] = false;
+            $response['success'] = true;
+            $response['url'] = $result1['url'];
+        }
+        $this->response->setOutput(my_json_encode($response));
 	}
 }
 ?>

@@ -1,17 +1,39 @@
-<form action="<?php echo $url; ?>" method="post" id="payment">
-  	<input type="hidden" name="merchant_id" value="<?php echo $merchant_id; ?>" />
-  	<input type="hidden" name="order_id" value="<?php echo $order_id; ?>" />
-  	<input type="hidden" name="amount" value="<?php echo $amount; ?>" />
-	<input type="hidden" name="currency" value="<?php echo $currency; ?>" />
-	<input type="hidden" name="accept_url" value="<?php echo $accept_url; ?>" />
-    <input type="hidden" name="language" value="<?php echo $language; ?>" />
-	<input type="hidden" name="callback_url" value="<?php echo $callback_url; ?>" />
-	<input type="hidden" name="capture_now" value="<?php echo $capture_now; ?>" />
-	<input type="hidden" name="pay_method" value="<?php echo $pay_method; ?>" />
-	<input type="hidden" name="cancel_url" value="<?php echo $cancel_url; ?>" />
-	<input type="hidden" name="return_method" value="<?php echo $request_method; ?>" />
-	<input type="hidden" name="mac" value="<?php echo $mac; ?>" />
-  <div class="buttons">
-    <div class="right"><a onclick="jQuery('#payment').submit();" class="button"><span><?php echo $button_confirm; ?></span></a></div>
-  </div>
-</form>
+<div style="margin-bottom: 10px;"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/images/bm_bank_s.png" /></div>
+<div id="payment">
+
+</div>
+<div class="buttons">
+    <div class="right">
+        <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="button" />
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery('#button_confirm').bind('click',function(){
+        $.ajax({
+            url: 'index.php?route=payment/billmate_bankpay/sendinvoice',
+            beforeSend: function() {
+                jQuery('#button-confirm').attr('disabled', true);
+
+                jQuery('.warning, .error').remove();
+
+                jQuery('#payment').before('<div class="attention"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/catalog/view/theme/default/image/loading.gif" alt="" /> <?php echo $text_wait; ?></div>');
+            },
+            complete: function() {
+                jQuery('#button-confirm').attr('disabled', false);
+                jQuery('.attention').remove();
+            },
+            success: function(json) {
+
+                if (!json['success']) {
+                    jQuery('#payment').before('<div class="warning">' + json['message'] + '</div>');
+                }
+
+
+                if (json['success']) {
+                    location = json['url'];
+                }
+            }
+        })
+    })
+</script>
+

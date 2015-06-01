@@ -5,7 +5,7 @@
     public $allPclass = array();
     
  	public static function ocGetModuleVersion(){
- 	    return '1.0.0';
+ 	    return '2.0';
  	}
  	public function ocGetAllPClasses(){
         $pclasses = $this->getPCStorage();
@@ -14,24 +14,22 @@
 
     public function ocFetchPClasses($countryCode, $eid, $key, $server){
         $base = dirname(__FILE__);
-		require_once $base.'/BillMate.php';
-		include_once($base."/lib/xmlrpc.inc");
-		include_once($base."/lib/xmlrpcs.inc");
+		require_once $base.'/Billmate.php';
 		$ssl = true;
 		$debug = false;
 		$eid = (int)$eid;
 		$key = (int)$key;
 
-        $k = new BillMate( $eid ,$key,$ssl,$debug);
+        $k = new BillMate( $eid ,$key,$ssl,false,$debug);
         
         $countryInfo = $this->country_iso_code_3( $countryCode);
 
-        $additionalinfo = array(
-	        "currency"=> $countryInfo['currency'],
-	        "country"=>$countryInfo['country'],
-	        "language"=>(int)$countryInfo['language'],
+        $additionalinfo['PaymentData'] = array(
+	        "currency"=> 'SEK',
+	        "country"=> 'se',
+	        "language"=>'sv',
         );
-        $this->pclass = $k->FetchCampaigns($additionalinfo);
+        $this->pclass = $k->getPaymentplans($additionalinfo);
 		if( is_array( $this->pclass) ){
 			array_walk($this->pclass, 'correct_lang_billmate');
 		}
@@ -143,13 +141,11 @@
  }
  
 function correct_lang_billmate(&$item, $index){
-    $keys = array('pclassid', 'description','months', 'start_fee','invoice_fee','interest', 'mintotal', 'country', 'Type', 'expiry', 'maxtotal' );
-    $item[1] = utf8_encode($item[1]);
-    $item = array_combine( $keys, $item );
-    $item['start_fee'] = $item['start_fee'] / 100;
-    $item['invoice_fee'] = $item['invoice_fee'] / 100;
-    $item['interest'] = $item['interest'] / 100;
-    $item['mintotal'] = $item['mintotal'] / 100;
-    $item['maxtotal'] = $item['maxtotal'] / 100;	
+
+    $item['startfee'] = $item['startfee'] / 100;
+    $item['handlingfee'] = $item['handlingfee'] / 100;
+    $item['interestrate'] = $item['interestrate'] / 100;
+    $item['minamount'] = $item['minamount'] / 100;
+    $item['maxamount'] = $item['maxamount'] / 100;
 }
 ?>

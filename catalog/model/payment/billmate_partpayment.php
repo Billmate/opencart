@@ -52,25 +52,25 @@ class ModelPaymentBillmatePartpayment extends Model {
                 
 			$total = $this->currency->format($total, $country_to_currency[$countryData['iso_code_3']], '', false);
 		
-					
+			$i = 0;
 			foreach ($countryRates as $pclass) {
 
 				// 0 - Campaign
 				// 1 - Account
 				// 2 - Special
 				// 3 - Fixed
-				if (!in_array($pclass['Type'], array(0, 2, 1, 3, 4))) {
+				if (!in_array($pclass['type'], array(0, 2, 1, 3, 4))) {
 					continue;
 				}
 
-				if ($pclass['Type'] == 2) {
+				if ($pclass['type'] == 2) {
 					$monthly_cost = -1;
 				} else {
-					if ($total < $pclass['mintotal'] || ($total > $pclass['maxtotal'] && $pclass['maxtotal'] > 0)) {
+					if ($total < $pclass['minamount'] || ($total > $pclass['maxamount'] && $pclass['maxamount'] > 0)) {
 						continue;
 					}
 
-					if ($pclass['Type'] == 3) {
+					if ($pclass['type'] == 3) {
 						continue;
 					} else {
 						$sum = $total;
@@ -78,23 +78,23 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$lowest_payment = $this->getLowestPaymentAccount($countryData['iso_code_3']);
 						$monthly_cost = 0;
 
-						$monthly_fee = $pclass['invoice_fee'];
-						$start_fee = $pclass['start_fee'];
+						$monthly_fee = $pclass['handlingfee'];
+						$start_fee = $pclass['startfee'];
 
 						$sum += $start_fee;
 
-						$base = ($pclass['Type'] == 1);
+						$base = ($pclass['type'] == 1);
 
-						$minimum_payment = ($pclass['Type'] === 1) ? $this->getLowestPaymentAccount($countryData['iso_code_3']) : 0;
+						$minimum_payment = ($pclass['type'] === 1) ? $this->getLowestPaymentAccount($countryData['iso_code_3']) : 0;
 
-						if ($pclass['months'] == 0) {
+						if ($pclass['nbrofmonths'] == 0) {
 							$payment = $sum;
-						} elseif ($pclass['interest'] == 0) {
-							$payment = $sum / $pclass['months'];
+						} elseif ($pclass['interestrate'] == 0) {
+							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest_rate = $pclass['interest'] / (100.0 * 12);
+							$interest_rate = $pclass['interestrate'] / (100.0 * 12);
 							
-							$payment = $sum * $interest_rate / (1 - pow((1 + $interest_rate), -$pclass['months']));
+							$payment = $sum * $interest_rate / (1 - pow((1 + $interest_rate), -$pclass['nbrofmonths']));
 						}
 
 						$payment += $monthly_fee;
@@ -102,10 +102,10 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$balance = $sum;
 						$pay_data = array();
 
-						$months = $pclass['months'];
+						$months = $pclass['nbrofmonths'];
 						
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interest'] / (100.0 * 12);
+							$interest = $balance * $pclass['interestrate'] / (100.0 * 12);
 							$new_balance = $balance + $interest + $monthly_fee;
 
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
@@ -132,19 +132,20 @@ class ModelPaymentBillmatePartpayment extends Model {
 							continue;
 						}
 
-						if ($pclass['Type'] == 1 && $monthly_cost < $lowest_payment) {
+						if ($pclass['type'] == 1 && $monthly_cost < $lowest_payment) {
 							$monthly_cost = $lowest_payment;
 						}
 
-						if ($pclass['Type'] == 0 && $monthly_cost < $lowest_payment) {
+						if ($pclass['type'] == 0 && $monthly_cost < $lowest_payment) {
 							continue;
 						}
 					}
 				}
 
-				$payment_option[$pclass['pclassid']]['monthly_cost'] = round($monthly_cost,0);
-				$payment_option[$pclass['pclassid']]['pclass_id'] = $pclass['pclassid'];
-				$payment_option[$pclass['pclassid']]['months'] = $pclass['months'];
+				$payment_option[$i]['monthly_cost'] = round($monthly_cost,0);
+				$payment_option[$i]['pclass_id'] = $pclass['paymentplanid'];
+				$payment_option[$i]['nbrofmonths'] = $pclass['nbrofmonths'];
+                $i++;
 			}
 		}
 		
