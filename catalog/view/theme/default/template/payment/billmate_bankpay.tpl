@@ -1,4 +1,4 @@
-<div style="margin-bottom: 10px;"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/images/bm_bank_s.png" /></div>
+<div style="margin-bottom: 10px;"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/images/billmate_bank_s.png" /></div>
 <div id="payment">
 
 </div>
@@ -8,7 +8,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    jQuery('#button_confirm').bind('click',function(){
+    jQuery('#button-confirm').bind('click',function(){
         $.ajax({
             url: 'index.php?route=payment/billmate_bankpay/sendinvoice',
             beforeSend: function() {
@@ -23,14 +23,14 @@
                 jQuery('.attention').remove();
             },
             success: function(json) {
-
-                if (!json['success']) {
-                    jQuery('#payment').before('<div class="warning">' + json['message'] + '</div>');
+                var result = JSON.parse(json);
+                if (!result.success) {
+                    jQuery('#payment').before('<div class="warning">' + result.message + '</div>');
                 }
 
 
-                if (json['success']) {
-                    location = json['url'];
+                if (result.success) {
+                    location = result.url;
                 }
             }
         })

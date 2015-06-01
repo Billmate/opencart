@@ -19,6 +19,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
         $this->load->model('checkout/order');
 
+        $this->data['description'] = $this->config->get('billmate_cardpay_description');
         
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl';
@@ -53,26 +54,35 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		$error_msg = '';
 
 		$post = empty($this->request->post)? $this->request->get : $this->request->post;
-		
-		if( isset($post['mac']) && isset($post['order_id']) && isset($post['status']) ) {
-			
-			$mac_calc = $this->calculateResMac();
-			$mac_posted = $post['mac'];
-			$data['hash_match'] = true; //($mac_calc == $mac_posted);
+        $eid = (int)$this->config->get('billmate_bankpay_merchant_id');
 
-                	if( $data['hash_match'] ) {
-                        	$order_id = $post['order_id'];
+        $key = (int)$this->config->get('billmate_bankpay_secret');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+        $k = new BillMate($eid,$key);
+        if(is_array($post))
+        {
+            foreach($post as $key => $value)
+                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
+        }
+        $post = $k->verify_hash($post);
+
+		if(isset($post['orderid']) && isset($post['status']) ) {
+
+
+
+                        	$order_id = $post['orderid'];
                         	$this->load->model('checkout/order');
                         	$order_info = $this->model_checkout_order->getOrder($order_id);
                         
                         	if ($order_info) {
-                                if ($post['status'] == '0' && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
+                                if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
                                     $this->cache->set('order'.$order_id,1);
                                     $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_bankpay_order_status_id'));
 
                                     $msg = '';
-                                    if (isset($post['trans_id'])) {
-                                            $msg .= 'trans_id: ' . $post['trans_id'] . "\n";
+                                    if (isset($post['number'])) {
+                                            $msg .= 'invoice_id: ' . $post['number'] . "\n";
                                     }
                                     if( isset($post['status'])) {
                                             $msg .= 'status: '. $post['status'] . "\n";
@@ -85,9 +95,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
                         	} else {
 					$error_msg = $this->language->get('text_unable');
 				}
-                	} else {
-				$error_msg = $this->language->get('text_com');
-			}
+
 		} else {
 			$error_msg = $this->language->get('text_fail');
 		}
@@ -120,6 +128,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		} else {
 			try{
                 $this->cache->delete('order'.$order_id);
+                $this->redirect($this->url->link('checkout/success'));
 			}catch(Exception $ex ){
 					$this->data['heading_title'] = $this->language->get('text_failed');
 					$this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $ex->getMessage(), $this->url->link('information/contact'));
@@ -152,19 +161,27 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
         $this->request->post = $post;
         $this->load->model('checkout/order');
-        if(isset($post['order_id']) && isset($post['status']) && isset($post['trans_id'])){
-            $order_info = $this->checkout_model->getOrder($post['order_id']);
-            if($post['status'] == 0 && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$post['order_id'])){
-                $this->cache->set('order'.$post['order_id'],1);
-                $order_id = $post['order_id'];
+        $eid = (int)$this->config->get('billmate_bankpay_merchant_id');
+
+        $key = (int)$this->config->get('billmate_bankpay_secret');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+        $k = new BillMate($eid,$key);
+        $post = $k->verify_hash($post);
+
+        if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
+            $order_info = $this->checkout_model->getOrder($post['orderid']);
+            if($post['status'] == 0 && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
+                $this->cache->set('order'.$post['orderid'],1);
+                $order_id = $post['orderid'];
                 $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_bankpay_order_status_id'));
 
                 $msg = '';
-                $msg .= 'trans_id: ' . $post['trans_id'] . "\n";
+                $msg .= 'invoice_id: ' . $post['number'] . "\n";
                 $msg .= 'status: '. $post['status'] . "\n";
                 $this->model_checkout_order->update($order_id, $this->config->get('billmate_bankpay_order_status_id'), $msg, false);
 
-                $this->cache->delete('order'.$post['order_id']);
+                $this->cache->delete('order'.$post['orderid']);
             }
         }
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl')) {
@@ -198,7 +215,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
 			$this->session->data['order_api_called'] = '';
 		}
-
+        $this->load->model('checkout/order');
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 
 		if( !empty( $this->session->data["shipping_method"] ) )
@@ -371,7 +388,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
                     $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
                 }
                 if($total['code'] == 'shipping'){
-                    $values['Cart']['shipping'] = array(
+                    $values['Cart']['Shipping'] = array(
                     'withouttax' => $total['value'] * 100,
                     'taxrate' => $total['tax_rate']
                 );
@@ -379,7 +396,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
                     $taxTotal += ($total['value'] * 100) * ($total['tax_rate']/100);
                 }
                 if($total['code'] == 'billmate_fee'){
-                    $values['Cart']['handling'] = array(
+                    $values['Cart']['Handling'] = array(
                     'withouttax' => $total['value'] * 100,
                     'taxrate' => $total['tax_rate']
                 );
@@ -593,8 +610,8 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
 		} // End discount isset
 
-        $round = $order_info['total'] - $orderTotal + $taxTotal;
-        $values['Cart']['total'] = array(
+        $round = ($order_info['total']*100) - ($orderTotal + $taxTotal);
+        $values['Cart']['Total'] = array(
             'withouttax' => $orderTotal,
             'tax' => $taxTotal,
             'rounding' => $round,

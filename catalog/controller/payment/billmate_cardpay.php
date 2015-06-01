@@ -15,65 +15,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->load->model('checkout/order');
-                
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-		$order_id = $this->session->data['order_id'];
-		$amount = round( $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) * 100,0 );
 
-        $merchant_id = $this->config->get('billmate_cardpay_merchant_id');
-        $currency = strtoupper($this->currency->getCode());
-        $accept_url = $this->url->link('payment/billmate_cardpay/accept');
-        $cancel_url = $this->url->link('payment/billmate_cardpay/cancel');
-        $callback_url = $this->url->link('payment/billmate_cardpay/callback');
-        $secret = substr($this->config->get('billmate_cardpay_secret'),0,12);
-
-		$prod_url = 'https://cardpay.billmate.se/pay';
-		$tst_url = 'https://cardpay.billmate.se/pay/test'; 
-
-		if( $this->config->get('billmate_cardpay_test') ) {
-			$url = $tst_url;
-		} else {
-			$url = $prod_url;
-		}
-		$this->data['capture_now'] = $this->config->get('billmate_cardpay_transaction_method') == 'sale' ? 'YES':'NO';
-		
-		$pay_method = 'CARD';
-		//$callback_url = 'http://api.billmate.se/callback.php';
-		$request_method = 'GET';
-		$do3dsecure     = $this->config->get('billmate_enable_3dsecure') == 'NO' ? 'NO' : 'YES';
-		$promptname     = $this->config->get('billmate_prompt_name') == 'YES' ? 'YES' : 'NO';
-
-		$languageCode = strtoupper( $this->language->get('code') );
-		
-		$languageCode = $languageCode == 'DA' ? 'DK' : $languageCode;
-		$languageCode = $languageCode == 'SV' ? 'SE' : $languageCode;
-		$languageCode = $languageCode == 'EN' ? 'GB' : $languageCode;
-		
-		
-        $mac_str = $accept_url . $amount . $callback_url .  $cancel_url . $this->data['capture_now'] . $currency . $do3dsecure . $languageCode . $merchant_id . $order_id . $pay_method . $promptname . $request_method. $secret;
-
-        $mac = hash ( "sha256", $mac_str );
-
-		$this->data['url'] = $url;
-		$this->data['order_id'] = $order_id;
-		$this->data['amount'] = $amount;
-		$this->data['merchant_id'] = $merchant_id;
-		$this->data['currency'] = $currency;
-		$this->data['language'] = $languageCode;
-		$this->data['request_method'] = $request_method;
-		$this->data['do3dsecure'] = $do3dsecure;
-		$this->data['promptname'] = $promptname;
-		$this->data['accept_url'] = $accept_url;
-		$this->data['callback_url'] = $callback_url;
-		$this->data['cancel_url'] = $cancel_url;
-		$this->data['pay_method'] = $pay_method;
-        $this->session->data['capture_now']=$this->config->get('billmate_cardpay_transaction_method');
-		//$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$order_id);
-
-		$this->billmate_transaction(true); 
-
-		$this->data['mac'] = $mac;
 		$this->data['description'] = $this->config->get('billmate_cardpay_description');
 
 
@@ -109,42 +52,49 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		$error_msg = '';
 
-		$post = empty($this->request->post)? $this->request->get : $this->request->post;
-		
-		if( isset($post['mac']) && isset($post['order_id']) && isset($post['status']) ) {
-			
-			$mac_calc = $this->calculateResMac();
-			$mac_posted = $post['mac'];
-			$data['hash_match'] = true; //($mac_calc == $mac_posted);
+		$post = empty($_POST)? $_GET : $_POST;
+        $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
-                	if( $data['hash_match'] ) {
-                        	$order_id = $post['order_id'];
-                        	$this->load->model('checkout/order');
-                        	$order_info = $this->model_checkout_order->getOrder($order_id);
-                        
-                        	if ($order_info) {
-                                	if ($post['status'] == '0' && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
-                                        $this->cache->set('order'.$order_id,1);
-                                        $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
+        $key = (int)$this->config->get('billmate_cardpay_secret');
 
-                                        $msg = '';
-                                        if (isset($post['trans_id'])) {
-                                                $msg .= 'trans_id: ' . $post['trans_id'] . "\n";
-                                        }
-                                        if( isset($post['status'])) {
-                                                $msg .= 'status: '. $post['status'] . "\n";
-                                        }
-                        		
-                                        $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
-                                    } else {
-                                        $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+        $k = new BillMate($eid,$key);
+        if(is_array($post))
+        {
+            foreach($post as $key => $value)
+                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
+        }
+
+        $post = $k->verify_hash($post);
+		if(isset($post['orderid']) && isset($post['status']) ) {
+
+
+
+                        $order_id = $post['orderid'];
+                        $this->load->model('checkout/order');
+                        $order_info = $this->model_checkout_order->getOrder($order_id);
+
+                        if ($order_info) {
+                                if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
+                                    $this->cache->set('order'.$order_id,1);
+                                    $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
+
+                                    $msg = '';
+                                    if (isset($post['number'])) {
+                                            $msg .= 'invoice_id: ' . $post['number'] . "\n";
                                     }
-                        	} else {
-					$error_msg = $this->language->get('text_unable');
+                                    if( isset($post['status'])) {
+                                            $msg .= 'status: '. $post['status'] . "\n";
+                                    }
+
+                                    $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
+                                } else {
+                                    $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
+                                }
+                        } else {
+                $error_msg = $this->language->get('text_unable');
 				}
-                	} else {
-				$error_msg = $this->language->get('text_com');
-			}
+
 		} else {
 			$error_msg = $this->language->get('text_fail');
 		}
@@ -176,8 +126,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         $this->response->setOutput($this->render());
 		} else {
 			try{
-				$this->billmate_transaction();
+				//$this->billmate_transaction();
                 $this->cache->delete('order'.$order_id);
+                $this->redirect($this->url->link('checkout/success'));
             }catch(Exception $ex ){
 					$this->data['heading_title'] = $this->language->get('text_failed');
 					$this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $ex->getMessage(), $this->url->link('information/contact'));
@@ -206,22 +157,29 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 	public function callback() {
         $post = json_decode(file_get_contents('php://input'),true);
+        $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
+
+        $key = (int)$this->config->get('billmate_cardpay_secret');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+        $k = new BillMate($eid,$key);
+        $post = $k->verify_hash($post);
         $this->request->post = $post;
         $this->load->model('checkout/order');
-        if(isset($post['order_id']) && isset($post['status']) && isset($post['trans_id'])){
-            $order_info = $this->checkout_model->getOrder($post['order_id']);
-            if($post['status'] == 0 && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['order_id'])){
-                $this->cache->set('order'.$post['order_id'],1);
+        if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
+            $order_info = $this->checkout_model->getOrder($post['orderid']);
+            if(($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
+                $this->cache->set('order'.$post['orderid'],1);
                 $order_id = $post['order_id'];
                 $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                 $msg = '';
-                $msg .= 'trans_id: ' . $post['trans_id'] . "\n";
+                $msg .= 'invoice_id: ' . $post['number'] . "\n";
                 $msg .= 'status: '. $post['status'] . "\n";
                 $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
-                $this->billmate_transaction();
+                //$this->billmate_transaction();
 
-                $this->cache->delete('order'.$post['order_id']);
+                $this->cache->delete('order'.$post['orderid']);
             }
         }
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay_callback.tpl')) {
@@ -231,7 +189,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}
 		$this->response->setOutput($this->render());
 	}
-	public function billmate_transaction($add_order = false){
+	public function sendinvoice($add_order = false){
 
 		$post = empty($this->request->post)? $this->request->get : $this->request->post;
 		
@@ -249,15 +207,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		if(isset($this->session->data['old_order_id']) && $this->session->data['old_order_id'] != $order_id){
 			$this->session->data['order_api_called'] = '';
 		}
-
+        $this->load->model('checkout/order');
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 
 		if( !empty( $this->session->data["shipping_method"] ) )
 		$shipping_method = $this->session->data["shipping_method"];
 		
-		require_once dirname(DIR_APPLICATION).'/billmate/BillMate.php';
-		include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
-		include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
+		require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 		
 		$eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 		
@@ -424,7 +380,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
                 }
                 if($total['code'] == 'shipping'){
-                    $values['Cart']['shipping'] = array(
+                    $values['Cart']['Shipping'] = array(
                         'withouttax' => $total['value'] * 100,
                         'taxrate' => $total['tax_rate']
                     );
@@ -646,8 +602,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
         } // End discount isset
 
-        $round = $order_info['total'] - $orderTotal + $taxTotal;
-        $values['Cart']['total'] = array(
+        $round = ($order_info['total']*100) - ($orderTotal + $taxTotal);
+        $values['Cart']['Total'] = array(
             'withouttax' => $orderTotal,
             'tax' => $taxTotal,
             'rounding' => $round,
