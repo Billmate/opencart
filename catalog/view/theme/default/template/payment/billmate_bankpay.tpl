@@ -11,7 +11,17 @@
 	<input type="hidden" name="cancel_url" value="<?php echo $cancel_url; ?>" />
 	<input type="hidden" name="return_method" value="<?php echo $request_method; ?>" />
 	<input type="hidden" name="mac" value="<?php echo $mac; ?>" />
-  <div class="buttons">
-    <div class="right"><a onclick="jQuery('#payment').submit();" class="button"><span><?php echo $button_confirm; ?></span></a></div>
-  </div>
+    <div class="buttons">
+        <div class="right"><a id="button-confirm" onclick="" class="button"><span><?php echo $button_confirm; ?></span></a></div>
+    </div>
 </form>
+<script type="text/javascript">
+    jQuery('#button-confirm').bind('click', function() {
+        jQuery.ajax({
+            url: 'index.php?route=payment/billmate_bankpay/sendorder',
+            success: function(res){
+                jQuery('#payment').submit();
+            }
+        });
+    });
+</script>

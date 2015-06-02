@@ -66,7 +66,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
         $this->data['language'] = $languageCode;
         $this->session->data['capture_now'] = 'Sale';
 		$_POST['order_id'] = $this->session->data['order_id'];
-		$this->billmate_transaction(true);
+
 		//$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$order_id);
 		$this->data['description'] = $this->config->get('billmate_bankpay_description');
 		$this->data['mac'] = $mac;
@@ -80,6 +80,12 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		
 		$this->render();
 	}
+    public function sendorder(){
+        $result = $this->billmate_transaction(true);
+        $response['success'] = is_array($result) ? true : false;
+        $this->response->setOutput(my_json_encode($response));
+
+    }
 
 	private function calculateResMac() {
 
@@ -251,7 +257,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
 			$this->session->data['order_api_called'] = '';
 		}
-
+        $this->load->model('checkout/order');
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 
 		if( !empty( $this->session->data["shipping_method"] ) )

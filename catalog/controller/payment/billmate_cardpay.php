@@ -71,7 +71,6 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $this->session->data['capture_now']=$this->config->get('billmate_cardpay_transaction_method');
 		//$this->db->query('update '.DB_PREFIX.'order set order_status_id = 1 where order_id='.$order_id);
 
-		$this->billmate_transaction(true); 
 
 		$this->data['mac'] = $mac;
 		$this->data['description'] = $this->config->get('billmate_cardpay_description');
@@ -85,7 +84,11 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$this->render();
 	}
-
+    public function sendorder(){
+        $result = $this->billmate_transaction(true);
+        $response['success'] = is_array($result) ? true : false;
+        $this->response->setOutput(my_json_encode($response));
+    }
 	private function calculateResMac() {
 
 		$data = empty($this->request->post)? $this->request->get : $this->request->post;
@@ -249,6 +252,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		if(isset($this->session->data['old_order_id']) && $this->session->data['old_order_id'] != $order_id){
 			$this->session->data['order_api_called'] = '';
 		}
+        $this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 

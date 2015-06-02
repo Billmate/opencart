@@ -14,6 +14,16 @@
 	<input type="hidden" name="prompt_name_entry" value="<?php echo $promptname; ?>" />
 	<input type="hidden" name="mac" value="<?php echo $mac; ?>" />
   <div class="buttons">
-    <div class="right"><a onclick="jQuery('#payment').submit();" class="button"><span><?php echo $button_confirm; ?></span></a></div>
+    <div class="right"><a id="button-confirm" onclick="" class="button"><span><?php echo $button_confirm; ?></span></a></div>
   </div>
 </form>
+<script type="text/javascript">
+    jQuery('#button-confirm').bind('click', function() {
+        jQuery.ajax({
+            url: 'index.php?route=payment/billmate_cardpay/sendorder',
+            success: function(res){
+                jQuery('#payment').submit();
+            }
+        });
+    });
+</script>
