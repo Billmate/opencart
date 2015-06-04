@@ -254,6 +254,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$key = (int)$billmate_partpayment['SWE']['secret'];
 				$ssl = true;
 				$debug = false;
+
+                define('BILLMATE_SERVER','2.1.7');
+                define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
                 $k = new BillMate($eid,$key,$ssl,$billmate_partpayment['SWE']['server'] == 'beta' ,$debug);
 
 
@@ -271,14 +274,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     'paymentdate' => date('Y-m-d')
                 );
 
-                $values['Card'] = array(
-                    'callbackurl' => $this->url->link('payment/billmate_cardpay/callback'),
-                    'accepturl' => $this->url->link('payment/billmate_cardpay/accept'),
-                    'cancelurl' => $this->url->link('payment/billmate_cardpay/cancel'),
-                    'returnmethod' => 'GET'
-                );
+
                 $values['Customer']['nr'] = $this->customer->getId();
-                $values['Customer']['pmo'] = $this->request->post['pno'];
+                $values['Customer']['pno'] = $this->request->post['pno'];
                 $values['Customer']['Shipping'] = array(
                     'email'           => $order_info['email'],
                     'firstname'           => $order_info['shipping_firstname'],
@@ -687,13 +685,13 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                 $db = $this->registry->get('db');
                 if( $db == NULL ) $db = $this->db;
 
-                $countriesdata = array(209 =>'sweden', 73=> 'finland',59=> 'denmark', 164 => 'norway', 81 => 'germany', 15 => 'austria', 154 => 'netherlands' );
-                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE LOWER(name) = '" . $addr['country']. "' AND status = '1'");
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = '" . $addr['country']. "' AND status = '1'");
                 $countryinfo = $query->row;
 
+                $countryname = $countryinfo['name'];
 
                 $fullname = $order_info['payment_firstname']. ' '.$order_info['payment_lastname'];
-                if( empty( $addr[0][0])){
+                if( empty( $addr['firstname'])){
                     $apiName = $fullname;
                 } else {
                     $apiName  = $addr['firstname'].' '.$addr['lastname'];
@@ -746,7 +744,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     if(!(isset($this->request->get['geturl']) and $this->request->get['geturl']=="yes")){
 
 
-                        $json['address'] = $addr['firstname'].' '.$addr['lastname'].'<br>'.$addr['street'].'<br>'.$addr['zip'].'<br>'.$addr['city'].'<br/>'.$addr['country'].'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
+                        $json['address'] = $addr['firstname'].' '.$addr['lastname'].'<br>'.$addr['street'].'<br>'.$addr['zip'].'<br>'.$addr['city'].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
                         $json['error'] = "";
                     }
 
@@ -788,8 +786,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                         $zonename = '';
 
-                        $ship_address = array_merge($values['Customer']['Shipping'], $ship_api_address );
-                        $bill_address = array_merge($values['Customer']['Billing'], $ship_api_address );
 
                         $this->load->model('account/address');
                         $data['firstname'] = $data['fname'];
@@ -811,27 +807,36 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         $sql = "UPDATE `" . DB_PREFIX . "order` SET shipping_company='".$data['company']."', payment_company='".$data['company']."', shipping_firstname = '" . $db->escape($data['fname']) . "',firstname = '" . $db->escape($data['fname']) . "', lastname = '" . $db->escape($data['lname']) . "', payment_firstname = '" . $db->escape($data['fname']) . "', payment_lastname = '" . $db->escape($data['lname']) . "', payment_address_1 = '" . $db->escape($data['address_1']) . "', payment_address_2 = '', payment_city = '" . $db->escape($data['city']) . "', payment_postcode = '" . $db->escape($data['postcode']) . "', payment_zone = '" . $db->escape($zonename) . "', payment_zone_id = '" . (int)$data['zone_id'] . "', shipping_lastname = '" . $db->escape($data['lname']) . "', shipping_address_1 = '" . $db->escape($data['address_1']) . "', shipping_address_2 = '', shipping_city = '" . $db->escape($data['city']) . "', shipping_postcode = '" . $db->escape($data['postcode']) . "', shipping_zone = '', shipping_zone_id = '0', date_modified = NOW(), shipping_country = '" . $this->db->escape($countryinfo['name']) . "', shipping_country_id = '" . (int)$countryinfo['country_id'] . "' where order_id = ". $this->session->data['order_id'];
                         $db->query($sql);
 
-//header('Content-Type:text/html');
-                        foreach( $ship_address as $key => $col ){
-                            if( !is_array( $col )) {
-                                $ship_address[$key] = utf8_decode( Encoding::fixUTF8($col));
-                            }
-                        }
-                        foreach( $bill_address as $key => $col ){
-                            if( !is_array( $col )) {
-                                $bill_address[$key] = utf8_decode( Encoding::fixUTF8($col));
-                            }
-                        }
+                        $order_info_updated = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+                        $values['Customer']['Shipping'] = array(
+                            'email'           => $order_info_updated['email'],
+                            'firstname'           => $order_info_updated['shipping_firstname'],
+                            'lastname'           => $order_info_updated['shipping_lastname'],
+                            'company'         => $order_info_updated['shipping_company'],
+                            'street'          => $order_info_updated['shipping_address_1'],
+                            'zip'             => $order_info_updated['shipping_postcode'],
+                            'city'            => $order_info_updated['shipping_city'],
+                            'country'         => $order_info_updated['shipping_iso_code_2'],
+                        );
+                        $values['Customer']['Billing'] = array(
+                            'email'           => $order_info_updated['email'],
+                            'firstname'           => $order_info_updated['shipping_firstname'],
+                            'lastname'           => $order_info_updated['shipping_lastname'],
+                            'company'         => $order_info_updated['shipping_company'],
+                            'street'          => $order_info_updated['shipping_address_1'],
+                            'zip'             => $order_info_updated['shipping_postcode'],
+                            'city'            => $order_info_updated['shipping_city'],
+                            'country'         => $order_info_updated['shipping_iso_code_2'],
+                        );
+
                         $func = create_function('','');
                         $oldhandler = set_error_handler($func);
 
-                        if( empty( $goods_list ) ){
-                            $result1 = 'Unable to find product in cart';
-                        } else {
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_partpayment', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+                        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_invoice', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
-                            $result1 = $k->AddPayment($values);
-                        }
+                        $result1 = $k->AddPayment($values);
+                        error_log(print_r($result1,true));
+
                         if(isset($result1['code']))
                         {
                             $json['address'] = '<p>'.utf8_encode($result1['message']).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="button" />';

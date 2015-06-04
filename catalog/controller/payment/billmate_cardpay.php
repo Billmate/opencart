@@ -221,6 +221,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$ssl = true;
 
 		$debug = false;
+
+        define('BILLMATE_SERVER','2.1.7');
+        define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
         $values['PaymentData'] = array(
             'method' => 8,
