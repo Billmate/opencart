@@ -5,11 +5,11 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 
 class ControllerPaymentBillmateBankPay extends Controller {
 	public function cancel(){
-		
-		//$order_id = $this->session->data['order_id'];
-		//$status = (int)$this->config->get('billmate_bankpay_order_cancel_status_id');
-		//$this->db->query('update `'.DB_PREFIX.'order` set order_status_id = '.$status.' where order_id='.$order_id);
-		$this->redirect($this->url->link('checkout/checkout'));
+
+        if(version_compare(VERSION,'2.0.0','>='))
+            $this->response->redirect($this->url->link('checkout/checkout'));
+        else
+		    $this->redirect($this->url->link('checkout/checkout'));
 	}
 	protected function index() {
 	
@@ -20,32 +20,26 @@ class ControllerPaymentBillmateBankPay extends Controller {
         $this->load->model('checkout/order');
 
         $this->data['description'] = $this->config->get('billmate_cardpay_description');
-        
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl';
-		} else {
-			$this->template = 'default/template/payment/billmate_bankpay.tpl';
-		}
-		
-		$this->render();
-	}
+        if(version_compare(VERSION,'2.0.0','>=')){
+            $data = $this->data;
+            unset($this->data);
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl',$data);
+            } else {
+                return $this->load->view('default/template/payment/billmate_bankpay.tpl',$data);
+            }
+        } else {
 
-	private function calculateResMac() {
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl')) {
+                $this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl';
+            } else {
+                $this->template = 'default/template/payment/billmate_bankpay.tpl';
+            }
 
-		$data = empty($this->request->post)? $this->request->get : $this->request->post;
+            $this->render();
+        }
 
 
-                $mac_str="";    
-                ksort( $data );
-                foreach($data as $key => $value){
-                        if( $key != "mac" ) {
-                                $mac_str .= $value;
-                        }
-                }
-		$mac_str.=$this->config->get('billmate_bankpay_secret');
-                $mac = hash( "sha256", $mac_str );
-
-                return $mac;
 	}
 	
 	public function accept() {
@@ -65,6 +59,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
             foreach($post as $key => $value)
                 $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
         }
+
         $post = $k->verify_hash($post);
 
 		if(isset($post['orderid']) && isset($post['status']) ) {
@@ -76,7 +71,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
                         	$order_info = $this->model_checkout_order->getOrder($order_id);
                         
                         	if ($order_info) {
-                                if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
+                                if (($post['status'] == 'Created' || $post['status'] == 'Paid' || $post['status'] == 'Pending' ) && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
                                     $this->cache->set('order'.$order_id,1);
                                     $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_bankpay_order_status_id'));
 
@@ -100,7 +95,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 			$error_msg = $this->language->get('text_fail');
 		}
 
-        if($post['status']!= 0 ){
+        if($post['status'] == 'Cancelled'){
             $error_msg = $post['error_message'];
         }
 		if( $error_msg != '' ) {
@@ -108,49 +103,85 @@ class ControllerPaymentBillmateBankPay extends Controller {
                         $this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $error_msg, $this->url->link('information/contact'));
                         $this->data['button_continue'] = $this->language->get('button_continue');
                         $this->data['continue'] = $this->url->link('common/home');
-                        
-                        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
-                                $this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl';
-                        } else {
-                                $this->template = 'default/template/payment/billmate_bankpay_failure.tpl';
-                        }       
+                        if(version_compare(VERSION,'2.0.0','>=')){
+                            $data = $this->data;
+                            unset($this->data);
+                            $data['column_left'] = $this->load->controller('common/column_left');
+                            $data['header'] = $this->load->controller('common/header');
+                            $data['footer'] = $this->load->controller('common/footer');
+                            $data['content_top'] = $this->load->controller('common/content_top');
+                            $data['content_bottom'] = $this->load->controller('common/content_bottom');
+                            $data['column_right'] = $this->load->controller('common/column_right');
 
-                        $this->children = array(
+                            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
+                                return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl',$data);
+                            } else {
+                                return $this->load->view('default/template/payment/billmate_bankpay_failure.tpl',$data);
+                            }
+                        } else {
+                            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
+                                $this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl';
+                            } else {
+                                $this->template = 'default/template/payment/billmate_bankpay_failure.tpl';
+                            }
+
+                            $this->children = array(
                                 'common/column_left',
                                 'common/column_right',
                                 'common/content_top',
                                 'common/content_bottom',
                                 'common/footer',
                                 'common/header'
-                        );
-                        
-                        $this->response->setOutput($this->render());
+                            );
+
+                            $this->response->setOutput($this->render());
+                        }
 		} else {
 			try{
                 $this->cache->delete('order'.$order_id);
-                $this->redirect($this->url->link('checkout/success'));
+                if(version_compare(VERSION,'2.0.0','>='))
+                    $this->response->redirect($this->url->link('checkout/success'));
+                else
+                    $this->redirect($this->url->link('checkout/success'));
 			}catch(Exception $ex ){
 					$this->data['heading_title'] = $this->language->get('text_failed');
 					$this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $ex->getMessage(), $this->url->link('information/contact'));
 					$this->data['button_continue'] = $this->language->get('button_continue');
 					$this->data['continue'] = $this->url->link('common/home');
-					
-					if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
-							$this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl';
-					} else {
-							$this->template = 'default/template/payment/billmate_bankpay_failure.tpl';
-					}       
 
-					$this->children = array(
-							'common/column_left',
-							'common/column_right',
-							'common/content_top',
-							'common/content_bottom',
-							'common/footer',
-							'common/header'
-					);
-					
-					$this->response->setOutput($this->render());
+                if(version_compare(VERSION,'2.0.0','>=')){
+                    $data = $this->data;
+                    unset($this->data);
+                    $data['column_left'] = $this->load->controller('common/column_left');
+                    $data['header'] = $this->load->controller('common/header');
+                    $data['footer'] = $this->load->controller('common/footer');
+                    $data['content_top'] = $this->load->controller('common/content_top');
+                    $data['content_bottom'] = $this->load->controller('common/content_bottom');
+                    $data['column_right'] = $this->load->controller('common/column_right');
+
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
+                        return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl',$data);
+                    } else {
+                        return $this->load->view('default/template/payment/billmate_bankpay_failure.tpl',$data);
+                    }
+                } else {
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
+                        $this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl';
+                    } else {
+                        $this->template = 'default/template/payment/billmate_bankpay_failure.tpl';
+                    }
+
+                    $this->children = array(
+                        'common/column_left',
+                        'common/column_right',
+                        'common/content_top',
+                        'common/content_bottom',
+                        'common/footer',
+                        'common/header'
+                    );
+
+                    $this->response->setOutput($this->render());
+                }
 			}
 		}
 	}
@@ -171,7 +202,7 @@ class ControllerPaymentBillmateBankPay extends Controller {
 
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
             $order_info = $this->checkout_model->getOrder($post['orderid']);
-            if($post['status'] == 0 && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
+            if(($post['status'] == 'Pending' || $post['status'] == 'Paid' || $post['status']) && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
                 $this->cache->set('order'.$post['orderid'],1);
                 $order_id = $post['orderid'];
                 $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_bankpay_order_status_id'));
@@ -184,12 +215,20 @@ class ControllerPaymentBillmateBankPay extends Controller {
                 $this->cache->delete('order'.$post['orderid']);
             }
         }
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl';
-		} else {
-			$this->template = 'default/template/payment/billmate_bankpay_callback.tpl';
-		}
-		$this->response->setOutput($this->render());
+        if(version_compare(VERSION,'2.0.0','>=')){
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl');
+            } else {
+                return $this->load->view('default/template/payment/billmate_bankpay_callback.tpl');
+            }
+        }else {
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl')) {
+                $this->template = $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl';
+            } else {
+                $this->template = 'default/template/payment/billmate_bankpay_callback.tpl';
+            }
+            $this->response->setOutput($this->render());
+        }
 	}
 	public function sendinvoice(){
 
@@ -307,14 +346,14 @@ class ControllerPaymentBillmateBankPay extends Controller {
 				    'quantity'   => (int)$product_total_qty,
 					'artnr'    => $product['model'],
 					'title'    => $title,
-					'aprice'    => (int)$productValue,
+					'aprice'    => $product['price']*100,
 					'taxrate'      => (float)($rates),
 					'discount' => 0.0,
-					'withouttax'    => $product_total_qty * $productValue,
+					'withouttax'    => $product_total_qty * ($product['price']*100),
 
 			);
-            $orderTotal += $product_total_qty * $productValue;
-            $taxTotal += ($product_total_qty * $productValue) * ($rates/100);
+            $orderTotal += $product_total_qty * ($product['price']*100);
+            $taxTotal += ($product_total_qty * ($product['price']*100)) * ($rates/100);
 
 			$subtotal += ($product['price'] * 100) * $product_total_qty;
 			$productTotal += ($product['price'] * 100) * $product_total_qty;

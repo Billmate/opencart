@@ -23,8 +23,10 @@ class ControllerTotalBillmateFee extends Controller {
             $this->model_setting_setting->editSetting('billmate_fee', array_merge($this->request->post, array('billmate_fee_status' => $status)));
 
             $this->session->data['success'] = $this->language->get('text_success');
-
-            $this->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
+            if(version_compare(VERSION,'2.0.0','>='))
+                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            else
+                $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 		
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -89,13 +91,23 @@ class ControllerTotalBillmateFee extends Controller {
 		
         $this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
 
-        $this->template = 'total/billmate_fee.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+        if(version_compare(VERSION,'2.0.0','>=')){
+            $data = $this->data;
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->render());
+            $this->response->setOutput($this->load->view('total/billmate_fee.tpl', $data));
+        } else {
+
+            $this->template = 'total/billmate_fee.tpl';
+            $this->children = array(
+                'common/header',
+                'common/footer'
+            );
+
+            $this->response->setOutput($this->render());
+        }
     }
 
     private function validate() {

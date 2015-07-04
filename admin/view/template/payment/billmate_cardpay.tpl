@@ -1,4 +1,8 @@
+<?php if(version_compare(VERSION,'2.0.0','>=')): ?>
+<?php echo $header; ?><?php echo $column_left; ?>
+<?php else: ?>
 <?php echo $header; ?>
+<?php endif; ?>
 <div id="content">
   <div class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -129,48 +133,13 @@
                     </div></td>
             </tr>
             <script type="text/javascript">
-
-                $('input[name=\'billmatecard-country\']').autocomplete({
-                    delay: 500,
-                    source: function(request, response) {
-                        $.ajax({
-                            url: 'index.php?route=payment/billmate_cardpay/country_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
-                            dataType: 'json',
-                            success: function(json) {
-                                console.log(json);
-                                response($.map(json, function(item) {
-                                    return {
-                                        label: item.name,
-                                        value: item.country_id
-                                    }
-                                }));
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        $('#billmatecard-country' + ui.item.value).remove();
-
-                        $('#billmatecard-country').append('<div id="billmatecard-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmatecard-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
-
-                        $('#billmatecard-country div:odd').attr('class', 'odd');
-                        $('#billmatecard-country div:even').attr('class', 'even');
-
-                        return false;
-                    },
-                    focus: function(event, ui) {
-                        return false;
-                    }
-                }).autocomplete("instance")._renderItem = function(ul, item){
-                    return $("<li>").append("<a>"+item.label +"</a>").appendTo(ul);
-                };
-
-                $('#billmatecard-country div img').live('click', function() {
-                    $(this).parent().remove();
-
-                    $('#billmatecard-country div:odd').attr('class', 'odd');
-                    $('#billmatecard-country div:even').attr('class', 'even');
-                });
+                var token = '<?php echo $token; ?>';
             </script>
+            <?php if(version_compare(VERSION,'2.0.0','>=')):
+                <script src="/billmate/js/billmate.js"></script>
+            <?php else: ?>
+                <script src="/billmate/js/legacy-billmate.js"></script>
+            <?php endif; ?>
             <tr>
           <tr>
             <td><?php echo $entry_status; ?></td>

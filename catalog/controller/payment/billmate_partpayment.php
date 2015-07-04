@@ -204,14 +204,25 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			//$this->document->addStyle($style);
 			//$this->document->addScript(HTTP_SERVER . 'catalog/view/javascript/module-tombola.js');
 			//$this->data['description'] = $billmate_partpayment['SWE']['description'];
-			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl';
-			} else {
-				$this->template = 'default/template/payment/billmate_partpayment.tpl';
-			}
-	
-			$this->render();
+
+            if(version_compare(VERSION,'2.0.0','>=')){
+                $data = $this->data;
+                unset($this->data);
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl',$data);
+                } else {
+                    return $this->load->view('default/template/payment/billmate_partpayment.tpl',$data);
+                }
+            } else {
+
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl')) {
+                    $this->template = $this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl';
+                } else {
+                    $this->template = 'default/template/payment/billmate_partpayment.tpl';
+                }
+
+                $this->render();
+            }
 		}
     }
     public function send() {
@@ -331,14 +342,14 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         'quantity'   => (int)$product_total_qty,
                         'artnr'    => $product['model'],
                         'title'    => $title,
-                        'aprice'    => (int)$productValue,
+                        'aprice'    => ($product['price']*100),
                         'taxrate'      => (float)($rates),
                         'discount' => 0.0,
-                        'withouttax'    => $product_total_qty * $productValue,
+                        'withouttax'    => $product_total_qty * ($product['price']*100),
 
                     );
-                    $orderTotal += $product_total_qty * $productValue;
-                    $taxTotal += ($product_total_qty * $productValue) * ($rates/100);
+                    $orderTotal += $product_total_qty * ($product['price']*100);
+                    $taxTotal += ($product_total_qty * ($product['price']*100)) * ($rates/100);
 
                     $subtotal += ($product['price'] * 100) * $product_total_qty;
                     $productTotal += ($product['price'] * 100) * $product_total_qty;

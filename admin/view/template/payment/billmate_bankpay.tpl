@@ -1,4 +1,8 @@
-<?php echo $header; ?>
+<?php if(version_compare(VERSION,'2.0.0','>=')): ?>
+    <?php echo $header; ?><?php echo $column_left; ?>
+<?php else: ?>
+    <?php echo $header; ?>
+<?php endif; ?>
 <div id="content">
   <div class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -9,9 +13,10 @@
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
   <div class="box">
-    <div class="heading">
-      <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_title; ?></h1>
-      <div class="buttons"><a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a></div>
+      <h1><img src="/billmate/images/billmate_bank_s.png" alt="" /> <?php echo $heading_title; ?></h1>
+    <div class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'pull-right' : 'heading'; ?>">
+
+      <div class="buttons"><a onclick="$('#form').submit();" class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'btn btn-primary' : 'button'; ?>"><?php echo $button_save; ?></a><a onclick="location = '<?php echo $cancel; ?>';" class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'btn btn-default' : 'button'; ?>"><?php echo $button_cancel; ?></a></div>
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
@@ -88,48 +93,14 @@
                     </div></td>
             </tr>
             <script type="text/javascript">
-
-                $('input[name=\'billmatebank-country\']').autocomplete({
-                    delay: 500,
-                    source: function(request, response) {
-                        $.ajax({
-                            url: 'index.php?route=payment/billmate_invoice/country_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
-                            dataType: 'json',
-                            success: function(json) {
-                                console.log(json);
-                                response($.map(json, function(item) {
-                                    return {
-                                        label: item.name,
-                                        value: item.country_id
-                                    }
-                                }));
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        $('#billmatebank-country' + ui.item.value).remove();
-
-                        $('#billmatebank-country').append('<div id="billmatebank-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmatebank-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
-
-                        $('#billmatebank-country div:odd').attr('class', 'odd');
-                        $('#billmatebank-country div:even').attr('class', 'even');
-
-                        return false;
-                    },
-                    focus: function(event, ui) {
-                        return false;
-                    }
-                }).autocomplete("instance")._renderItem = function(ul, item){
-                    return $("<li>").append("<a>"+item.label +"</a>").appendTo(ul);
-                };
-
-                $('#billmatebank-country div img').live('click', function() {
-                    $(this).parent().remove();
-
-                    $('#billmatebank-country div:odd').attr('class', 'odd');
-                    $('#billmatebank-country div:even').attr('class', 'even');
-                });
+                var token = '<?php echo $token; ?>';
             </script>
+            <?php if(version_compare(VERSION,'2.0.0','>=')): ?>
+
+                <script src="/billmate/js/billmate.js"></script>
+            <?php else: ?>
+                <script src="/billmate/js/legacy-billmate.js"></script>
+            <?php endif; ?>
             <tr>
           <tr>
             <td><?php echo $entry_status; ?></td>

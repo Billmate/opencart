@@ -8,8 +8,6 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		$billmate_invoice = $this->config->get('billmate_invoice');
 		
 		require_once dirname(DIR_APPLICATION).'/billmate/billingapi/BillMate API/BillMate.php';
-		include_once(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpc.inc");
-		include_once(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpcs.inc");
 			
 		$eid = 7270;//7320;
 		$key = 606250886062;//511461125114;
@@ -131,14 +129,25 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			    $this->data['billmate_fee'] = '';
 		    }
 			$this->data['description'] = $billmate_invoice['SWE']['description'];
-			 
-		    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
-			    $this->template = $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl';
-		    } else {
-			    $this->template = 'default/template/payment/billmate_invoice.tpl';
-		    }
 
-		    $this->render();
+            if(version_compare(VERSION,'2.0.0','>=')){
+                $data = $this->data;
+                unset($this->data);
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_invoice.tpl',$data);
+                } else {
+                    return $this->load->view('default/template/payment/billmate_invoice.tpl',$data);
+                }
+            } else {
+
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
+                    $this->template = $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl';
+                } else {
+                    $this->template = 'default/template/payment/billmate_invoice.tpl';
+                }
+
+                $this->render();
+            }
 	    }
     }
 
@@ -255,14 +264,14 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         'quantity'   => (int)$product_total_qty,
                         'artnr'    => $product['model'],
                         'title'    => $title,
-                        'aprice'    => (int)$productValue,
+                        'aprice'    => $product['price'] * 100,
                         'taxrate'      => (float)($rates),
                         'discount' => 0.0,
-                        'withouttax'    => $product_total_qty * $productValue,
+                        'withouttax'    => $product_total_qty * ($product['price']*100),
 
                     );
-                    $orderTotal += $product_total_qty * $productValue;
-                    $taxTotal += ($product_total_qty * $productValue) * ($rates/100);
+                    $orderTotal += $product_total_qty * ($product['price']*100);
+                    $taxTotal += ($product_total_qty * ($product['price']*100)) * ($rates/100);
 
                     $subtotal += ($product['price'] * 100) * $product_total_qty;
                     $productTotal += ($product['price'] * 100) * $product_total_qty;

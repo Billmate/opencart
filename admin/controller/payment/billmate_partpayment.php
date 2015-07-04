@@ -51,8 +51,10 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$this->model_setting_setting->editSetting('billmate_partpayment', array_merge($this->request->post, $data));
 
 
-
-            $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            if(version_compare(VERSION,'2.0.0','>='))
+                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            else
+                $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 		
  		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -191,15 +193,26 @@ class ControllerPaymentBillmatePartpayment extends Controller {
             $this->data['log'] = '';
         }
         
-        $this->data['clear'] = $this->url->link('payment/billmate_partpayment/clear', 'token=' . $this->session->data['token'], 'SSL'); 
+        $this->data['clear'] = $this->url->link('payment/billmate_partpayment/clear', 'token=' . $this->session->data['token'], 'SSL');
 
-        $this->template = 'payment/billmate_partpayment.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer',
-        );
+        if(version_compare(VERSION,'2.0.0','>=')){
+            $data = $this->data;
+            unset($this->data);
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->render());
+            $this->response->setOutput($this->load->view('payment/billmate_partpayment.tpl', $data));
+        } else {
+
+            $this->template = 'payment/billmate_partpayment.tpl';
+            $this->children = array(
+                'common/header',
+                'common/footer'
+            );
+
+            $this->response->setOutput($this->render());
+        }
     }
 
     private function validate() {

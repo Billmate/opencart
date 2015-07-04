@@ -20,8 +20,10 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			$this->model_setting_setting->editSetting('billmate_cardpay', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
-			
-			$this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+			if(version_compare(VERSION,'2.0.0','>='))
+                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            else
+			    $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 		
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -169,19 +171,29 @@ class ControllerPaymentBillmateCardpay extends Controller {
             $this->data['billmate_country'] = $this->config->get('billmatecard-country');
         }
         $this->data['token'] = $this->session->data['token'];
-		$this->template = 'payment/billmate_cardpay.tpl';
-		$this->children = array(
-			'common/header',
-			'common/footer'
-		);
-				
-		$this->response->setOutput($this->render());
+        if(version_compare(VERSION,'2.0.0','>=')){
+            $data = $this->data;
+            unset($this->data);
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
+
+            $this->response->setOutput($this->load->view('payment/billmate_cardpay.tpl', $data));
+        } else {
+
+            $this->template = 'payment/billmate_cardpay.tpl';
+            $this->children = array(
+                'common/header',
+                'common/footer'
+            );
+
+            $this->response->setOutput($this->render());
+        }
 	}
     public function install()
     {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
-        $this->log->write(print_r($country,true));
         $this->load->model('setting/setting');
         $this->model_setting_setting->editSetting('billmate_cardpay',array('version' => PLUGIN_VERSION,'billmatecard-country' =>array($country['country_id'] => array('name' => $country['name']))));
 
