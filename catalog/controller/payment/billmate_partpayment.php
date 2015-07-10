@@ -843,7 +843,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         $func = create_function('','');
                         $oldhandler = set_error_handler($func);
 
-                        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_invoice', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+                        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_partpayment', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
                         $result1 = $k->AddPayment($values);
                         error_log(print_r($result1,true));

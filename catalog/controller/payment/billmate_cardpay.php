@@ -69,6 +69,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         $order_info = $this->model_checkout_order->getOrder($order_id);
 
                         if ($order_info) {
+
                                 if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
                                     $this->cache->set('order'.$order_id,1);
                                     $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
@@ -198,10 +199,10 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $this->request->post = $post;
         $this->load->model('checkout/order');
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
-            $order_info = $this->checkout_model->getOrder($post['orderid']);
+            $order_info = $this->model_checkout_order->getOrder($post['orderid']);
             if(($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
                 $this->cache->set('order'.$post['orderid'],1);
-                $order_id = $post['order_id'];
+                $order_id = $post['orderid'];
                 $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                 $msg = '';
@@ -229,6 +230,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         }
 	}
 	public function sendinvoice($add_order = false){
+        $this->language->load('payment/billmate_cardpay');
 
 		$post = empty($this->request->post)? $this->request->get : $this->request->post;
 		
