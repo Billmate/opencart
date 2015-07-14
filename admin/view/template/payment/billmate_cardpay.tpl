@@ -135,7 +135,7 @@
             <script type="text/javascript">
                 var token = '<?php echo $token; ?>';
             </script>
-            <?php if(version_compare(VERSION,'2.0.0','>=')):
+            <?php if(version_compare(VERSION,'2.0.0','>=')): ?>
                 <script src="/billmate/js/billmate.js"></script>
             <?php else: ?>
                 <script src="/billmate/js/legacy-billmate.js"></script>
