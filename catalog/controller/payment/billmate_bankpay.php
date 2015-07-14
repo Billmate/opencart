@@ -12,14 +12,16 @@ class ControllerPaymentBillmateBankPay extends Controller {
 		    $this->redirect($this->url->link('checkout/checkout'));
 	}
 	protected function index() {
-	
-		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
+        $this->language->load('payment/billmate_bankpay');
+
+        if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
 				
         $this->data['button_confirm'] = $this->language->get('button_confirm');
-
+        $this->data['text_wait'] = $this->language->get('text_wait');
         $this->load->model('checkout/order');
 
         $this->data['description'] = $this->config->get('billmate_cardpay_description');
+
         if(version_compare(VERSION,'2.0.0','>=')){
             $data = $this->data;
             unset($this->data);
