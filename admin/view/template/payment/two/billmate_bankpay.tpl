@@ -82,10 +82,10 @@
                             <input type="text" name="billmatebank-country" class="form-control">
                             <div class="dropdown-menu"></div>
                             <div class="well well-sm" id="billmatebank-country">
-                                <?php if(isset($billmate_countries) && is_array($billmate_countries)){ ?>
-                                    <?php foreach ($billmate_countries as $key => $billmate_country) { ?>
-                                        <div id="billmatebank-country<?php echo $key; ?>"><i class="fa fa-minus-circle"></i> <?php echo $billmate_country['name']; ?>
-                                            <input type="hidden" name="billmatebank-country[<?php echo $key;?>][name];?>" value="<?php echo $billmate_country['name']; ?>" />
+                                <?php if(isset($billmate_country) && is_array($billmate_country)){ ?>
+                                    <?php foreach ($billmate_country as $key => $b_country) { ?>
+                                        <div id="billmatebank-country<?php echo $key; ?>"><i class="fa fa-minus-circle"></i> <?php echo $b_country['name']; ?>
+                                            <input type="hidden" name="billmatebank-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
                                         </div>
                                     <?php } ?>
                                 <?php } ?>

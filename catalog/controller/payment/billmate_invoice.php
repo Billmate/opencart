@@ -39,20 +39,20 @@ class ControllerPaymentBillmateInvoice extends Controller {
     public function terms(){
         $this->language->load('payment/billmate_invoice');
         
-        $this->data['page_title'] = $this->language->get('page_title');
-        $this->data['body_title'] = $this->language->get('body_title');
-        $this->data['subtitle'] = $this->language->get('subtitle');
-        $this->data['short_description'] = $this->language->get('short_description');
-        $this->data['subline'] = $this->language->get('subline');
-        $this->data['li1'] = $this->language->get('li1');
-        $this->data['li2'] = $this->language->get('li2');
-        $this->data['li3'] = $this->language->get('li3');
-        $this->data['li4'] = $this->language->get('li4');
-        $this->data['li5'] = $this->language->get('li5');
-        $this->data['li6'] = $this->language->get('li6');
-        $this->data['long_description'] = $this->language->get('long_description');
-        $this->data['footer_one'] = $this->language->get('footer_one');
-        $this->data['footer_two'] = $this->language->get('footer_two');
+        $data['page_title'] = $this->language->get('page_title');
+        $data['body_title'] = $this->language->get('body_title');
+        $data['subtitle'] = $this->language->get('subtitle');
+        $data['short_description'] = $this->language->get('short_description');
+        $data['subline'] = $this->language->get('subline');
+        $data['li1'] = $this->language->get('li1');
+        $data['li2'] = $this->language->get('li2');
+        $data['li3'] = $this->language->get('li3');
+        $data['li4'] = $this->language->get('li4');
+        $data['li5'] = $this->language->get('li5');
+        $data['li6'] = $this->language->get('li6');
+        $data['long_description'] = $this->language->get('long_description');
+        $data['footer_one'] = $this->language->get('footer_one');
+        $data['footer_two'] = $this->language->get('footer_two');
 	
 	    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/villkor.tpl')) {
 		    $this->template = $this->config->get('config_template') . '/template/payment/villkor.tpl';
@@ -66,7 +66,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		echo 'Billmate Plugin Version: '.PLUGIN_VERSION; 
 		phpinfo();
 	}
-    protected function index() {
+    public function index() {
 	    $this->load->model('checkout/order');
 
 	    $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -81,14 +81,14 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 			$this->language->load('payment/billmate_invoice');
 
-            $this->data['text_additional'] = $this->language->get('text_additional');
-            $this->data['text_payment_option'] = $this->language->get('text_payment_option');	
-		    $this->data['text_wait'] = $this->language->get('text_wait');		
+            $data['text_additional'] = $this->language->get('text_additional');
+            $data['text_payment_option'] = $this->language->get('text_payment_option');	
+		    $data['text_wait'] = $this->language->get('text_wait');		
 			
-		    $this->data['entry_pno'] = $this->language->get('entry_pno');
-		    $this->data['entry_phone_no'] = sprintf($this->language->get('entry_phone_no'),$order_info['email'] );
-		    $this->data['button_confirm'] = $this->language->get('button_confirm');
-			$this->data['wrong_person_number'] = $this->language->get('your_billing_wrong');
+		    $data['entry_pno'] = $this->language->get('entry_pno');
+		    $data['entry_phone_no'] = sprintf($this->language->get('entry_phone_no'),$order_info['email'] );
+		    $data['button_confirm'] = $this->language->get('button_confirm');
+			$data['wrong_person_number'] = $this->language->get('your_billing_wrong');
 			
 
 	
@@ -97,49 +97,48 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 		    $billmate_invoice = $this->config->get('billmate_invoice');
 	
-		    $this->data['merchant'] = (int)$billmate_invoice['SWE']['merchant'];
-		    $this->data['phone_number'] = $order_info['telephone'];
+		    $data['merchant'] = (int)$billmate_invoice['SWE']['merchant'];
+		    $data['phone_number'] = $order_info['telephone'];
 				
 		    if ($countryData['iso_code_3'] == 'DEU' || $countryData['iso_code_3'] == 'NLD') {
 			    $address = $this->splitAddress($order_info['payment_address_1']);
 		
-			    $this->data['street'] = $address[0];
-			    $this->data['street_number'] = $address[1];
-			    $this->data['street_extension'] = $address[2];
+			    $data['street'] = $address[0];
+			    $data['street_number'] = $address[1];
+			    $data['street_extension'] = $address[2];
 		
 			    if ($countryData['iso_code_3'] == 'DEU') {
-				    $this->data['street_number'] = trim($address[1] . ' ' . $address[2]);
+				    $data['street_number'] = trim($address[1] . ' ' . $address[2]);
 			    }
 		    } else {
-			    $this->data['street'] = '';
-			    $this->data['street_number'] = '';
-			    $this->data['street_extension'] = '';
+			    $data['street'] = '';
+			    $data['street_number'] = '';
+			    $data['street_extension'] = '';
 		    }
 
-		    $this->data['company'] = $order_info['payment_company'];
-		    $this->data['iso_code_2'] = $countryData['iso_code_2'];
-		    $this->data['iso_code_3'] = $countryData['iso_code_3'];
+		    $data['company'] = $order_info['payment_company'];
+		    $data['iso_code_2'] = $countryData['iso_code_2'];
+		    $data['iso_code_3'] = $countryData['iso_code_3'];
 	
 		    // Get the invoice fee
 		    $query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "order_total` WHERE `order_id` = " . (int) $order_info['order_id'] . " AND `code` = 'billmate_fee'");
 	        
 		    if ($query->num_rows && !$query->row['value']) {
-			    $this->data['billmate_fee'] = $query->row['value'];
+			    $data['billmate_fee'] = $query->row['value'];
 		    } else {
-			    $this->data['billmate_fee'] = '';
+			    $data['billmate_fee'] = '';
 		    }
-			$this->data['description'] = $billmate_invoice['SWE']['description'];
+			$data['description'] = $billmate_invoice['SWE']['description'];
 
             if(version_compare(VERSION,'2.0.0','>=')){
-                $data = $this->data;
-                unset($this->data);
+
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
                     return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_invoice.tpl',$data);
                 } else {
                     return $this->load->view('default/template/payment/billmate_invoice.tpl',$data);
                 }
             } else {
-
+                $this->data = $data;
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
                     $this->template = $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl';
                 } else {
@@ -245,7 +244,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     $product_total_qty = $product['quantity'];
 
                     if ($product['minimum'] > $product_total_qty) {
-                        $this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+                        $data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
                     }
                     $rates=0;
 
@@ -779,8 +778,12 @@ $db->query($sql);
 						}
 						
 						$comment = sprintf($this->language->get('text_comment'), $result1['number']);
-						
-						$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+                        if(version_compare(VERSION,'<','2.0'))
+                            $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+                        else
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id',$comment,false));
+
+
 						
 						$json['redirect'] = $this->url->link('checkout/success'); 
 					}

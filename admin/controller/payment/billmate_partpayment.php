@@ -13,7 +13,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$this->load->model('setting/setting');
 
         $billmatepart = $this->model_setting_setting->getSetting('billmate_partpayment');
-        if(!isset($billmatepart['version']) || $billmatepart['version'] != PLUGIN_VERSION){
+        if(!isset($billmatepart['billmate_partpayment_version']) || $billmatepart['billmate_partpayment_version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
 
         }
@@ -34,7 +34,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				'billmate_partpayment_country', 
 				array()
 			);
-            $this->request->post['version'] = PLUGIN_VERSION;
+            $this->request->post['billmate_partpayment_version'] = PLUGIN_VERSION;
+            $this->request->post['billmate_partpayment_country'] = $this->request->post['billmatepartpayment-country'];
 			$this->model_setting_setting->editSetting('billmate_partpayment', $this->request->post);
 		
 			$numFoundPClasses = $this->model_payment_billmate->updatePClasses();
@@ -181,7 +182,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
             $data['billmate_country'] = $this->request->post['billmatepart-country'];
 
         } else {
-            $data['billmate_country'] = $this->config->get('billmatepart-country');
+            $data['billmate_country'] = $this->config->get('billmate_partpay_country');
         }
 
 		$this->load->model('localisation/order_status');

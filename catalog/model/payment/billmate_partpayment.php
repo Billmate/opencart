@@ -18,7 +18,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 		}
         
 		if( $status){
-            $available_countries = array_keys($this->config->get('billmatepart-country'));
+            $available_countries = array_keys($this->config->get('billmate_partpayment_country'));
             if(in_array($address['country_id'],$available_countries)){
                 $status = true;
             } else {
@@ -167,7 +167,8 @@ class ModelPaymentBillmatePartpayment extends Model {
 			$method = array(
 				'code'       => 'billmate_partpayment',
 				'title'      => sprintf($this->language->get('text_no_fee'), preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
-				'sort_order' => $billmate_partpayment['SWE']['sort_order']
+				'sort_order' => $billmate_partpayment['SWE']['sort_order'],
+				'terms' => false
 			);
 		}
 		

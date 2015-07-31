@@ -10,28 +10,27 @@ class ControllerPaymentBillmateCardpay extends Controller {
         else
 		    $this->redirect($this->url->link('checkout/checkout'));
 	}
-	protected function index() {
+	public function index() {
 		if( !empty($this->session->data['order_created']) ) $this->session->data['order_created'] = '';
         $this->language->load('payment/billmate_cardpay');
-        $this->data['button_confirm'] = $this->language->get('button_confirm');
-        $this->data['text_wait'] = $this->language->get('text_wait');
-
+        $data['button_confirm'] = $this->language->get('button_confirm');
+        $data['text_wait'] = $this->language->get('text_wait');
+        error_log('test');
         $this->load->model('checkout/order');
 
 
-		$this->data['description'] = $this->config->get('billmate_cardpay_description');
+		$data['description'] = $this->config->get('billmate_cardpay_description');
 
 
         if(version_compare(VERSION,'2.0.0','>=')){
-            $data = $this->data;
-            unset($this->data);
+
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl')) {
                 return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl',$data);
             } else {
                 return $this->load->view('default/template/payment/billmate_cardpay.tpl',$data);
             }
         } else {
-
+            $this->data = $data;
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl')) {
                 $this->template = $this->config->get('config_template') . '/template/payment/billmate_cardpay.tpl';
             } else {
@@ -74,7 +73,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                                 if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
                                     $this->cache->set('order'.$order_id,1);
-                                    $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
+                                    if(version_compare(VERSION,'<','2.0'))
+                                        $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                                     $msg = '';
                                     if (isset($post['number'])) {
@@ -83,8 +83,11 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                     if( isset($post['status'])) {
                                             $msg .= 'status: '. $post['status'] . "\n";
                                     }
+                                    if(version_compare(VERSION,'<','2.0'))
+                                        $this->model_checkout_order->update($order_id, 1,$msg, false);
+                                    else
+                                        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,false));
 
-                                    $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
                                 } else {
                                     $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
                                 }
@@ -100,14 +103,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
             $error_msg = $post['error_message'];
         }
 		if( $error_msg != '' ) {
-			$this->data['heading_title'] = $this->language->get('text_failed');
-            $this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $error_msg, $this->url->link('information/contact'));
-            $this->data['button_continue'] = $this->language->get('button_continue');
-            $this->data['continue'] = $this->url->link('common/home');
+			$data['heading_title'] = $this->language->get('text_failed');
+            $data['text_message'] = sprintf($this->language->get('text_error_msg'), $error_msg, $this->url->link('information/contact'));
+            $data['button_continue'] = $this->language->get('button_continue');
+            $data['continue'] = $this->url->link('common/home');
 
             if(version_compare(VERSION,'2.0.0','>=')){
-                $data = $this->data;
-                unset($this->data);
+
                 $data['column_left'] = $this->load->controller('common/column_left');
                 $data['header'] = $this->load->controller('common/header');
                 $data['footer'] = $this->load->controller('common/footer');
@@ -121,6 +123,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     return $this->load->view('default/template/payment/billmate_cardpay_failure.tpl',$data);
                 }
             } else {
+                $this->data = $data;
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay_failure.tpl')) {
                     $this->template = $this->config->get('config_template') . '/template/payment/billmate_cardpay_failure.tpl';
                 } else {
@@ -147,14 +150,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 else
                     $this->redirect($this->url->link('checkout/success'));
             }catch(Exception $ex ){
-					$this->data['heading_title'] = $this->language->get('text_failed');
-					$this->data['text_message'] = sprintf($this->language->get('text_error_msg'), $ex->getMessage(), $this->url->link('information/contact'));
-					$this->data['button_continue'] = $this->language->get('button_continue');
-					$this->data['continue'] = $this->url->link('common/home');
+					$data['heading_title'] = $this->language->get('text_failed');
+					$data['text_message'] = sprintf($this->language->get('text_error_msg'), $ex->getMessage(), $this->url->link('information/contact'));
+					$data['button_continue'] = $this->language->get('button_continue');
+					$data['continue'] = $this->url->link('common/home');
 
                 if(version_compare(VERSION,'2.0.0','>=')){
-                    $data = $this->data;
-                    unset($this->data);
+
                     $data['column_left'] = $this->load->controller('common/column_left');
                     $data['header'] = $this->load->controller('common/header');
                     $data['footer'] = $this->load->controller('common/footer');
@@ -168,6 +170,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         return $this->load->view('default/template/payment/billmate_cardpay_failure.tpl',$data);
                     }
                 } else {
+                    $this->data = $data;
                     if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_cardpay_failure.tpl')) {
                         $this->template = $this->config->get('config_template') . '/template/payment/billmate_cardpay_failure.tpl';
                     } else {
@@ -205,13 +208,17 @@ class ControllerPaymentBillmateCardpay extends Controller {
             if(($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
                 $this->cache->set('order'.$post['orderid'],1);
                 $order_id = $post['orderid'];
-                $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
+                if(version_compare(VERSION,'<','2.0'))
+                    $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                 $msg = '';
                 $msg .= 'invoice_id: ' . $post['number'] . "\n";
                 $msg .= 'status: '. $post['status'] . "\n";
-                $this->model_checkout_order->update($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, false);
-                //$this->billmate_transaction();
+
+                if(version_compare(VERSION,'<','2.0'))
+                    $this->model_checkout_order->update($order_id, 1,$msg, false);
+                else
+                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,false));
 
                 $this->cache->delete('order'.$post['orderid']);
             }
@@ -323,7 +330,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
             $product_total_qty = $product['quantity'];
 
             if ($product['minimum'] > $product_total_qty) {
-                $this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+                $data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
             }
             $rates=0;
 

@@ -13,11 +13,14 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		
 		$this->load->model('setting/setting');
         $billmatebank = $this->model_setting_setting->getSetting('billmate_bankpay');
-        if(!isset($billmatebank['version']) || $billmatebank['version'] != PLUGIN_VERSION){
+        if(!isset($billmatebank['billmate_bankpay_version']) || $billmatebank['billmate_bankpay_version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
         }
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->request->post['version'] = PLUGIN_VERSION;
+            $this->request->post['billmate_bankpay_version'] = PLUGIN_VERSION;
+			error_log(print_r($this->request->post,true));
+			$this->request->post['billmate_bankpay_country'] = $this->request->post['billmatebank-country'];
+
 			$this->model_setting_setting->editSetting('billmate_bankpay', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -149,7 +152,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
             $data['billmate_country'] = $this->request->post['billmatebank-country'];
 
         } else {
-            $data['billmate_country'] = $this->config->get('billmatebank-country');
+            $data['billmate_country'] = $this->config->get('billmate_bankpay_country');
         }
         $data['token'] = $this->session->data['token'];
         if(version_compare(VERSION,'2.0.0','>=')){

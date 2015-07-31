@@ -30,7 +30,7 @@ class ModelPaymentBillmateInvoice extends Model {
 
 
 		if( $status){
-            $available_countries = array_keys($this->config->get('billmate-country'));
+            $available_countries = array_keys($this->config->get('billmate_invoice_country'));
             if(in_array($address['country_id'],$available_countries)){
                 $status = true;
             } else {
@@ -44,7 +44,7 @@ class ModelPaymentBillmateInvoice extends Model {
             $billmate_fee = $this->config->get('billmate_fee');
 			$description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee') : $billmate_invoice['SWE']['description'];
 			
-            if ($billmate_fee[$countryData['iso_code_3']]['status']) {
+            if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status']) {
                 $title = sprintf($this->language->get('text_fee'), $description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
                 
             } else {
@@ -55,7 +55,8 @@ class ModelPaymentBillmateInvoice extends Model {
             $method = array(
                 'code'       => 'billmate_invoice',
                 'title'      => $title,
-                'sort_order' => $billmate_invoice['SWE']['sort_order']
+                'sort_order' => $billmate_invoice['SWE']['sort_order'],
+                'terms' => false
             );
         }
         

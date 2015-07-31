@@ -110,13 +110,13 @@
                                     <div class="form-group">
                                         <label for="input-country" class="col-sm-2 control-label"><?php echo $entry_available_countries;; ?></label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="billmateinvoice-country" class="form-control">
+                                            <input type="text" name="billmatepartpayment-country" class="form-control">
                                             <div class="dropdown-menu"></div>
-                                            <div class="well well-sm" id="billmateinvoice-country">
-                                                <?php if(isset($billmate_countries) && is_array($billmate_countries)){ ?>
-                                                <?php foreach ($billmate_countries as $key => $billmate_country) { ?>
-                                                <div id="billmateinvoice-country<?php echo $key; ?>"><i class="fa fa-minus-circle"></i> <?php echo $billmate_country['name']; ?>
-                                                    <input type="hidden" name="billmateinvoice-country[<?php echo $key;?>][name];?>" value="<?php echo $billmate_country['name']; ?>" />
+                                            <div class="well well-sm" id="billmatepartpayment-country">
+                                                <?php if(isset($billmate_country) && is_array($billmate_country)){ ?>
+                                                <?php foreach ($billmate_country as $key => $b_country) { ?>
+                                                <div id="billmatepartpayment-country<?php echo $key; ?>"><i class="fa fa-minus-circle"></i> <?php echo $b_country['name']; ?>
+                                                    <input type="hidden" name="billmatepartpayment-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
                                                 </div>
                                                 <?php } ?>
                                                 <?php } ?>

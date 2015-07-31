@@ -31,7 +31,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				'billmate_invoice_status'   => $status,
                 'version' => PLUGIN_VERSION
 			);
-			
+            $this->request->post['billmate_invoice_country'] = $this->request->post['billmateinvoice-country'];
 			$this->model_setting_setting->editSetting('billmate_invoice', array_merge($this->request->post, $data));
 			
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -143,12 +143,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			$data['billmate_invoice'] = $this->config->get('billmate_invoice');
 		}
 
-        if(isset($this->request->post['billmate-country'])){
+        if(isset($this->request->post['billmateinvoice-country'])){
 
-            $data['billmate_country'] = $this->request->post['billmate-country'];
+            $data['billmate_country'] = $this->request->post['billmateinvoice-country'];
 
         } else {
-            $data['billmate_country'] = $this->config->get('billmate-country');
+            $data['billmate_country'] = $this->config->get('billmate_invoice_country');
         }
 		
 

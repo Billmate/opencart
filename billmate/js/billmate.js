@@ -82,7 +82,7 @@ $('input[name=\'billmateinvoice-country\']').autocomplete({
 $('#billmateinvoice-country').delegate('.fa-minus-circle', 'click', function() {
     $(this).parent().remove();
 });
-$('input[name=\'billmatepart-country\']').autocomplete({
+$('input[name=\'billmatepartpayment-country\']').autocomplete({
     'source': function(request, response) {
         $.ajax({
             url: 'index.php?route=payment/billmate_invoice/country_autocomplete&token='+token+'&filter_name=' +  encodeURIComponent(request),
@@ -98,15 +98,15 @@ $('input[name=\'billmatepart-country\']').autocomplete({
         });
     },
     'select': function(item) {
-        $('input[name=\'billmatepart-country\']').val('');
+        $('input[name=\'billmatepartpayment-country\']').val('');
 
-        $('#billmatepart-country' + item['value']).remove();
+        $('#billmatepartpayment-country' + item['value']).remove();
 
-        $('#billmatepart-country').append('<div id="billmatepart-country' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="billmatepart-country['+item['value']+'][name]" value="' + item['label'] + '" /></div>');
+        $('#billmatepartpayment-country').append('<div id="billmatepartpayment-country' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="billmatepartpayment-country['+item['value']+'][name]" value="' + item['label'] + '" /></div>');
     }
 });
 
-$('#billmatepart-country').delegate('.fa-minus-circle', 'click', function() {
+$('#billmatepartpayment-country').delegate('.fa-minus-circle', 'click', function() {
     $(this).parent().remove();
 });
 
