@@ -72,10 +72,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			
 			// The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
 			$billmate_partpayment = $this->config->get('billmate_partpayment');
-		    $this->db->query("SET NAMES 'utf8'");
-		    $query = $this->db->query('SELECT value FROM '.DB_PREFIX.'setting where serialized=1 and `key`="'.$countryData['iso_code_3'].'"');
-            $countryRates = unserialize( $query->row['value']);
-            $countryRates = $countryRates[0];
+		    $countryRates = $this->config->get('billmate_partpayment_pclasses');
+            $countryRates = $countryRates['SWE'][0];
 			
 			$data['merchant'] = $billmate_partpayment['SWE']['merchant'];
 			$data['phone_number'] = $order_info['telephone'];

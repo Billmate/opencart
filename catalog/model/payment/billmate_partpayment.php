@@ -16,9 +16,9 @@ class ModelPaymentBillmatePartpayment extends Model {
 		} elseif (!$billmate_partpayment['SWE']['status']) {
 			$status = false;
 		}
-        
 		if( $status){
             $available_countries = array_keys($this->config->get('billmate_partpayment_country'));
+
             if(in_array($address['country_id'],$available_countries)){
                 $status = true;
             } else {
@@ -26,15 +26,12 @@ class ModelPaymentBillmatePartpayment extends Model {
             }
 
 		}
-
         if(!$status) return false;
-        		
-		$this->db->query("SET NAMES 'utf8'");
-		$query = $this->db->query('SELECT value FROM '.DB_PREFIX.'setting where serialized=1 and `key`="'.$countryData['iso_code_3'].'"');
-		if( empty( $query->row['value'] ) ) return false;
+
 		
-        $countryRates = unserialize( $query->row['value']);
-        $countryRates = $countryRates[0];
+        $countryRates = $this->config->get('billmate_partpayment_pclasses');
+        $countryRates = $countryRates['SWE'][0];
+
 
        $method = array();
 
@@ -148,7 +145,7 @@ class ModelPaymentBillmatePartpayment extends Model {
                 $i++;
 			}
 		}
-		
+		error_log('po'.print_r($payment_option,true));
 		if (!$payment_option) {
 			$status = false;
 		}

@@ -182,7 +182,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
             $data['billmate_country'] = $this->request->post['billmatepart-country'];
 
         } else {
-            $data['billmate_country'] = $this->config->get('billmate_partpay_country');
+            $data['billmate_country'] = $this->config->get('billmate_partpayment_country');
         }
 
 		$this->load->model('localisation/order_status');
