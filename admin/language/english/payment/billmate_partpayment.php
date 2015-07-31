@@ -16,6 +16,7 @@ $_['text_norway']           = 'Norway';
 $_['text_finland']          = 'Finland';
 $_['text_denmark']          = 'Denmark';
 $_['entry_description']     = 'Description:';
+$_['entry_test']         = 'Test Mode:';
 
 // Entry
 $_['entry_merchant']        = 'Billmate ID:<br /><span class="help">(estore id) to use for the Billmate service (provided by Billmate).</span>';

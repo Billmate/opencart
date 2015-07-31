@@ -24,82 +24,82 @@ class ControllerTotalBillmateFee extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
             if(version_compare(VERSION,'2.0.0','>='))
-                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
             else
-                $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
 		
-		$this->data['heading_title'] = $this->language->get('heading_title');
+		$data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_none'] = $this->language->get('text_none');
+		$data['text_enabled'] = $this->language->get('text_enabled');
+		$data['text_disabled'] = $this->language->get('text_disabled');
+		$data['text_none'] = $this->language->get('text_none');
 		
-		$this->data['entry_fee'] = $this->language->get('entry_fee');
-		$this->data['entry_tax_class'] = $this->language->get('entry_tax_class');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		$data['entry_fee'] = $this->language->get('entry_fee');
+		$data['entry_tax_class'] = $this->language->get('entry_tax_class');
+		$data['entry_status'] = $this->language->get('entry_status');
+		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
 					
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
+		$data['button_save'] = $this->language->get('button_save');
+		$data['button_cancel'] = $this->language->get('button_cancel');
 		
         if (isset($this->error['warning'])) {
-            $this->data['error_warning'] = $this->error['warning'];
+            $data['error_warning'] = $this->error['warning'];
         } else {
-            $this->data['error_warning'] = '';
+            $data['error_warning'] = '';
         }
 
-        $this->data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = array();
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
             'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => false
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_total'),
             'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
             'href'      => $this->url->link('total/billmate_fee', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
                 
-		$this->data['action'] = $this->url->link('total/billmate_fee', 'token=' . $this->session->data['token'], 'SSL');
+		$data['action'] = $this->url->link('total/billmate_fee', 'token=' . $this->session->data['token'], 'SSL');
 
-        $this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['countries'] = array();
+		$data['countries'] = array();
 		
-		$this->data['countries'][] = array(
+		$data['countries'][] = array(
 			'name' => $this->language->get('text_sweden'),
 			'code' => 'SWE'
 		);
 
 		
         if (isset($this->request->post['billmate_fee'])) {
-            $this->data['billmate_fee'] = $this->request->post['billmate_fee'];
+            $data['billmate_fee'] = $this->request->post['billmate_fee'];
         } else {
-            $this->data['billmate_fee'] = $this->config->get('billmate_fee');
+            $data['billmate_fee'] = $this->config->get('billmate_fee');
         }
              
         $this->load->model('localisation/tax_class');   
 		
-        $this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
 
         if(version_compare(VERSION,'2.0.0','>=')){
-            $data = $this->data;
+
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['footer'] = $this->load->controller('common/footer');
 
-            $this->response->setOutput($this->load->view('total/billmate_fee.tpl', $data));
+            $this->response->setOutput($this->load->view('total/two/billmate_fee.tpl', $data));
         } else {
-
+            $this->data = $data;
             $this->template = 'total/billmate_fee.tpl';
             $this->children = array(
                 'common/header',

@@ -21,22 +21,53 @@
         <?php } ?>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $heading_title; ?></h3>
             </div>
             <div class="panel-body">
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-bankpay" class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                         <div class="col-sm-10">
-                            <input type="text" name="cod_total" value="<?php echo $cod_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
+                            <select name="billmate_bankpay_status" id="input-status" class="form-control">
+                                <?php if ($billmate_bankpay_status) { ?>
+                                <option value="1" selected="selected"><?php echo $text_yes; ?></option>
+                                <option value="0"><?php echo $text_no; ?></option>
+                                <?php } else { ?>
+                                <option value="1"><?php echo $text_yes; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_no; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-merchant_id"><span><?php echo $entry_merchant_id; ?></span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="billmate_bankpay_merchant_id" value="<?php echo $billmate_bankpay_merchant_id; ?>" placeholder="<?php echo $entry_merchant_id; ?>" id="input-merchant_id" class="form-control" />
+                        </div>
+                    </div><div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secret"><span><?php echo $entry_secret; ?></span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="billmate_bankpay_secret" value="<?php echo $billmate_bankpay_secret; ?>" placeholder="<?php echo $entry_secret; ?>" id="input-secret" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-description"><span><?php echo $entry_description; ?></span></label>
+                        <div class="col-sm-10">
+                            <textarea cols="84" rows="10" name="billmate_bankpay_description"><?php echo $billmate_bankpay_description; ?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-total"><span><?php echo $entry_total; ?></span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="billmate_bankpay_total" value="<?php echo $billmate_bankpay_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
                         <div class="col-sm-10">
-                            <select name="cod_order_status_id" id="input-order-status" class="form-control">
+                            <select name="billmate_bankpay_order_status_id" id="input-order-status" class="form-control">
                                 <?php foreach ($order_statuses as $order_status) { ?>
-                                <?php if ($order_status['order_status_id'] == $cod_order_status_id) { ?>
+                                <?php if ($order_status['order_status_id'] == $billmate_bankpay_order_status_id) { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                                 <?php } else { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -46,30 +77,31 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-geo-zone"><?php echo $entry_geo_zone; ?></label>
+                        <label for="input-country" class="col-sm-2 control-label"><?php echo $entry_available_countries;; ?></label>
                         <div class="col-sm-10">
-                            <select name="cod_geo_zone_id" id="input-geo-zone" class="form-control">
-                                <option value="0"><?php echo $text_all_zones; ?></option>
-                                <?php foreach ($geo_zones as $geo_zone) { ?>
-                                <?php if ($geo_zone['geo_zone_id'] == $cod_geo_zone_id) { ?>
-                                <option value="<?php echo $geo_zone['geo_zone_id']; ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
-                                <?php } else { ?>
-                                <option value="<?php echo $geo_zone['geo_zone_id']; ?>"><?php echo $geo_zone['name']; ?></option>
+                            <input type="text" name="billmatebank-country" class="form-control">
+                            <div class="dropdown-menu"></div>
+                            <div class="well well-sm" id="billmatebank-country">
+                                <?php if(isset($billmate_countries) && is_array($billmate_countries)){ ?>
+                                    <?php foreach ($billmate_countries as $key => $billmate_country) { ?>
+                                        <div id="billmatebank-country<?php echo $key; ?>"><i class="fa fa-minus-circle"></i> <?php echo $billmate_country['name']; ?>
+                                            <input type="hidden" name="billmatebank-country[<?php echo $key;?>][name];?>" value="<?php echo $billmate_country['name']; ?>" />
+                                        </div>
+                                    <?php } ?>
                                 <?php } ?>
-                                <?php } ?>
-                            </select>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                        <label class="col-sm-2 control-label" for="input-test-status"><?php echo $entry_test; ?></label>
                         <div class="col-sm-10">
-                            <select name="cod_status" id="input-status" class="form-control">
-                                <?php if ($cod_status) { ?>
-                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                <option value="0"><?php echo $text_disabled; ?></option>
+                            <select name="billmate_bankpay_test" id="input-test-status" class="form-control">
+                                <?php if ($billmate_bankpay_test) { ?>
+                                <option value="1" selected="selected"><?php echo $text_yes; ?></option>
+                                <option value="0"><?php echo $text_no; ?></option>
                                 <?php } else { ?>
-                                <option value="1"><?php echo $text_enabled; ?></option>
-                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                <option value="1"><?php echo $text_yes; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_no; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -77,7 +109,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
                         <div class="col-sm-10">
-                            <input type="text" name="cod_sort_order" value="<?php echo $cod_sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
+                            <input type="text" name="billmate_bankpay_sort_order" value="<?php echo $billmate_bankpay_sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
                         </div>
                     </div>
                 </form>
@@ -85,4 +117,8 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var token = '<?php echo $token; ?>';
+</script>
+<script src="/billmate/js/billmate.js"></script>
 <?php echo $footer; ?>

@@ -158,7 +158,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['footer'] = $this->load->controller('common/footer');
 
-            $this->response->setOutput($this->load->view('payment/billmate_bankpay.tpl', $data));
+            $this->response->setOutput($this->load->view('payment/two/billmate_bankpay.tpl', $data));
         } else {
             $this->data = $data;
             $this->template = 'payment/billmate_bankpay.tpl';

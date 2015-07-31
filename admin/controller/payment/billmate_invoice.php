@@ -41,140 +41,140 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 		
- 		$this->data['heading_title'] = $this->language->get('heading_title');
+ 		$data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
-		$this->data['text_live'] = $this->language->get('text_live');
-		$this->data['text_beta'] = $this->language->get('text_beta');
-		$this->data['text_sweden'] = $this->language->get('text_sweden');
-		$this->data['text_norway'] = $this->language->get('text_norway');
-		$this->data['text_finland'] = $this->language->get('text_finland');
-		$this->data['text_denmark'] = $this->language->get('text_denmark');
+		$data['text_enabled'] = $this->language->get('text_enabled');
+		$data['text_disabled'] = $this->language->get('text_disabled');
+		$data['text_all_zones'] = $this->language->get('text_all_zones');
+		$data['text_live'] = $this->language->get('text_live');
+		$data['text_beta'] = $this->language->get('text_beta');
+		$data['text_sweden'] = $this->language->get('text_sweden');
+		$data['text_norway'] = $this->language->get('text_norway');
+		$data['text_finland'] = $this->language->get('text_finland');
+		$data['text_denmark'] = $this->language->get('text_denmark');
 				
-		$this->data['entry_merchant'] = $this->language->get('entry_merchant');
-		$this->data['entry_secret'] = $this->language->get('entry_secret');
-		$this->data['entry_server'] = $this->language->get('entry_server');
-		$this->data['entry_mintotal'] = $this->language->get('entry_mintotal');	
-		$this->data['entry_maxtotal'] = $this->language->get('entry_maxtotal');	
-		$this->data['entry_pending_status'] = $this->language->get('entry_pending_status');
-		$this->data['entry_accepted_status'] = $this->language->get('entry_accepted_status');		
+		$data['entry_merchant'] = $this->language->get('entry_merchant');
+		$data['entry_secret'] = $this->language->get('entry_secret');
+		$data['entry_server'] = $this->language->get('entry_server');
+		$data['entry_mintotal'] = $this->language->get('entry_mintotal');	
+		$data['entry_maxtotal'] = $this->language->get('entry_maxtotal');	
+		$data['entry_pending_status'] = $this->language->get('entry_pending_status');
+		$data['entry_accepted_status'] = $this->language->get('entry_accepted_status');
+        $data['entry_test'] = $this->language->get('entry_test');
 
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		$this->data['entry_description'] = $this->language->get('entry_description');
-        $this->data['entry_available_countries'] = $this->language->get('entry_available_countries');
+		$data['entry_status'] = $this->language->get('entry_status');
+		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		$data['entry_description'] = $this->language->get('entry_description');
+        $data['entry_available_countries'] = $this->language->get('entry_available_countries');
 		
-		$this->data['entry_invoice_fee'] = $this->language->get('entry_invoice_fee');
-		$this->data['entry_invoice_fee_tax'] = $this->language->get('entry_invoice_fee_tax');
+		$data['entry_invoice_fee'] = $this->language->get('entry_invoice_fee');
+		$data['entry_invoice_fee_tax'] = $this->language->get('entry_invoice_fee_tax');
 		
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-		$this->data['button_clear'] = $this->language->get('button_clear');
+		$data['button_save'] = $this->language->get('button_save');
+		$data['button_cancel'] = $this->language->get('button_cancel');
+		$data['button_clear'] = $this->language->get('button_clear');
 		
-		$this->data['tab_general'] = $this->language->get('tab_general');
-		$this->data['tab_log'] = $this->language->get('tab_log');
+		$data['tab_general'] = $this->language->get('tab_general');
+		$data['tab_log'] = $this->language->get('tab_log');
 				       
         if (isset($this->error['warning'])) {
-            $this->data['error_warning'] = $this->error['warning'];
+            $data['error_warning'] = $this->error['warning'];
         } else {
-            $this->data['error_warning'] = '';
+            $data['error_warning'] = '';
         }
         
-        $this->data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = array();
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
             'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => false
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_payment'),
             'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
             'href'      => $this->url->link('payment/billmate_invoice', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 		
 		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
+			$data['success'] = $this->session->data['success'];
 		
 			unset($this->session->data['success']);
 		} else {
-			$this->data['success'] = '';
+			$data['success'] = '';
 		}
 		
-        $this->data['action'] = $this->url->link('payment/billmate_invoice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('payment/billmate_invoice', 'token=' . $this->session->data['token'], 'SSL');
        
-	    $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+	    $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['countries'] = array();
+		$data['countries'] = array();
 		
-		$this->data['countries'][] = array(
+		$data['countries'][] = array(
 			'name' => $this->language->get('text_sweden'),
 			'code' => 'SWE'
 		);
 		
-/*		$this->data['countries'][] = array(
+/*		$data['countries'][] = array(
 			'name' => $this->language->get('text_denmark'),
 			'code' => 'DNK'
 		);
 		
-		$this->data['countries'][] = array(
+		$data['countries'][] = array(
 			'name' => $this->language->get('text_norway'),
 			'code' => 'NOR'
 		);
 		
-		$this->data['countries'][] = array(
+		$data['countries'][] = array(
 			'name' => $this->language->get('text_finland'),
 			'code' => 'FIN'
 		);
 */
 		if (isset($this->request->post['billmate_invoice'])) {
-			$this->data['billmate_invoice'] = $this->request->post['billmate_invoice'];
+			$data['billmate_invoice'] = $this->request->post['billmate_invoice'];
 		} else {
-			$this->data['billmate_invoice'] = $this->config->get('billmate_invoice');
+			$data['billmate_invoice'] = $this->config->get('billmate_invoice');
 		}
 
         if(isset($this->request->post['billmate-country'])){
 
-            $this->data['billmate_country'] = $this->request->post['billmate-country'];
+            $data['billmate_country'] = $this->request->post['billmate-country'];
 
         } else {
-            $this->data['billmate_country'] = $this->config->get('billmate-country');
+            $data['billmate_country'] = $this->config->get('billmate-country');
         }
 		
 
 		$this->load->model('localisation/order_status');
 			
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
         
 		$file = DIR_LOGS . 'billmate_invoice.log';
         
         if (file_exists($file)) {
-            $this->data['log'] = file_get_contents($file, FILE_USE_INCLUDE_PATH, null);
+            $data['log'] = file_get_contents($file, FILE_USE_INCLUDE_PATH, null);
         } else {
-            $this->data['log'] = '';
+            $data['log'] = '';
         }
-        $this->data['token'] = $this->session->data['token'];
-        $this->data['clear'] = $this->url->link('payment/billmate_invoice/clear', 'token=' . $this->session->data['token'], 'SSL');
+        $data['token'] = $this->session->data['token'];
+        $data['clear'] = $this->url->link('payment/billmate_invoice/clear', 'token=' . $this->session->data['token'], 'SSL');
 
         if(version_compare(VERSION,'2.0.0','>=')){
-            $data = $this->data;
-            unset($this->data);
+
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['footer'] = $this->load->controller('common/footer');
 
-            $this->response->setOutput($this->load->view('payment/billmate_invoice.tpl', $data));
+            $this->response->setOutput($this->load->view('payment/two/billmate_invoice.tpl', $data));
         } else {
-
+            $this->data = $data;
             $this->template = 'payment/billmate_invoice.tpl';
             $this->children = array(
                 'common/header',

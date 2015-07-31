@@ -337,7 +337,7 @@ class ModelPaymentBillmate extends Model {
 
     public function updatePClasses() {
         $billmate = new OpenCartBillmate();
-
+        $this->load->model('setting/setting');
        // $billmate->ocClearPClasses();
 
         // Loop through all enabled countries and find unique country/eid/server combinations
@@ -384,6 +384,7 @@ class ModelPaymentBillmate extends Model {
 
             foreach($countryConfigurations AS $config) {
                 try {
+
                     $billmate->ocFetchPClasses(
                         $countryCode,
                         $config['eid'],
@@ -403,7 +404,7 @@ class ModelPaymentBillmate extends Model {
 
         }
 		
-        $this->model_setting_setting->editSetting( 'billmate_partpayment_country', $data );
+        $this->model_setting_setting->editSetting( 'billmate_partpayment', array('billmate_partpayment_pclasses' => $data) );
         return $numFoundPClasses;
     }
 
