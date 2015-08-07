@@ -11,7 +11,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		
 		$this->load->model('setting/setting');
         $billmateinvoice = $this->model_setting_setting->getSetting('billmate_invoice');
-        if(!isset($billmateinvoice['version']) || $billmateinvoice['version'] != PLUGIN_VERSION){
+        if(!isset($billmateinvoice['billmate_invoice_version']) || $billmateinvoice['billmate_invoice_version'] != PLUGIN_VERSION){
             include_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'update.php';
 
         }
@@ -29,7 +29,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			$data = array(
 				'billmate_invoice_pclasses' => $this->pclasses,
 				'billmate_invoice_status'   => $status,
-                'version' => PLUGIN_VERSION
+                'billmate_invoice_version' => PLUGIN_VERSION
 			);
             $this->request->post['billmate_invoice_country'] = $this->request->post['billmateinvoice-country'];
 			$this->model_setting_setting->editSetting('billmate_invoice', array_merge($this->request->post, $data));
