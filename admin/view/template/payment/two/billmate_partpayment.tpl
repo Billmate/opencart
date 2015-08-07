@@ -159,26 +159,29 @@
                         <div class="tab-pane" id="tab-pclasses">
                             <table class="form">
                                 <?php
-                                    $head = array();
-                                    if( is_array( $all_pclasses[0] )){
-                                        $head = array_keys($all_pclasses[0]);
-                                    }
-                                    ?>
-                                    <tr>
-                                        <?php foreach($head as $row) echo '<th>',ucfirst(str_replace('_',' ', $row)),'</th>'; ?>
-                                    </tr>
-                                    <?php
-                                    foreach($all_pclasses as $pclass){
-                                        echo '<tr>';
-                                        foreach($pclass as $key => $val){
-                                            if( $key == 'country' ){
-                                                echo '<td align="center">',($val==209? 'Sweden': $val),'</td>';
-                                            }else{
-                                                echo '<td align="center">',$val,'</td>';
-                                            }
+                                    if(isset($all_pclasses[0]){
+                                        $head = array();
+                                        if( is_array( $all_pclasses[0] )){
+                                            $head = array_keys($all_pclasses[0]);
                                         }
-                                            echo '</tr>';
-                                    }
+                                        ?>
+                                        <tr>
+                                            <?php foreach($head as $row) echo '<th>',ucfirst(str_replace('_',' ', $row)),'</th>'; ?>
+                                        </tr>
+                                        <?php
+                                        foreach($all_pclasses as $pclass){
+                                            echo '<tr>';
+                                            foreach($pclass as $key => $val){
+                                                if( $key == 'country' ){
+                                                    echo '<td align="center">',($val==209? 'Sweden': $val),'</td>';
+                                                }else{
+                                                    echo '<td align="center">',$val,'</td>';
+                                                }
+                                            }
+                                                echo '</tr>';
+                                        }
+                                    } else
+                                        echo $no_pclasses_found;
                                 ?>
                             </table>
                         </div>

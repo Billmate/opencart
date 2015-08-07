@@ -38,4 +38,5 @@ $_['error_permission']      = 'Warning: You do not have permission to modify pay
 $_['regen_pclasses'] = 'Save & Regen Pclasses';
 $_['text_pclasses_updated'] = 'Successful update: fetched {count} PClasses from Billmate.';
 $_['text_pclasses_updated_link'] = 'Would you like to view them?';
+$_['no_pclasses_found'] = 'Couldnt find any saved paymentplans';
 

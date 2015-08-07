@@ -37,4 +37,5 @@ $_['error_permission']      = 'Varning: Du har inte access till att ändra Billm
 $_['regen_pclasses'] = 'Save & Regen Pclasses';
 $_['text_pclasses_updated'] = 'Successful update: fetched {count} PClasses from Billmate.';
 $_['text_pclasses_updated_link'] = 'Would you like to view them?';
+$_['no_pclasses_found'] = 'Hittade inga sparade betalplaner';
 
