@@ -51,7 +51,12 @@
                                                 <input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][secret]" value="<?php echo $billmate_invoice[$country['code']]['secret']; ?>" id="input-secret" class="form-control" />
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="input-description"><span><?php echo $entry_description; ?></span></label>
+                                            <div class="col-sm-10">
+                                                <textarea cols="84" rows="10" name="billmate_invoice[<?php echo $country['code'];?>][description]"><?php echo isset($billmate_invoice[$country['code']]['description']) ? $billmate_invoice[$country['code']]['description'] : ''; ?></textarea>
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                                             <div class="col-sm-10">
