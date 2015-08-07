@@ -7,6 +7,11 @@ $_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) 
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %%, 
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: %s,effectiverate:34});
 });</script>';
+$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning" style="float: left;margin: 2px 6px;">Betala från %s/månad <a id="terms-delbetalning">Köpvillkor</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+		$("#terms").Terms("villkor",{invoicefee:29});
+		//effectiverate=(monthlyfee*numberofmonths-1)/100 %%,
+		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: %s,effectiverate:34});
+		});</script>';
 $_['text_information']     = 'Billmate delbetalning information';
 $_['text_additional']      = 'Billmate delbetalning behöver lite mer information för att processa din order.';
 $_['text_wait']            = 'Var god vänta!';

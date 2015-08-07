@@ -161,12 +161,21 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$method = array();
 	
 		if ($status) {
-			$method = array(
-				'code'       => 'billmate_partpayment',
-				'title'      => sprintf($this->language->get('text_no_fee'), preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
-				'sort_order' => $billmate_partpayment['SWE']['sort_order'],
-				'terms' => false
-			);
+			if(version_compare(VERSION,'2.0','<')){
+				$method = array(
+					'code'       => 'billmate_partpayment',
+					'title'      => sprintf($this->language->get('text_no_fee'), preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
+					'sort_order' => $billmate_partpayment['SWE']['sort_order']
+				);
+			} else {
+				$method = array(
+					'code'       => 'billmate_partpayment',
+					'title'      => $this->language->get('text_title'),
+					'sort_order' => $billmate_partpayment['SWE']['sort_order'],
+					'terms' => sprintf($this->language->get('text_no_fee2'), preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
+				);
+			}
+
 		}
 		
         return $method;

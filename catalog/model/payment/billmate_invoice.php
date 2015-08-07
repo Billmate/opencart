@@ -42,22 +42,39 @@ class ModelPaymentBillmateInvoice extends Model {
         
         if ($status) {
             $billmate_fee = $this->config->get('billmate_fee');
-			$description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee') : $billmate_invoice['SWE']['description'];
-			
-            if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status']) {
-                $title = sprintf($this->language->get('text_fee'), $description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
-                
-            } else {
-                $title = sprintf($this->language->get('text_no_fee'),$description, $billmate_invoice['SWE']['merchant'], strtolower($countryData['iso_code_2']));
-            }
+			if(version_compare(VERSION,'2.0','<')) {
+                $description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee') : $billmate_invoice['SWE']['description'];
 
-           
-            $method = array(
-                'code'       => 'billmate_invoice',
-                'title'      => $title,
-                'sort_order' => $billmate_invoice['SWE']['sort_order'],
-                'terms' => false
-            );
+                if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status']) {
+                    $title = sprintf($this->language->get('text_fee'), $description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
+
+                } else {
+                    $title = sprintf($this->language->get('text_no_fee'), $description, $billmate_invoice['SWE']['merchant'], strtolower($countryData['iso_code_2']));
+                }
+
+
+                $method = array(
+                    'code' => 'billmate_invoice',
+                    'title' => $title,
+                    'sort_order' => $billmate_invoice['SWE']['sort_order'],
+                );
+            } else {
+                $description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee2') : $billmate_invoice['SWE']['description'];
+
+                if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status']) {
+                    $title = sprintf($this->language->get('text_fee2'), $description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
+
+                } else {
+                    $title = sprintf($this->language->get('text_no_fee2'),$description, $billmate_invoice['SWE']['merchant'], strtolower($countryData['iso_code_2']));
+                }
+
+                $method = array(
+                    'code' => 'billmate_invoice',
+                    'title' => $this->language->get('text_title'),
+                    'sort_order' => $billmate_invoice['SWE']['sort_order'],
+                    'terms' => $title
+                );
+            }
         }
         
         return $method;
