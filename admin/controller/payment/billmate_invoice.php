@@ -276,7 +276,13 @@ class ControllerPaymentBillmateInvoice extends Controller {
         if (!$this->user->hasPermission('modify', 'payment/billmate_invoice')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
-				
+
+        if(!$this->request->post['billmate_invoice[swe][merchant]']){
+            $this->error['merchant_swe'] = $this->language->get('error_merchant_id');
+        }
+        if(!$this->request->post['billmate_invoice[swe][secret]']){
+            $this->error['secret_swe'] = $this->language->get('error_secret');
+        }
         if (!$this->error) {
             return true;
         } else {
@@ -289,7 +295,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_invoice',array('version' => PLUGIN_VERSION,'billmate-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_invoice',array('billmate_invoice_version' => PLUGIN_VERSION,'billmate_invoice_country' =>array($country['country_id'] => array('name' => $country['name']))));
 
     }
     

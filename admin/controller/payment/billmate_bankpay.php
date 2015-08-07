@@ -43,6 +43,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $data['entry_test'] = $this->language->get('entry_test');
 		$data['entry_order_status'] = $this->language->get('entry_order_status');
 		$data['entry_total'] = $this->language->get('entry_total');
+		$data['help_total'] = $this->language->get('help_total');
 
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
@@ -179,13 +180,15 @@ class ControllerPaymentBillmateBankpay extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-                if (!$this->request->post['billmate_bankpay_merchant_id']) {
-                        $this->error['merchant'] = $this->language->get('error_merchant_id');
-                }
+		if (!$this->request->post['billmate_bankpay_merchant_id']) {
+				$this->error['merchant'] = $this->language->get('error_merchant_id');
+		}
 
-                if (!$this->request->post['billmate_bankpay_secret']) {
-                        $this->error['secret'] = $this->language->get('error_secret');
-                }
+		if (!$this->request->post['billmate_bankpay_secret']) {
+				$this->error['secret'] = $this->language->get('error_secret');
+		}
+
+
 				
 		if (!$this->error) {
 			return true;
@@ -198,7 +201,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_bankpay',array('version' => PLUGIN_VERSION,'billmatebank-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_bankpay',array('billmate_bankpay_version' => PLUGIN_VERSION,'billmate_bankpay_country' =>array($country['country_id'] => array('name' => $country['name']))));
     }
 }
 ?>

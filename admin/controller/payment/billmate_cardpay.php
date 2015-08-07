@@ -39,7 +39,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$data['entry_secret'] = $this->language->get('entry_secret');
         $data['entry_test'] = $this->language->get('entry_test');				
 		$data['entry_order_status'] = $this->language->get('entry_order_status');
-		$data['entry_total'] = $this->language->get('entry_total');	
+		$data['entry_total'] = $this->language->get('entry_total');
+        $data['help_total'] = $this->language->get('help_total');
 		$data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$data['entry_description'] = $this->language->get('entry_description');
 		$data['entry_status'] = $this->language->get('entry_status');
@@ -195,7 +196,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
         $country = $query->row;
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('billmate_cardpay',array('version' => PLUGIN_VERSION,'billmatecard-country' =>array($country['country_id'] => array('name' => $country['name']))));
+        $this->model_setting_setting->editSetting('billmate_cardpay',array('billmate_cardpay_version' => PLUGIN_VERSION,'billmate_cardpay_country' =>array($country['country_id'] => array('name' => $country['name']))));
 
     }
 
@@ -295,13 +296,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-                if (!$this->request->post['billmate_cardpay_merchant_id']) {
-                        $this->error['merchant'] = $this->language->get('error_merchant_id');
-                }
+        if (!$this->request->post['billmate_cardpay_merchant_id']) {
+                $this->error['merchant'] = $this->language->get('error_merchant_id');
+        }
 
-                if (!$this->request->post['billmate_cardpay_secret']) {
-                        $this->error['secret'] = $this->language->get('error_secret');
-                }
+        if (!$this->request->post['billmate_cardpay_secret']) {
+                $this->error['secret'] = $this->language->get('error_secret');
+        }
 				
 		if (!$this->error) {
 			return true;

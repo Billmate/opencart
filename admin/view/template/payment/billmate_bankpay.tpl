@@ -58,7 +58,7 @@
               <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_total; ?></td>
+            <td><?php echo $entry_total.$help_total; ?></td>
             <td><input type="text" name="billmate_bankpay_total" value="<?php echo $billmate_bankpay_total; ?>" /></td>
           </tr>        
           <tr>
