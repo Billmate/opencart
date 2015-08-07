@@ -15,6 +15,8 @@ $_['text_norway']           = 'Norge';
 $_['text_finland']          = 'Finland';
 $_['text_denmark']          = 'Danmark';
 $_['entry_description']     = 'Beskrivning:';
+$_['latest_release']     = 'Det finns en nyare version av denna plugin';
+
 
 // Entry
 $_['entry_merchant']        = 'Billmate ID:';

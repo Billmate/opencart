@@ -425,4 +425,26 @@ class ModelPaymentBillmate extends Model {
         }
     }
 
+    public function isLatestRelease($version)
+    {
+        $ch = curl_init('https://api.github.com/repos/Billmate/opencart/releases/latest');
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch,CURLOPT_POST,0);
+        curl_setopt($ch,CURLOPT_HEADER,0);
+        curl_setopt($ch,CURLOPT_USERAGENT,'billmate-opencart');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ));
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = json_decode($result,true);
+        if(version_compare($version,$result['tag_name'],'<')){
+            return false;
+        }
+
+        return true;
+    }
+
 }

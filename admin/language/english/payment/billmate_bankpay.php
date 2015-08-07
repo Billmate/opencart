@@ -11,6 +11,7 @@ $_['text_success']       = 'Success: You have modified Billmate Bank payment mod
 // Entry
 $_['entry_merchant_id']     = 'Billmate ID:';
 $_['entry_merchant_help']   = '(estore id) to use for the Billmate service (provided by Billmate).';
+$_['latest_release']     = 'There is a new version released for this plugin';
 
 $_['entry_secret']     = 'Billmate Key:';
 $_['entry_secret_help']     = 'Shared secret to use with the Billmate service (provided by Billmate).';

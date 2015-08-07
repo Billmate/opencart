@@ -50,7 +50,6 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			);
             $setting = $this->model_setting_setting->getSetting('billmate_partpayment');
             $data['billmate_partpayment_pclasses'] = $setting['billmate_partpayment_pclasses'];
-			error_log(print_r($this->model_setting_setting->getSetting('billmate_partpayment_country'),true));
 			$this->model_setting_setting->editSetting('billmate_partpayment', array_merge($this->request->post, $data));
 
 
@@ -59,7 +58,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
             else
                 $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
-		
+        $this->load->model('payment/billmate');
+		$data['latest_release'] = (!$this->model_payment_billmate->isLatestRelease(PLUGIN_VERSION)) ? $this->language->get('latest_release') : '';
  		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_enabled'] = $this->language->get('text_enabled');

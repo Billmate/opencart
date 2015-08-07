@@ -42,7 +42,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
         }
 		
  		$data['heading_title'] = $this->language->get('heading_title');
-
+        $this->load->model('payment/billmate');
+        $data['latest_release'] = (!$this->model_payment_billmate->isLatestRelease(PLUGIN_VERSION)) ? $this->language->get('latest_release') : '';
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
 		$data['text_all_zones'] = $this->language->get('text_all_zones');

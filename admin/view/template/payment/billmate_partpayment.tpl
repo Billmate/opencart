@@ -17,6 +17,9 @@
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
+    <?php if($latest_release != ''){ ?>
+    <div class="warning"><?php echo $latest_release; ?></div>
+    <?php } ?>
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>

@@ -12,6 +12,8 @@ $_['entry_merchant_id']     = 'Billmate ID';
 $_['entry_merchant_help']   = 'Affärens ID för att använda Billmates tjänster (fås av Billmate).';
 $_['entry_secret']     = 'Billmate Nyckel:';
 $_['entry_secret_help']     = 'Hemlig nyckel för att använda Billmates tjänster (fås av Billmate).';
+$_['latest_release']     = 'Det finns en nyare version av denna plugin';
+
 
 
 $_['entry_test']         = 'Testläge:';
