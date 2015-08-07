@@ -54,10 +54,14 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		$data['text_denmark'] = $this->language->get('text_denmark');
 				
 		$data['entry_merchant'] = $this->language->get('entry_merchant');
+        $data['entry_merchant_help'] = $this->language->get('entry_merchant_help');
 		$data['entry_secret'] = $this->language->get('entry_secret');
+        $data['entry_secret_help'] = $this->language->get('entry_secret_help');
 		$data['entry_server'] = $this->language->get('entry_server');
 		$data['entry_mintotal'] = $this->language->get('entry_mintotal');	
-		$data['entry_maxtotal'] = $this->language->get('entry_maxtotal');	
+		$data['entry_mintotal_help'] = $this->language->get('entry_mintotal_help');
+		$data['entry_maxtotal'] = $this->language->get('entry_maxtotal');
+		$data['entry_maxtotal_help'] = $this->language->get('entry_maxtotal_help');
 		$data['entry_pending_status'] = $this->language->get('entry_pending_status');
 		$data['entry_accepted_status'] = $this->language->get('entry_accepted_status');
         $data['entry_test'] = $this->language->get('entry_test');

@@ -17,11 +17,15 @@ $_['text_denmark']          = 'Danmark';
 $_['entry_description']     = 'Beskrivning:';
 
 // Entry
-$_['entry_merchant']        = 'Billmate ID:<br /><span class="help">Affärens ID för att använda Billmates tjänster (fås av Billmate).</span>';
-$_['entry_secret']          = 'Billmate Nyckel:<br /><span class="help">Hemlig nyckel för att använda Billmates tjänster (fås av Billmate).</span>';
+$_['entry_merchant']        = 'Billmate ID:';
+$_['entry_merchant_help']   = 'Affärens ID för att använda Billmates tjänster (fås av Billmate).';
+$_['entry_secret']          = 'Billmate Nyckel:';
+$_['entry_secret_help']     = 'Hemlig nyckel för att använda Billmates tjänster (fås av Billmate).';
 $_['entry_server']          = 'Server:';
-$_['entry_mintotal']           = 'Minimum Totalbelopp:<br /><span class="help">Kundvagnens totalbelopp måste vara minst detta belopp för att aktivera betalningsmetoden.</span>';
-$_['entry_maxtotal']           = 'Maximum Totalbelopp:<br /><span class="help">Kundvagnens totalbelopp måste vara max detta belopp för att aktivera betalningsmetoden.</span>';
+$_['entry_mintotal']           = 'Minimum Totalbelopp:';
+$_['entry_mintotal_help']   = 'Kundvagnens totalbelopp måste vara minst detta belopp för att aktivera betalningsmetoden.';
+$_['entry_maxtotal']           = 'Maximum Totalbelopp:';
+$_['entry_maxtotal_help']   = 'Kundvagnens totalbelopp måste vara max detta belopp för att aktivera betalningsmetoden.';
 $_['entry_pending_status']  = 'Pending Status:';
 $_['entry_accepted_status'] = 'Godkänd Status:';
 $_['entry_geo_zone']        = 'Geo Zone:';

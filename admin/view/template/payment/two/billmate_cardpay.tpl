@@ -40,19 +40,19 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-merchant_id"><span><?php echo $entry_merchant_id; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-merchant_id"><span data-toggle="tooltip" title="<?php echo $entry_merchant_help; ?>"><?php echo $entry_merchant_id; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_cardpay_merchant_id" value="<?php echo $billmate_cardpay_merchant_id; ?>" placeholder="<?php echo $entry_merchant_id; ?>" id="input-merchant_id" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-secret"><span><?php echo $entry_secret; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-secret"><span data-toggle="tooltip" title="<?php echo $entry_secret_help; ?>"><?php echo $entry_secret; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_cardpay_secret" value="<?php echo $billmate_cardpay_secret; ?>" placeholder="<?php echo $entry_secret; ?>" id="input-secret" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-description"><span><?php echo $entry_description; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-description"><?php echo $entry_description; ?></label>
                         <div class="col-sm-10">
                             <textarea cols="84" rows="10" name="billmate_cardpay_description"><?php echo $billmate_cardpay_description; ?></textarea>
                         </div>
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-total"><span><?php echo $entry_total; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_cardpay_total" value="<?php echo $billmate_cardpay_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                         </div>

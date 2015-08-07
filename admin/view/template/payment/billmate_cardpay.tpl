@@ -88,7 +88,7 @@
 
 
           <tr>
-            <td><?php echo $entry_total.$help_total; ?></td>
+            <td><?php echo $entry_total.'<br /><span class="help">'.$help_total; ?></span></td>
             <td><input type="text" name="billmate_cardpay_total" value="<?php echo $billmate_cardpay_total; ?>" /></td>
           </tr>        
           <tr>

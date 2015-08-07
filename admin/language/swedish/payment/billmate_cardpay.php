@@ -10,13 +10,16 @@ $_['text_all_countries'] = 'Alla länder';
 
 // Entry
 $_['entry_merchant_id']     = 'Billmate ID';
+$_['entry_merchant_help']   = 'Affärens ID för att använda Billmates tjänster (fås av Billmate).';
 $_['entry_secret']     = 'Billmate Nyckel:';
+$_['entry_secret_help']     = 'Hemlig nyckel för att använda Billmates tjänster (fås av Billmate).';
+
 
 $_['entry_test']         = 'Testläge:';
 $_['entry_prompt_name']  = 'Visa namn i betalfönster:';
 $_['entry_3dsecure']     = 'Aktivera 3D secure:';
 $_['entry_total']        = 'Totalbelopp:';
-$_['help_total']         = '<br /><span class="help">Kundvagnens totalbelopp måste vara över detta för att aktivera betalningsmetoden.</span>';
+$_['help_total']         = 'Kundvagnens totalbelopp måste vara över detta för att aktivera betalningsmetoden.';
 $_['entry_order_status'] = 'Orderstatus:';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';

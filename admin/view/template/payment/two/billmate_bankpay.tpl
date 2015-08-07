@@ -40,12 +40,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-merchant_id"><span><?php echo $entry_merchant_id; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-merchant_id"><span data-toggle="tooltip" title="<?php echo $entry_merchant_help; ?>"><?php echo $entry_merchant_id; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_bankpay_merchant_id" value="<?php echo $billmate_bankpay_merchant_id; ?>" placeholder="<?php echo $entry_merchant_id; ?>" id="input-merchant_id" class="form-control" />
                         </div>
                     </div><div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-secret"><span><?php echo $entry_secret; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-secret"><span data-toggle="tooltip" title="<?php echo $entry_secret_help; ?>"><?php echo $entry_secret; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_bankpay_secret" value="<?php echo $billmate_bankpay_secret; ?>" placeholder="<?php echo $entry_secret; ?>" id="input-secret" class="form-control" />
                         </div>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-total"><span><?php echo $entry_total; ?></span></label>
+                        <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_bankpay_total" value="<?php echo $billmate_bankpay_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                         </div>

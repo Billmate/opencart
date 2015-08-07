@@ -41,19 +41,19 @@
                                 <?php foreach ($countries as $country) { ?>
                                 <div class="tab-pane" id="tab-<?php echo $country['code']; ?>">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="input-merchant"><span><?php echo $entry_merchant; ?></span></label>
+                                        <label class="col-sm-2 control-label" for="input-merchant"><span data-toggle="tooltip" title="<?php echo $entry_merchant_help; ?>"><?php echo $entry_merchant; ?></span></label>
                                         <div class="col-sm-10">
                                             <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][merchant]" value="<?php echo $billmate_partpayment[$country['code']]['merchant']; ?>" id="input-merchant" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="input-secret"><span><?php echo $entry_secret; ?></span></label>
+                                        <label class="col-sm-2 control-label" for="input-secret"><span data-toggle="tooltip" title="<?php echo $entry_secret_help; ?>"><?php echo $entry_secret; ?></span></label>
                                         <div class="col-sm-10">
                                             <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][secret]" value="<?php echo $billmate_partpayment[$country['code']]['secret']; ?>" id="input-secret" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="input-description"><span><?php echo $entry_description; ?></span></label>
+                                        <label class="col-sm-2 control-label" for="input-description"><?php echo $entry_description; ?></label>
                                         <div class="col-sm-10">
                                             <textarea cols="84" rows="10" name="billmate_partpayment[<?php echo $country['code'];?>][description]"><?php echo isset($billmate_partpayment[$country['code']]['description']) ? $billmate_partpayment[$country['code']]['description'] :'' ; ?></textarea>
                                         </div>
@@ -73,13 +73,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="input-mintotal"><span><?php echo $entry_mintotal; ?></span></label>
+                                        <label class="col-sm-2 control-label" for="input-mintotal"><span data-toggle="tooltip" title="<?php echo $entry_mintotal_help; ?>"><?php echo $entry_mintotal; ?></span></label>
                                         <div class="col-sm-10">
                                             <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][mintotal]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['mintotal'] : ''; ?>" id="input-mintotal" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="input-maxtotal"><span><?php echo $entry_maxtotal; ?></span></label>
+                                        <label class="col-sm-2 control-label" for="input-maxtotal"><span data-toggle="tooltip" title="<?php echo $entry_maxtotal_help; ?>"><?php echo $entry_maxtotal; ?></span></label>
                                         <div class="col-sm-10">
                                             <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][maxtotal]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['maxtotal'] : ''; ?>" id="input-maxtotal" class="form-control" />
                                         </div>
@@ -164,7 +164,7 @@
                         <div class="tab-pane" id="tab-pclasses">
                             <table class="form">
                                 <?php
-                                    if(isset($all_pclasses[0]){
+                                    if(isset($all_pclasses[0])){
                                         $head = array();
                                         if( is_array( $all_pclasses[0] )){
                                             $head = array_keys($all_pclasses[0]);

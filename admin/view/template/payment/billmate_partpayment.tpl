@@ -42,11 +42,11 @@
           <div id="tab-<?php echo $country['code']; ?>" class="vtabs-content">
             <table class="form">
               <tr>
-                <td><?php echo $entry_merchant; ?></td>
+                <td><?php echo $entry_merchant.'<br /><span class="help">'.$entry_merchant_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][merchant]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['merchant'] : ''; ?>" /></td>
               </tr>
               <tr>
-                <td><?php echo $entry_secret; ?></td>
+                <td><?php echo $entry_secret.'<br /><span class="help">'.$entry_secret_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][secret]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['secret'] : ''; ?>" /></td>
               </tr>
               <tr>
@@ -89,11 +89,11 @@
                   </select></td>
               </tr>
               <tr>
-                <td><?php echo $entry_mintotal; ?></td>
+                <td><?php echo $entry_mintotal.'<br /><span class="help">'.$entry_mintotal_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][mintotal]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['mintotal'] : ''; ?>" /></td>
               </tr>
               <tr>
-                <td><?php echo $entry_maxtotal; ?></td>
+                <td><?php echo $entry_maxtotal.'<br /><span class="help">'.$entry_maxtotal_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][maxtotal]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['maxtotal'] : ''; ?>" /></td>
               </tr>
 
