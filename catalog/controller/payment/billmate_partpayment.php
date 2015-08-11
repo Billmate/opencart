@@ -751,9 +751,13 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     $this->session->data['mismatch'] = true;
                     if(!(isset($this->request->get['geturl']) and $this->request->get['geturl']=="yes")){
 
+                        if(isset($addr['company'])) {
 
-                        $json['address'] = $addr['firstname'].' '.$addr['lastname'].'<br>'.$addr['street'].'<br>'.$addr['zip'].'<br>'.$addr['city'].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
-                        $json['error'] = "";
+                            $json['address'] = $addr['company'] . '<br>' . $addr['street'] . '<br>' . $addr['zip'] . '<br>' . $addr['city'] . '<br/>' . $countryname . '<div style="padding: 17px 0px;"></div><div><input type="button" value="' . $this->language->get('bill_yes') . '" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >' . $this->language->get('bill_no') . '</a></div>';
+                        } else {
+                            $json['address'] = $addr['firstname'] . ' ' . $addr['lastname'] . '<br>' . $addr['street'] . '<br>' . $addr['zip'] . '<br>' . $addr['city'] . '<br/>' . $countryname . '<div style="padding: 17px 0px;"></div><div><input type="button" value="' . $this->language->get('bill_yes') . '" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >' . $this->language->get('bill_no') . '</a></div>';
+
+                        }$json['error'] = "";
                     }
 
                 }

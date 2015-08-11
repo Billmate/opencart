@@ -666,9 +666,14 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				    $this->session->data['mismatch'] = true;
                     if(!(isset($this->request->get['geturl']) and $this->request->get['geturl']=="yes")){
 
+                    if(isset($addr['company'])) {
 
-                    $json['address'] = $addr['firstname'].' '.$addr['lastname'].'<br>'.$addr['street'].'<br>'.$addr['zip'].'<br>'.$addr['city'].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
-                    $json['error'] = "";
+                        $json['address'] = $addr['company'] . '<br>' . $addr['street'] . '<br>' . $addr['zip'] . '<br>' . $addr['city'] . '<br/>' . $countryname . '<div style="padding: 17px 0px;"></div><div><input type="button" value="' . $this->language->get('bill_yes') . '" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >' . $this->language->get('bill_no') . '</a></div>';
+                    } else {
+                        $json['address'] = $addr['firstname'] . ' ' . $addr['lastname'] . '<br>' . $addr['street'] . '<br>' . $addr['zip'] . '<br>' . $addr['city'] . '<br/>' . $countryname . '<div style="padding: 17px 0px;"></div><div><input type="button" value="' . $this->language->get('bill_yes') . '" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >' . $this->language->get('bill_no') . '</a></div>';
+
+                    }
+                        $json['error'] = "";
                     }
 
 				}
@@ -758,7 +763,6 @@ $db->query($sql);
 					$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_invoice', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 						
 					$result1 = $k->AddPayment($values);
-                    error_log(print_r($result1,true));
 
 					if(isset($result1['code']))
 					{ 
@@ -802,6 +806,32 @@ $db->query($sql);
 		$this->response->setOutput($data);
     }
 
+    public function getaddress()
+    {
+        $billmate_invoice = $this->config->get('billmate_invoice');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+
+        $eid = (int)$billmate_invoice['SWE']['merchant'];
+        $key = (int)$billmate_invoice['SWE']['secret'];
+
+        $ssl = true;
+        $debug = false;
+        define('BILLMATE_SERVER','2.1.7');
+        define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
+
+        $result = $k->getAddress(array('pno' => $this->request->post['pno']));
+        if(!isset($result['code'])){
+            $response['success'] = true;
+            $response['data'] = $result;
+        } else {
+            $response['success'] = false;
+            $response['error'] = $result['message'];
+        }
+        $this->response->setOutput(json_encode($response));
+
+    }
     
     private function splitAddress($address) {
         $numbers = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
