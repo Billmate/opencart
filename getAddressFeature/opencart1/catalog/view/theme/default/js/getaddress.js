@@ -48,6 +48,7 @@ $(document).ready(function(){
     										$('input[name="city"]').val(result.data.city);
     										$('input[name="email"]').val(result.data.email);
     										$('input[name="telephone"]').val(result.data.phone);
+    										$('select[name="country_id"]').val(result.data.country_id);
 
 
     										if($('input[name="pno"]').length > 0){

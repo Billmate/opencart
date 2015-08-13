@@ -87,6 +87,8 @@
                                             $('#input-payment-city').val(result.data.city)
                                             $('#input-payment-postcode').val(result.data.zip)
 
+    										$('select[name="country_id"]').val(result.data.country_id);
+
                                         }
                                     }
                                 })

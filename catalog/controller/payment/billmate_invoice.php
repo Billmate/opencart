@@ -823,6 +823,14 @@ $db->query($sql);
 
         $result = $k->getAddress(array('pno' => $this->request->post['pno']));
         if(!isset($result['code'])){
+            $db = $this->registry->get('db');
+            if( $db == NULL ) $db = $this->db;
+
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = '" . $result['country']. "' AND status = '1'");
+            $countryinfo = $query->row;
+
+            $result['country_id'] = $countryinfo['country_id'];
+
             $response['success'] = true;
             $response['data'] = $result;
         } else {
