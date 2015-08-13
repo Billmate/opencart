@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>Function for GetAddress from billmate</id>
+    <version>1.3</version>
+    <vqmver>2.4.1</vqmver>
+    <author>www.boxedsolutions.se</author>
+    <file name="catalog/language/swedish/payment/billmate_invoice.php">
+	    <operation info="add personnumber title">
+	    	<search position="after">
+	    		<![CDATA[
+	    			$_['text_title']          = 'Billmate faktura';
+	    		]]>
+	    	</search>
+	    	<add>
+		    	<![CDATA[
+		    		$_['personnumber'] = 'Org/Personnummer:';
+		    		$_['fetchaddress'] = 'Hämta adress';
+		    	]]>
+	    	</add>
+	    </operation>
+    </file>
+    <file name="catalog/language/english/payment/billmate_invoice.php">
+	    <operation info="add personnumber title">
+	    	<search position="after">
+	    		<![CDATA[
+	    			$_['text_title']          = 'Billmate faktura';
+	    		]]>
+	    	</search>
+	    	<add>
+		    	<![CDATA[
+		    		$_['personnumber'] = 'SSN:';
+		    		$_['fetchaddress'] = 'Get Address';
+		    	]]>
+	    	</add>
+	    </operation>
+    </file>
+    <file name="catalog/controller/checkout/guest.php,catalog/controller/checkout/register.php">
+    	<operation info="Add personnumber field">
+    		<search position="after">
+    		<![CDATA[
+    			$this->data['entry_shipping'] = $this->language->get('entry_shipping');
+    		]]>
+    		</search>
+    		<add>
+    		<![CDATA[
+    			$this->language->load('payment/billmate_invoice');
+    			$this->data['fetchaddress'] = $this->language->get('fetchaddress');
+     			$this->data['entry_personnumber'] = $this->language->get('personnumber');
+    		]]>
+    		</add>
+    	</operation>
+    </file>
+    <file name="catalog/view/theme/default/template/checkout/guest.tpl,catalog/view/theme/default/template/checkout/register.tpl">
+    	<operation info="mod view for button with pno">
+    		<search position="after">
+    			<![CDATA[
+    				<h2><?php echo $text_your_details; ?></h2>
+    			]]>
+    		</search>
+    		<add>
+    			<![CDATA[
+    			<span class="required">*</span> <?php echo $entry_personnumber; ?><br/>
+                                </label><input id="payment_address_pno" type="text" value="" name="pno"/>
+								<a class="button" id="fetch_address" href="#">
+                                    <?php echo $fetchaddress; ?>
+                                </a>
+                                <br/><br/>
+
+    			]]>
+    		</add>
+    	</operation>
+    </file>
+    <file name="catalog/view/theme/default/template/payment/billmate_invoice.tpl">
+    	<operation info="Add jquery that fetches pnumber field">
+    		<search position="after">
+    		<![CDATA[<td><?php echo $entry_phone_no; ?></td>]]>
+    		</search>
+    		<add>
+    			<![CDATA[
+    			<script type="text/javascript">
+    				$(document).ready(function(){
+    					var pno = $('#payment_address_pno').val();
+    					$('input[name="pno"]').val(pno);
+    				})
+    			</script>
+    			]]>
+    		</add>
+    	</operation>
+    </file>
+    <file name="catalog/view/theme/default/template/payment/billmate_partpayment.tpl">
+    	<operation info="Add jquery that fetches pnumber field">
+    		<search position="after">
+    		<![CDATA[<td><?php echo $entry_phone_no; ?></td>]]>
+    		</search>
+    		<add>
+    			<![CDATA[
+    			<script type="text/javascript">
+    				$(document).ready(function(){
+    					var pno = $('#payment_address_pno').val();
+    					$('input[name="pno"]').val(pno);
+    				})
+    			</script>
+    			]]>
+    		</add>
+    	</operation>
+    </file>
+    <file name="catalog/view/theme/*/template/common/header.tpl">
+    	<operation info="Add css">
+    		<search position="before">
+    		<![CDATA[<?php foreach ($scripts as $script) { ?>]]>
+    		</search>
+    		<add><![CDATA[
+    		<link rel="stylesheet" type="text/css" href="catalog/view/theme/default/stylesheet/getaddress.css" />
+    		<script type="text/javascript" src="catalog/view/theme/default/js/getaddress.js"></script>
+    		]]></add>
+    	</operation>
+    </file>
+</modification>
