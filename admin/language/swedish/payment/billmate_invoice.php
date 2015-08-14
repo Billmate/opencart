@@ -39,4 +39,7 @@ $_['entry_available_countries'] = 'Tillgängliga länder (autocomplete)';
 
 // Error
 $_['error_permission']      = 'Varning: Du har inte access till att ändra Billmate inställningar!';
+$_['error_merchant_id']     = 'Billmate ID saknas';
+$_['error_secret']     = 'Billmate nyckel saknas';
+$_['error_credentials'] = 'Vänligen kontrollera BillmateID och Billmate nyckel';
 ?>

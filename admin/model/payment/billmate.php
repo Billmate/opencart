@@ -256,6 +256,31 @@ class ModelPaymentBillmate extends Model {
         }
     }
 
+    public function validateCredentials($billmateId, $secret)
+    {require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+
+        $eid = (int)$billmateId;
+        $key = (int)$secret;
+        $ssl = true;
+        $debug = false;
+
+        define('BILLMATE_SERVER','2.1.7');
+        define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        $billmate = new BillMate($eid,$key,$ssl,false,$debug);
+        $values['PaymentData'] = array(
+            'currency' => 'SEK',
+            'language' => 'sv',
+            'country' => 'se'
+        );
+        $result = $billmate->getPaymentplans($values);
+        $response = array();
+        if(isset($result['code']) && ($result['code'] == 9013 || $result['code'] == 9010 || $result['code'] == 9012)){
+            $response['success'] = false;
+        }
+        else{
+            $response['success'] = true;
+        }
+    }
     public function validate(&$errors) {
         $this->moduleType = $this->request->post['billmate_module_type'];
 

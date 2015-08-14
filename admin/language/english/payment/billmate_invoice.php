@@ -46,4 +46,7 @@ $_['entry_available_countries'] = 'Available countries (autocomplete)';
 
 // Error
 $_['error_permission']      = 'Warning: You do not have permission to modify payment Billmate Part Payment!';
-?>
+$_['error_credentials']  = 'Please check your credentials';
+$_['error_merchant_id']     = 'Billmate ID missing';
+$_['error_secret']     = 'Billmate key missing';
+

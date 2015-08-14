@@ -15,6 +15,9 @@
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
+    <?php if ($error_credentials) { ?>
+    <div class="warning"><?php echo $error_credentials; ?></div>
+    <?php } ?>
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_title; ?></h1>

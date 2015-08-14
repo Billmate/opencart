@@ -44,4 +44,7 @@ $_['regen_pclasses'] = 'Save & Regen Pclasses';
 $_['text_pclasses_updated'] = 'Successful update: fetched {count} PClasses from Billmate.';
 $_['text_pclasses_updated_link'] = 'Would you like to view them?';
 $_['no_pclasses_found'] = 'Hittade inga sparade betalplaner';
+$_['error_merchant_id']     = 'Billmate ID saknas';
+$_['error_secret']     = 'Billmate nyckel saknas';
+$_['error_credentials'] = 'Vänligen kontrollera BillmateID och Billmate nyckel';
 

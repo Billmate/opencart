@@ -75,6 +75,11 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		} else {
 			$data['error_warning'] = '';
 		}
+		if (isset($this->error['credentials'])) {
+			$data['error_credentials'] = $this->error['credentials'];
+		} else {
+			$data['error_credentials'] = '';
+		}
 
   		$data['breadcrumbs'] = array();
 
@@ -190,7 +195,10 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		if (!$this->request->post['billmate_bankpay_secret']) {
 				$this->error['secret'] = $this->language->get('error_secret');
 		}
-
+		$this->load->model('payment/billmate');
+		if(!$this->model_payment_billmate->validateCredentials($this->request->post['billmate_bankpay_merchant_id'],$this->request->post['billmate_bankpay_secret'])){
+			$this->error['credentials'] = $this->language->get('error_credentials');
+		}
 
 				
 		if (!$this->error) {

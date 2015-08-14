@@ -15,6 +15,9 @@
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
+    <?php if ($error_credentials) { ?>
+    <div class="warning"><?php echo $error_credentials; ?></div>
+    <?php } ?>
   <div class="box">
       <h1><img src="/billmate/images/billmate_bank_s.png" alt="" /> <?php echo $heading_title; ?></h1>
     <div class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'pull-right' : 'heading'; ?>">

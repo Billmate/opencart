@@ -122,6 +122,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
         } else {
             $data['error_warning'] = '';
         }
+        if (isset($this->error['credentials'])) {
+            $data['error_credentials'] = $this->error['credentials'];
+        } else {
+            $data['error_credentials'] = '';
+        }
          
         $data['breadcrumbs'] = array();
 
@@ -228,11 +233,17 @@ class ControllerPaymentBillmatePartpayment extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if(!$this->request->post['billmate_partpayment[swe][merchant]']){
+        $billmatePartpayment = $this->request->post['billmate_partpayment'];
+
+        if(!$billmatePartpayment['SWE']['merchant']){
             $this->error['merchant_swe'] = $this->language->get('error_merchant_id');
         }
-        if(!$this->request->post['billmate_partpayment[swe][secret]']){
+        if(!$billmatePartpayment['SWE']['secret']){
             $this->error['secret_swe'] = $this->language->get('error_secret');
+        }
+        $this->load->model('payment/billmate');
+        if(!$this->model_payment_billmate->validateCredentials($billmatePartpayment['SWE']['merchant'],$billmatePartpayment['SWE']['secret'])){
+            $this->error['credentials'] = $this->language->get('error_credentials');
         }
 				
         if (!$this->error) {

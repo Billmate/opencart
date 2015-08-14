@@ -12,7 +12,6 @@ $_['text_success']       = 'Success: You have modified Billmate Bank payment mod
 $_['entry_merchant_id']     = 'Billmate ID:';
 $_['entry_merchant_help']   = '(estore id) to use for the Billmate service (provided by Billmate).';
 $_['latest_release']     = 'There is a new version released for this plugin';
-
 $_['entry_secret']     = 'Billmate Key:';
 $_['entry_secret_help']     = 'Shared secret to use with the Billmate service (provided by Billmate).';
 
@@ -35,6 +34,8 @@ $_['entry_sort_order']   = 'Sort Order:';
 $_['error_permission']   = 'Warning: You do not have permission to modify payment Billmate Bank!';
 $_['error_merchant_id']     = 'Billmate ID missing';
 $_['error_secret']     = 'Billmate key missing';
+$_['error_credentials']  = 'Please check your credentials';
+
 
 
 $_['entry_transaction_method'] = 'Transaction Method';

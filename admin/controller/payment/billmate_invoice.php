@@ -87,6 +87,11 @@ class ControllerPaymentBillmateInvoice extends Controller {
         } else {
             $data['error_warning'] = '';
         }
+        if (isset($this->error['credentials'])) {
+            $data['error_credentials'] = $this->error['credentials'];
+        } else {
+            $data['error_credentials'] = '';
+        }
         
         $data['breadcrumbs'] = array();
 
@@ -282,12 +287,19 @@ class ControllerPaymentBillmateInvoice extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if(!$this->request->post['billmate_invoice[swe][merchant]']){
+        $billmateInvoice = $this->request->post['billmate_invoice'];
+
+        if(!$billmateInvoice['SWE']['merchant']){
             $this->error['merchant_swe'] = $this->language->get('error_merchant_id');
         }
-        if(!$this->request->post['billmate_invoice[swe][secret]']){
+        if(!$billmateInvoice['SWE']['secret']){
             $this->error['secret_swe'] = $this->language->get('error_secret');
         }
+        $this->load->model('payment/billmate');
+        if(!$this->model_payment_billmate->validateCredentials($billmateInvoice['SWE']['merchant'],$billmateInvoice['SWE']['secret'])){
+            $this->error['credentials'] = $this->language->get('error_credentials');
+        }
+
         if (!$this->error) {
             return true;
         } else {
