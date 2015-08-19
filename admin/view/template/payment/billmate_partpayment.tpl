@@ -105,7 +105,7 @@
 
                 <tr>
                     <td><?php echo $entry_available_countries; ?></td>
-                    <td><input type="text" name="billmatepart-country" value="" /></td>
+                    <td><input type="text" name="billmatepartpayment-country" value="" /></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
@@ -115,7 +115,7 @@
                             <?php foreach ($billmate_country as $key => $b_country) { ?>
                             <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
                             <div id="billmate-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
-                                <input type="hidden" name="billmatepart-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
+                                <input type="hidden" name="billmatepartpayment-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
 
                             </div>
                             <?php } ?>
@@ -164,6 +164,7 @@
         <div id="tab-pclasses">
           <table class="form">
 			<?php
+			if(isset($all_pclasses[0])){
 			$head = array();
 			if( is_array( $all_pclasses[0] )){
 				$head = array_keys($all_pclasses[0]);
@@ -184,6 +185,8 @@
 				}
 				echo '</tr>';
 			}
+              } else
+                echo $no_pclasses_found;
 		  ?>
           </table>
         </div>

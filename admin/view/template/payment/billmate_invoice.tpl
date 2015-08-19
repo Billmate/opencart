@@ -100,7 +100,7 @@
 
                 <tr>
                     <td><?php echo $entry_available_countries; ?></td>
-                    <td><input type="text" name="billmate-country" value="" /></td>
+                    <td><input type="text" name="billmateinvoice-country" value="" /></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
@@ -110,7 +110,7 @@
                             <?php foreach ($billmate_country as $key => $b_country) { ?>
                             <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
                             <div id="billmate-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
-                                <input type="hidden" name="billmate-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
+                                <input type="hidden" name="billmateinvoice-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
 
                             </div>
                             <?php } ?>

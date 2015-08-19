@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="input-country" class="col-sm-2 control-label"><?php echo $entry_available_countries;; ?></label>
+                        <label for="input-country" class="col-sm-2 control-label"><?php echo $entry_available_countries; ?></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmatecard-country" class="form-control">
                             <div class="dropdown-menu"></div>

@@ -1,6 +1,7 @@
 <?php
 
 require_once(DIR_SYSTEM . 'library/billmate/OpenCartBillmate.php');
+require_once(DIR_SYSTEM . 'library/billmate/Billmate.php');
 
 class ModelPaymentBillmate extends Model {
     private $moduleType;
@@ -257,7 +258,8 @@ class ModelPaymentBillmate extends Model {
     }
 
     public function validateCredentials($billmateId, $secret)
-    {require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+    {
+        //require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
         $eid = (int)$billmateId;
         $key = (int)$secret;
@@ -275,10 +277,10 @@ class ModelPaymentBillmate extends Model {
         $result = $billmate->getPaymentplans($values);
         $response = array();
         if(isset($result['code']) && ($result['code'] == 9013 || $result['code'] == 9010 || $result['code'] == 9012)){
-            $response['success'] = false;
+            return false;
         }
         else{
-            $response['success'] = true;
+            return true;
         }
     }
     public function validate(&$errors) {
