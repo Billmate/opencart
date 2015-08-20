@@ -103,10 +103,10 @@ class ControllerPaymentBillmateBankpay extends Controller {
                                     if( isset($post['status'])) {
                                         $msg .= 'status: '. $post['status'] . "\n";
                                     }
-                                    if(version_compare(VERSION,'<','2.0'))
-                                        $this->model_checkout_order->update($order_id, 1,$msg, false);
+                                    if(version_compare(VERSION,'>=','2.0'))
+                                        $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id'),$msg,false);
                                     else
-                                        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,false));
+                                        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id'), $msg, 1);
 
 
                                     $this->cache->delete('order'.$order_id);
@@ -247,10 +247,10 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $msg = '';
                 $msg .= 'invoice_id: ' . $post['number'] . "\n";
                 $msg .= 'status: '. $post['status'] . "\n";
-                if(version_compare(VERSION,'<','2.0'))
-                    $this->model_checkout_order->update($order_id, 1,$msg, false);
+                if(version_compare(VERSION,'>=','2.0'))
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id'),$msg,false);
                 else
-                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,false));
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id'), $msg, 1);
 
                 $this->cache->delete('order'.$post['orderid']);
 

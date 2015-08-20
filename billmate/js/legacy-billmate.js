@@ -74,7 +74,7 @@ $('#billmatecard-country div img').live('click', function() {
     $('#billmatecard-country div:even').attr('class', 'even');
 });
 
-$('input[name=\'billmate-country\']').autocomplete({
+$('input[name=\'billmateinvoice-country\']').autocomplete({
     delay: 500,
     source: function(request, response) {
         $.ajax({
@@ -92,10 +92,10 @@ $('input[name=\'billmate-country\']').autocomplete({
         });
     },
     select: function(event, ui) {
-        $('#billmate-country' + ui.item.value).remove();
-        $('#billmate-country').append('<div id="billmate-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmate-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
-        $('#billmate-country div:odd').attr('class', 'odd');
-        $('#billmate-country div:even').attr('class', 'even');
+        $('#billmateinvoice-country' + ui.item.value).remove();
+        $('#billmateinvoice-country').append('<div id="billmateinvoice-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmateinvoice-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
+        $('#billmateinvoice-country div:odd').attr('class', 'odd');
+        $('#billmateinvoice-country div:even').attr('class', 'even');
         return false;
     },
     focus: function(event, ui) {
@@ -104,13 +104,13 @@ $('input[name=\'billmate-country\']').autocomplete({
 }).autocomplete("instance")._renderItem = function(ul, item){
     return $("<li>").append("<a>"+item.label +"</a>").appendTo(ul);
 };
-$('#billmate-country div img').live('click', function() {
+$('#billmateinvoice-country div img').live('click', function() {
     $(this).parent().remove();
-    $('#billmate-country div:odd').attr('class', 'odd');
-    $('#billmate-country div:even').attr('class', 'even');
+    $('#billmateinvoice-country div:odd').attr('class', 'odd');
+    $('#billmateinvoice-country div:even').attr('class', 'even');
 });
 
-$('input[name=\'billmatepart-country\']').autocomplete({
+$('input[name=\'billmatepartpayment-country\']').autocomplete({
     delay: 500,
     source: function(request, response) {
         $.ajax({
@@ -128,10 +128,10 @@ $('input[name=\'billmatepart-country\']').autocomplete({
         });
     },
     select: function(event, ui) {
-        $('#billmatepart-country' + ui.item.value).remove();
-        $('#billmatepart-country').append('<div id="billmatepart-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmatepart-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
-        $('#billmatepart-country div:odd').attr('class', 'odd');
-        $('#billmatepart-country div:even').attr('class', 'even');
+        $('#billmatepartpayment-country' + ui.item.value).remove();
+        $('#billmatepartpayment-country').append('<div id="billmatepartpayment-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmatepartpayment-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
+        $('#billmatepartpayment-country div:odd').attr('class', 'odd');
+        $('#billmatepartpayment-country div:even').attr('class', 'even');
         return false;
     },
     focus: function(event, ui) {
@@ -140,8 +140,8 @@ $('input[name=\'billmatepart-country\']').autocomplete({
 }).autocomplete("instance")._renderItem = function(ul, item){
     return $("<li>").append("<a>"+item.label +"</a>").appendTo(ul);
 };
-$('#billmatepart-country div img').live('click', function() {
+$('#billmatepartpayment-country div img').live('click', function() {
     $(this).parent().remove();
-    $('#billmatepart-country div:odd').attr('class', 'odd');
-    $('#billmatepart-country div:even').attr('class', 'even');
+    $('#billmatepartpayment-country div:odd').attr('class', 'odd');
+    $('#billmatepartpayment-country div:even').attr('class', 'even');
 });

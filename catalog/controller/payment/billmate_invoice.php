@@ -782,14 +782,15 @@ $db->query($sql);
 						}
 						
 						$comment = sprintf($this->language->get('text_comment'), $result1['number']);
-                        if(version_compare(VERSION,'<','2.0'))
-                            $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+
+                        if(version_compare(VERSION,'>=','2.0'))
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_invoice_order_status_id'),$comment,false);
                         else
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id',$comment,false));
+                            $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
 
 
-						
-						$json['redirect'] = $this->url->link('checkout/success'); 
+
+                        $json['redirect'] = $this->url->link('checkout/success');
 					}
 					set_error_handler($oldhandler);
 				 } catch(Exception $e) {

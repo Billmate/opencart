@@ -104,12 +104,12 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td><div id="billmate-country" class="scrollbox">
+                    <td><div id="billmateinvoice-country" class="scrollbox">
                             <?php $class = 'odd'; ?>
                             <?php if(isset($billmate_country) && is_array($billmate_country)){ ?>
                             <?php foreach ($billmate_country as $key => $b_country) { ?>
                             <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                            <div id="billmate-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
+                            <div id="billmateinvoice-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
                                 <input type="hidden" name="billmateinvoice-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
 
                             </div>

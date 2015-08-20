@@ -847,7 +847,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_partpayment', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
                         $result1 = $k->AddPayment($values);
-                        error_log(print_r($result1,true));
+
 
                         if(isset($result1['code']))
                         {
@@ -867,10 +867,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                             }
 
                             $comment = sprintf($this->language->get('text_comment'), $result1['number']);
-                            if(version_compare(VERSION,'<','2.0'))
-                                $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+
+                            if(version_compare(VERSION,'>=','2.0'))
+                                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_partpay_order_status_id'),$comment,false);
                             else
-                                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id',$comment,false));
+                                $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
 
                             $json['redirect'] = $this->url->link('checkout/success');
                         }
