@@ -66,6 +66,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		$data['entry_pending_status'] = $this->language->get('entry_pending_status');
 		$data['entry_accepted_status'] = $this->language->get('entry_accepted_status');
         $data['entry_test'] = $this->language->get('entry_test');
+        $data['entry_description'] = $this->language->get('entry_description');
 
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_sort_order'] = $this->language->get('entry_sort_order');

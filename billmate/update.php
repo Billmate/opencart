@@ -16,13 +16,13 @@ $billmatepart = $this->model_setting_setting->getSetting('billmate_partpayment')
 $billmatebank['billmate_bankpay_version'] = PLUGIN_VERSION;
 $billmatecard['billmate_cardpay_version'] = PLUGIN_VERSION;
 $billmateinvoice['billmate_invoice_version'] = PLUGIN_VERSION;
-$billmatepart['billmate_partpay_version'] = PLUGIN_VERSION;
+$billmatepart['billmate_partpayment_version'] = PLUGIN_VERSION;
 
 // Default Countries
 $billmatebank['billmate_bankpay_country'] = array($country['country_id'] => array('name' => $country['name']));
 $billmatecard['billmate_cardpay_country'] = array(0 => array('name' => 'All countries'));
 $billmateinvoice['billmate_invoice_country'] = array($country['country_id'] => array('name' => $country['name']));
-$billmatepart['billmate_partpay_country'] = array($country['country_id'] => array('name' => $country['name']));
+$billmatepart['billmate_partpayment_country'] = array($country['country_id'] => array('name' => $country['name']));
 $this->model_setting_setting->editSetting('billmate_bankpay',$billmatebank);
 $this->model_setting_setting->editSetting('billmate_cardpay',$billmatecard);
 $this->model_setting_setting->editSetting('billmate_invoice',$billmateinvoice);

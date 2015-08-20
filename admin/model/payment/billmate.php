@@ -275,6 +275,7 @@ class ModelPaymentBillmate extends Model {
             'country' => 'se'
         );
         $result = $billmate->getPaymentplans($values);
+
         $response = array();
         if(isset($result['code']) && ($result['code'] == 9013 || $result['code'] == 9010 || $result['code'] == 9012)){
             return false;

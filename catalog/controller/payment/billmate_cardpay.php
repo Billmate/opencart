@@ -73,7 +73,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                                 if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
                                     $this->cache->set('order'.$order_id,1);
-                                    if(version_compare(VERSION,'2.0.0','>='))
+                                    if(version_compare(VERSION,'2.0.0','<'))
                                         $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                                     $msg = '';
