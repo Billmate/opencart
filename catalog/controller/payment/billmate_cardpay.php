@@ -73,7 +73,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                                 if (($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$order_id)) {
                                     $this->cache->set('order'.$order_id,1);
-                                    if(version_compare(VERSION,'<','2.0'))
+                                    if(version_compare(VERSION,'2.0.0','>='))
                                         $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                                     $msg = '';
@@ -83,7 +83,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                     if( isset($post['status'])) {
                                             $msg .= 'status: '. $post['status'] . "\n";
                                     }
-                                    if(version_compare(VERSION,'>=','2.0'))
+                                    if(version_compare(VERSION,'2.0.0','>='))
                                         $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
                                     else
                                         $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
@@ -208,14 +208,14 @@ class ControllerPaymentBillmateCardpay extends Controller {
             if(($post['status'] == 'Created' || $post['status'] == 'Paid') && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
                 $this->cache->set('order'.$post['orderid'],1);
                 $order_id = $post['orderid'];
-                if(version_compare(VERSION,'<','2.0'))
+                if(version_compare(VERSION,'2.0.0','<'))
                     $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'));
 
                 $msg = '';
                 $msg .= 'invoice_id: ' . $post['number'] . "\n";
                 $msg .= 'status: '. $post['status'] . "\n";
 
-                if(version_compare(VERSION,'>=','2.0'))
+                if(version_compare(VERSION,'2.0.0','>='))
                     $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
                 else
                     $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
@@ -521,7 +521,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                             }
                         }
                         $freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
-                        $values['Articles'] = array(
+                        $values['Articles'][] = array(
                             'quantity'   => 1,
                             'artnr'    => '',
                             'title'    => $total['title'].' Free Shipping',
@@ -599,7 +599,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                         $discountExcl = $discountIncl / (1 + $tax / 100);
                         $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
-                        $values['Articles'] = array(
+                        $values['Articles'][] = array(
                             'quantity'   => 1,
                             'artnr'    => '',
                             'title'    => $total['title'].' '.$tax.'% tax',
@@ -615,7 +615,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     }
                 }
                 $freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
-                $values['Articles'] = array(
+                $values['Articles'][] = array(
                     'quantity'   => 1,
                     'artnr'    => '',
                     'title'    => $total['title'].' Free Shipping',
@@ -637,7 +637,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     $percent      = $value / $productTotal;
                     $discount     = $percent * ($total['value'] * 100);
                     $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
-                    $values['Articles'] = array(
+                    $values['Articles'][] = array(
                         'quantity'   => 1,
                         'artnr'    => '',
                         'title'    => $total['title'].' '.$tax.'% tax',

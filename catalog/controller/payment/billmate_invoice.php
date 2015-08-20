@@ -435,7 +435,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                     }
                                 }
                                 $freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
-                                $values['Articles'] = array(
+                                $values['Articles'][] = array(
                                     'quantity'   => 1,
                                     'artnr'    => '',
                                     'title'    => $total['title'].' Free Shipping',
@@ -513,7 +513,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
                                 $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
-                                $values['Articles'] = array(
+                                $values['Articles'][] = array(
                                     'quantity'   => 1,
                                     'artnr'    => '',
                                     'title'    => $total['title'].' '.$tax.'% tax',
@@ -529,7 +529,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             }
                         }
                         $freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
-                        $values['Articles'] = array(
+                        $values['Articles'][] = array(
                             'quantity'   => 1,
                             'artnr'    => '',
                             'title'    => $total['title'].' Free Shipping',
@@ -551,7 +551,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             $percent      = $value / $productTotal;
                             $discount     = $percent * ($total['value'] * 100);
                             $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
-                            $values['Articles'] = array(
+                            $values['Articles'][] = array(
                                 'quantity'   => 1,
                                 'artnr'    => '',
                                 'title'    => $total['title'].' '.$tax.'% tax',
@@ -783,11 +783,11 @@ $db->query($sql);
 						
 						$comment = sprintf($this->language->get('text_comment'), $result1['number']);
 
-                        if(version_compare(VERSION,'>=','2.0'))
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_invoice_order_status_id'),$comment,false);
-                        else
+                        if(version_compare(VERSION,'2.0.0','>=')) {
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_invoice_order_status_id'), $comment, false);
+                        }else {
                             $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
-
+                        }
 
 
                         $json['redirect'] = $this->url->link('checkout/success');
