@@ -24,10 +24,10 @@ class ControllerPaymentBillmateBankpay extends Controller {
         error_log('index bank');
         if(version_compare(VERSION,'2.0.0','>=')){
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay.tpl',$data);
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_bankpay.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_bankpay.tpl',$data);
             } else {
-                return $this->load->view('default/template/payment/billmate_bankpay.tpl',$data);
+                return $this->load->view('default/template/payment/oc2/billmate_bankpay.tpl',$data);
             }
         } else {
             $this->data = $data;

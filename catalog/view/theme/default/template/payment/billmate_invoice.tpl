@@ -9,7 +9,7 @@
   <div class="content">
     <table class="form">
 	  <tr>
-        <td><?php echo $entry_pno; ?></td>
+        <td><?php echo $entry_pno; ?><br /><span class="help"><?php echo $help_pno; ?></span></td>
         <td><input type="text" name="pno" value="" /></td>
       </tr>
       <tr>

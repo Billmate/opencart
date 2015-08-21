@@ -3,8 +3,8 @@
 
 </div>
 <div class="buttons">
-    <div class="right">
-        <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="button" />
+    <div class="pull-right">
+        <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="btn btn-primary" />
     </div>
 </div>
 <script type="text/javascript">

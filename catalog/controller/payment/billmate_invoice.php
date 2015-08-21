@@ -86,6 +86,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		    $data['text_wait'] = $this->language->get('text_wait');		
 			
 		    $data['entry_pno'] = $this->language->get('entry_pno');
+            $data['help_pno'] = $this->language->get('help_pno');
 		    $data['entry_phone_no'] = sprintf($this->language->get('entry_phone_no'),$order_info['email'] );
 		    $data['button_confirm'] = $this->language->get('button_confirm');
 			$data['wrong_person_number'] = $this->language->get('your_billing_wrong');
@@ -132,10 +133,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
             if(version_compare(VERSION,'2.0.0','>=')){
 
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_invoice.tpl',$data);
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_invoice.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_invoice.tpl',$data);
                 } else {
-                    return $this->load->view('default/template/payment/billmate_invoice.tpl',$data);
+                    return $this->load->view('default/template/payment/oc2/billmate_invoice.tpl',$data);
                 }
             } else {
                 $this->data = $data;

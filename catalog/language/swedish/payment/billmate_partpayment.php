@@ -36,7 +36,8 @@ $_['wrong_person_number'] = "Ej giltigt organisations-/personnummer. Kontrollera
 // Entry
 $_['Close'] 			  = 'Stäng';
 $_['entry_gender']         = 'Kön:';
-$_['entry_pno']            = 'Organisations-/personnummer:<br /><span class="help">Vänligen skriv in ditt organisationsnummer (företag) eller personnummer (privat).</span>';
+$_['entry_pno']            = 'Organisations-/personnummer:';
+$_['help_pno'] 			   = 'Vänligen skriv in ditt organisationsnummer (företag) eller personnummer (privat).';
 $_['entry_dob']            = 'Date of Birth:';
 $_['entry_phone_no']       = 'Min e-postadress %s är korrekt och får användas för fakturering.';//Mobilnummer:<br /><span class="help">Vänligen skriv in ditt mobilnummer.</span>';
 $_['entry_street']         = 'Adress:<br /><span class="help">Vänligen notera att leverans och fakturaadress måste vara samma som fokbokföringsadress när ni betalar med Billmate.</span>';

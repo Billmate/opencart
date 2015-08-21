@@ -36,6 +36,7 @@ $_['requried_confirm_verify_email']='Please check the checkbox for confirm email
 // Entry
 $_['entry_gender']         = 'Gender:';
 $_['entry_pno']            = 'Personal Number:';
+$_['help_pno']  		   = 'Please enter your Social Security number here.';
 $_['entry_dob']            = 'Date of Birth:';
 $_['entry_phone_no']       = 'My email address %s is correct and can be used for invoicing purposes.';//Phone number:<br /><span class="help">Please enter your phone number.</span>';
 $_['entry_street']         = 'Street:<br /><span class="help">Please note that delivery can only take place to the registered address when paying with Billmate.</span>';

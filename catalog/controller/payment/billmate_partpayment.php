@@ -22,8 +22,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$data['text_month'] = $this->language->get('text_month');	
 			$data['text_year'] = $this->language->get('text_year');	
 			$data['text_male'] = $this->language->get('text_male');	
-			$data['text_female'] = $this->language->get('text_female');		
-			
+			$data['text_female'] = $this->language->get('text_female');
+
+			$data['help_pno'] = $this->language->get('help_pno');
 			$data['entry_pno'] = $this->language->get('entry_pno');		
 			$data['entry_dob'] = $this->language->get('entry_dob');	
 			$data['entry_gender'] = $this->language->get('entry_gender');	
@@ -205,10 +206,10 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
             if(version_compare(VERSION,'2.0.0','>=')){
 
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_partpayment.tpl',$data);
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_partpayment.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_partpayment.tpl',$data);
                 } else {
-                    return $this->load->view('default/template/payment/billmate_partpayment.tpl',$data);
+                    return $this->load->view('default/template/payment/oc2/billmate_partpayment.tpl',$data);
                 }
             } else {
                 $this->data = $data;

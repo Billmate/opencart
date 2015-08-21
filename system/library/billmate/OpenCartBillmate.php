@@ -95,8 +95,8 @@
 		switch ($countrycode) {
 			// Sweden
 			case 'SWE':
-				$country = 209;
-				$language = 138;
+				$country = 'SE';
+				$language = 'sv';
 				$encoding = 2;
 				$currency = 0;
 				break;

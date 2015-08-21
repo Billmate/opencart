@@ -5,25 +5,30 @@
 <?php } ?>
 <div style="margin-bottom: 10px;"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/images/bm_delbetalning_l.png" /></div>
 <div id="payment">
-  <div style="margin-bottom: 3px;"><b><?php echo $text_payment_option; ?></b></div>
-  <div class="content"> 
-    <table class="radio">
-      <?php foreach ($payment_options as $payment_option) { ?>
-      <tr class="highlight">
-        <td><?php if (!isset($code)) { ?>
-          <?php $code = $payment_option['code']; ?>
-          <input type="radio" name="code" value="<?php echo $payment_option['code']; ?>" id="plan-id<?php echo $payment_option['code']; ?>" checked="checked" />
-          <?php } else { ?>
-          <input type="radio" name="code" value="<?php echo $payment_option['code']; ?>" id="plan-id<?php echo $payment_option['code']; ?>" />
-          <?php } ?></td>
-        <td><label for="plan-id<?php echo $payment_option['code']; ?>"><?php echo $payment_option['title']; ?></label></td>
-      </tr>
-      <?php } ?>
-    </table>
+  <div class="content">
+    <form action="" class="form-horizontal" id="pclass">
+      <div class="form-group required">
+        <label for="" class="col-sm-2 control-label"><b><?php echo $text_payment_option; ?></b></label>
+        <div class="col-sm-10">
+          <?php foreach ($payment_options as $payment_option) { ?>
+
+            <?php if (!isset($code)) { ?>
+              <?php $code = $payment_option['code']; ?>
+              <input type="radio" name="code" value="<?php echo $payment_option['code']; ?>" id="plan-id<?php echo $payment_option['code']; ?>" checked="checked" />
+              <?php } else { ?>
+              <input type="radio" name="code" value="<?php echo $payment_option['code']; ?>" id="plan-id<?php echo $payment_option['code']; ?>" />
+              <?php } ?>
+            <label for="plan-id<?php echo $payment_option['code']; ?>"><?php echo $payment_option['title']; ?></label><br/>
+
+          <?php } ?>
+        </div>
+      </div>
+    </form>
+
   </div>
   <div style="margin-bottom: 3px;"><b><?php echo $text_additional; ?></b></div>
   <div class="content">
-    <table class="form">
+    <form class="form-horizontal">
       <?php if (!$company) { ?>
       <?php if ($iso_code_3 == 'DEU' || $iso_code_3 == 'NLD') { ?>
       <tr>
@@ -49,9 +54,18 @@
       </tr>
       <?php } else { ?>
       <tr>
-        <td><?php echo $entry_pno; ?></td>
-        <td><input type="text" name="pno" value="" /></td>
-      </tr>
+      <div class="form-group required">
+        <label for="pno" class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_pno; ?>"><?php echo $entry_pno; ?></span></label>
+        <div class="col-sm-3">
+          <input type="text" name="pno" class="form-control" value="" />
+        </div>
+
+      </div>
+      <div class="form-group required">
+        <label for="confirm_verify_email" class="col-sm-12 control-label"><input type="checkbox" checked="checked" name="confirm_verify_email" value="on" /><?php echo $entry_phone_no; ?></label>
+
+      </div>
+        </tr>
       <?php } ?>
       <?php } else { ?>
       <tr>
@@ -82,10 +96,7 @@
         <td><input type="text" name="house_ext" value="<?php echo $street_extension; ?>" /></td>
       </tr>
       <?php } ?>
-      <tr>
-        <td><input type="checkbox" checked="checked" name="confirm_verify_email" value="on" /></td>
-        <td><?php echo $entry_phone_no; ?></td>
-      </tr>
+
       <?php if ($iso_code_3 == 'DEU') { ?>
       <tr>
         <td colspan="2"><input type="checkbox" name="deu_terms" value="1" />
@@ -93,12 +104,12 @@
           Daten an Billmate bin ich einverstanden. Meine kann ich jederzeit mit Wirkung für die Zukunft widerrufen.</td>
       </tr>
       <?php } ?>
-    </table>
+    </form>
   </div>
 </div>
 <div class="buttons">
-  <div class="right">
-    <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="button" />
+  <div class="pull-right">
+    <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="btn btn-primary" />
   </div>
 </div>
 <script type="text/javascript"><!--

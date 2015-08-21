@@ -7,21 +7,25 @@
 <div id="payment">
   <div style="margin-bottom: 3px;"><b><?php echo $text_additional; ?></b></div>
   <div class="content">
-    <table class="form">
-	  <tr>
-        <td><?php echo $entry_pno; ?></td>
-        <td><input type="text" name="pno" value="" /></td>
-      </tr>
-      <tr>
-        <td><input type="checkbox" checked="checked" name="confirm_verify_email" value="on" /></td>
-        <td><?php echo $entry_phone_no; ?></td>
-      </tr>
-    </table>	
+	  <form id="payment" class="form-horizontal">
+	  <div class="form-group required">
+		  <label for="pno" class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_pno; ?>"><?php echo $entry_pno; ?></span></label>
+		<div class="col-sm-3">
+			<input type="text" name="pno" class="form-control" value="" />
+		</div>
+
+	  </div>
+		<div class="form-group required">
+			<label for="confirm_verify_email" class="col-sm-12 control-label"><input type="checkbox" checked="checked" name="confirm_verify_email" value="on" /><?php echo $entry_phone_no; ?></label>
+
+		</div>
+
+	  </form>
   </div>
 </div>
 <div class="buttons">
-  <div class="right">
-    <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="button" />
+  <div class="pull-right">
+    <input type="button" value="<?php echo $button_confirm; ?>" id="button-confirm" class="btn btn-primary" />
   </div>
 </div>
 <script type="text/javascript">
