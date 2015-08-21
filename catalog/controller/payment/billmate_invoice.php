@@ -249,7 +249,9 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     }
                     $rates=0;
 
-                    $tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
+                    $price = $product['price'];
+                    $price = $this->currency->convert($price,$this->config->get('config_currency'),$this->session->data['currency']);
+                    $tax_rates = $this->tax->getRates($price,$product['tax_class_id']);
                     foreach($tax_rates as $rate){
                         $rates+= $rate['rate'];
                     }
@@ -259,31 +261,31 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             $title .= ' - '.$option['name'].': '.$option['option_value'];
                         }
                     }
-                    $productValue = $this->currency->format($product['price']*100, $this->currency->getCode(), '', false);
+                    $productValue = $this->currency->format($price *100, $this->currency->getCode(), '', false);
                     $values['Articles'][] = array(
                         'quantity'   => (int)$product_total_qty,
                         'artnr'    => $product['model'],
                         'title'    => $title,
-                        'aprice'    => $product['price'] * 100,
+                        'aprice'    => $price * 100,
                         'taxrate'      => (float)($rates),
                         'discount' => 0.0,
-                        'withouttax'    => $product_total_qty * ($product['price']*100),
+                        'withouttax'    => $product_total_qty * ($price *100),
 
                     );
-                    $orderTotal += $product_total_qty * ($product['price']*100);
-                    $taxTotal += ($product_total_qty * ($product['price']*100)) * ($rates/100);
+                    $orderTotal += $product_total_qty * ($price *100);
+                    $taxTotal += ($product_total_qty * ($price *100)) * ($rates/100);
 
-                    $subtotal += ($product['price'] * 100) * $product_total_qty;
-                    $productTotal += ($product['price'] * 100) * $product_total_qty;
+                    $subtotal += ($price * 100) * $product_total_qty;
+                    $productTotal += ($price * 100) * $product_total_qty;
                     if(isset($prepareDiscount[$rates])){
-                        $prepareDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
+                        $prepareDiscount[$rates] += ($price * 100) * $product_total_qty;
                     } else {
-                        $prepareDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
+                        $prepareDiscount[$rates] = ($price * 100) * $product_total_qty;
                     }
                     if(isset($prepareProductDiscount[$rates])){
-                        $prepareProductDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
+                        $prepareProductDiscount[$rates] += ($price * 100) * $product_total_qty;
                     } else {
-                        $prepareProductDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
+                        $prepareProductDiscount[$rates] = ($price * 100) * $product_total_qty;
                     }
                 }
 
@@ -334,6 +336,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                         $total['value'] = round( $total['value'], 2 );
                         $totalTypeTotal = $this->currency->format($total['value']*100, $this->currency->getCode(), '', false);
+                        $totalTypeTotal = $this->currency->convert($totalTypeTotal,$this->config->get('config_currency'),$this->session->data['currency']);
                         if($total['code'] != 'billmate_fee' && $total['code'] != 'shipping'){
                             $values['Articles'][] = array(
                                 'quantity' => 1,
@@ -349,27 +352,29 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         }
                         if($total['code'] == 'shipping'){
                             $values['Cart']['Shipping'] = array(
-                                'withouttax' => $total['value'] * 100,
+                                'withouttax' => $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100,
                                 'taxrate' => $total['tax_rate']
                             );
-                            $orderTotal += $total['value'] * 100;
-                            $taxTotal += ($total['value'] * 100) * ($total['tax_rate']/100);
+                            $orderTotal += $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            $taxTotal += ($this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100) * ($total['tax_rate']/100);
                         }
                         if($total['code'] == 'billmate_fee'){
                             $values['Cart']['Handling'] = array(
-                                'withouttax' => $total['value'] * 100,
+                                'withouttax' => $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100,
                                 'taxrate' => $total['tax_rate']
                             );
-                            $orderTotal += $total['value'] * 100;
-                            $taxTotal += ($total['value'] * 100) * ($total['tax_rate']/100);
+                            $orderTotal +=$this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            $taxTotal += ($this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100) * ($total['tax_rate']/100);
                         }
+
+
                         if($total['code'] != 'myoc_price_rounding' )
                         {
                             if (isset($prepareDiscount[$total['tax_rate']]))
-                                $prepareDiscount[$total['tax_rate']] += $total['value'] * 100;
+                                $prepareDiscount[$total['tax_rate']] += $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
                             else
-                                $prepareDiscount[$total['tax_rate']] = $total['value'] * 100;
-                            $subtotal += $total['value'] * 100;
+                                $prepareDiscount[$total['tax_rate']] = $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            $subtotal += $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
                         }
                     }
                 }
@@ -421,6 +426,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                                         $discountExcl = $discountIncl / (1 + $tax / 100);
                                         $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                                        $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+
                                         $values['Articles'][] = array(
                                             'quantity'   => 1,
                                             'artnr'    => '',
@@ -436,6 +443,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                     }
                                 }
                                 $freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                                $freeshipTotal = $this->currency->convert($freeshipTotal,$this->config->get('config_currency'),$this->session->data['currency']);
+
                                 $values['Articles'][] = array(
                                     'quantity'   => 1,
                                     'artnr'    => '',
@@ -457,6 +466,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                     $percent      = $value / $productTotal;
                                     $discount     = $percent * ($total['value'] * 100);
                                     $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+                                    $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+
                                     $values['Articles'][] = array(
                                         'quantity'   => 1,
                                         'artnr'    => '',
@@ -514,6 +525,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
                                 $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                                $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+
                                 $values['Articles'][] = array(
                                     'quantity'   => 1,
                                     'artnr'    => '',
@@ -530,6 +543,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             }
                         }
                         $freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                        $freeshipTotal = $this->currency->convert($freeshipTotal,$this->config->get('config_currency'),$this->session->data['currency']);
+
                         $values['Articles'][] = array(
                             'quantity'   => 1,
                             'artnr'    => '',
@@ -552,6 +567,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             $percent      = $value / $productTotal;
                             $discount     = $percent * ($total['value'] * 100);
                             $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+
+                            $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
                                 'artnr'    => '',
@@ -569,8 +586,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     }
 
                 } // End discount isset
-
-                $round = ($order_info['total']*100) - ($orderTotal + $taxTotal);
+                $total = $this->currency->convert($order_info['total'],$this->config->get('config_currency'),$this->session->data['currency']);
+                $round = ($total*100) - ($orderTotal + $taxTotal);
                 $values['Cart']['Total'] = array(
                     'withouttax' => $orderTotal,
                     'tax' => $taxTotal,
@@ -821,6 +838,7 @@ $db->query($sql);
         $debug = false;
         define('BILLMATE_SERVER','2.1.7');
         define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
 
         $result = $k->getAddress(array('pno' => $this->request->post['pno']));

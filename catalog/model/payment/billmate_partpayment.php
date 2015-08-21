@@ -1,8 +1,8 @@
 <?php
 class ModelPaymentBillmatePartpayment extends Model {
-    public function getMethod($address, $total) {        
-        $this->language->load('payment/billmate_partpayment');
-		
+    public function getMethod($address, $total) {
+
+		$this->language->load('payment/billmate_partpayment');
 		$status = true;
 		
 		$billmate_partpayment = $this->config->get('billmate_partpayment');
@@ -15,6 +15,19 @@ class ModelPaymentBillmatePartpayment extends Model {
 			$status = false;
 		} elseif (!$billmate_partpayment['SWE']['status']) {
 			$status = false;
+		}
+
+		if(isset($billmate_partpayment['SWE'])){
+			if(isset($billmate_partpayment['SWE']['mintotal'])){
+				if($total < $billmate_partpayment['SWE']['mintotal']){
+					$status = false;
+				}
+			}
+			if(isset($billmate_partpayment['SWE']['maxtotal'])){
+				if($total < $billmate_partpayment['SWE']['maxtotal']){
+					$status = false;
+				}
+			}
 		}
 		if( $status){
             $available_countries = array_keys($this->config->get('billmate_partpayment_country'));

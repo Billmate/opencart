@@ -26,7 +26,18 @@ class ModelPaymentBillmateInvoice extends Model {
 			'DEU' => 'EUR',
 			'NLD' => 'EUR',
 		);				
-        
+        if(isset($billmate_invoice['SWE'])){
+            if(isset($billmate_invoice['SWE']['mintotal'])){
+                if($total < $billmate_invoice['SWE']['mintotal']){
+                    $status = false;
+                }
+            }
+            if(isset($billmate_invoice['SWE']['maxtotal'])){
+                if($total < $billmate_invoice['SWE']['maxtotal']){
+                    $status = false;
+                }
+            }
+        }
 
 
 		if( $status){
