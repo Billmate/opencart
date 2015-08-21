@@ -102,7 +102,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						} elseif ($pclass['interestrate'] == 0) {
 							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest_rate = $pclass['interestrate'] / (100.0 * 12);
+							$interest_rate = $pclass['interestrate'] / 12;
 							
 							$payment = $sum * $interest_rate / (1 - pow((1 + $interest_rate), -$pclass['nbrofmonths']));
 						}
@@ -115,7 +115,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$months = $pclass['nbrofmonths'];
 						
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interestrate'] / (100.0 * 12);
+							$interest = $balance * $pclass['interestrate'] / 12;
 							$new_balance = $balance + $interest + $monthly_fee;
 
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
@@ -267,7 +267,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						} elseif ($pclass['interestrate'] == 0) {
 							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest_rate = $pclass['interestrate'] / (100.0 * 12);
+							$interest_rate = $pclass['interestrate'] / 12;
 
 							$payment = $sum * $interest_rate / (1 - pow((1 + $interest_rate), -$pclass['nbrofmonths']));
 						}
@@ -280,7 +280,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$months = $pclass['nbrofmonths'];
 
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interestrate'] / (100.0 * 12);
+							$interest = $balance * $pclass['interestrate'] /  12;
 							$new_balance = $balance + $interest + $monthly_fee;
 
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {

@@ -140,7 +140,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						} elseif ($pclass['interestrate'] == 0) {
 							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest = $pclass['interestrate'] / (100.0 * 12);
+							$interest = $pclass['interestrate'] / 12;
 							$payment = $sum * $interest / (1 - pow((1 + $interest), -$pclass['nbrofmonths']));
 						}
 						$payment += $monthly_fee;
@@ -149,7 +149,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						$months = $pclass['nbrofmonths'];
 						
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interestrate'] / (100.0 * 12);
+							$interest = $balance * $pclass['interestrate'] /  12;
 							$new_balance = $balance + $interest + $monthly_fee;
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
 								$pay_data[] = $new_balance;
