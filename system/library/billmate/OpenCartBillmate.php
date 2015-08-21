@@ -1,7 +1,7 @@
 <?php
 
  class OpenCartBillmate{
-    private $pclass = null;
+    private $pclass = array();
     public $allPclass = array();
     
  	public static function ocGetModuleVersion(){
@@ -23,17 +23,17 @@
         $k = new BillMate( $eid ,$key,$ssl,false,$debug);
         
         $countryInfo = $this->country_iso_code_3( $countryCode);
-
-        $additionalinfo['PaymentData'] = array(
-	        "currency"=> 'SEK',
-	        "country"=> 'se',
-	        "language"=>'sv',
-        );
-        $this->pclass = $k->getPaymentplans($additionalinfo);
-		if( is_array( $this->pclass) ){
-			array_walk($this->pclass, 'correct_lang_billmate');
+		foreach(array('sv','en') as $language) {
+			$additionalinfo['PaymentData'] = array(
+				"currency" => 'SEK',
+				"country" => 'se',
+				"language" => $language,
+			);
+			$this->pclass[$language] = $k->getPaymentplans($additionalinfo);
+			if (is_array($this->pclass)) {
+				array_walk($this->pclass, 'correct_lang_billmate');
+			}
 		}
-        
         return $this;
     }
     public function getPClasses(){

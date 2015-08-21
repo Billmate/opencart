@@ -102,6 +102,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$data['regen_pclasses'] = $this->language->get('regen_pclasses');
         $data['no_pclasses_found'] = $this->language->get('no_pclasses_found');
         $data['billmate_version'] = PLUGIN_VERSION;
+        $lang_code = $this->language->get('code');
+        $data['lang_code'] = ($lang_code == 'se') ? 'sv' : $lang_code;
 
 		$store_currency = $this->config->get('config_currency');
 		$store_country  = $this->config->get('config_country_id');

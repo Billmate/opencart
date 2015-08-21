@@ -18,12 +18,12 @@ class ModelPaymentBillmatePartpayment extends Model {
 		}
 
 		if(isset($billmate_partpayment['SWE'])){
-			if(isset($billmate_partpayment['SWE']['mintotal'])){
+			if(isset($billmate_partpayment['SWE']['mintotal']) && ($billmate_partpayment['SWE']['mintotal'] != '' || $billmate_partpayment['SWE']['mintotal'] != 0)){
 				if($total < $billmate_partpayment['SWE']['mintotal']){
 					$status = false;
 				}
 			}
-			if(isset($billmate_partpayment['SWE']['maxtotal'])){
+			if(isset($billmate_partpayment['SWE']['maxtotal'])  && ($billmate_partpayment['SWE']['maxtotal'] != '' || $billmate_partpayment['SWE']['maxtotal'] != 0)){
 				if($total < $billmate_partpayment['SWE']['maxtotal']){
 					$status = false;
 				}
@@ -41,9 +41,17 @@ class ModelPaymentBillmatePartpayment extends Model {
 		}
         if(!$status) return false;
 
-		
-        $countryRates = $this->config->get('billmate_partpayment_pclasses');
-        $countryRates = $countryRates['SWE'][0];
+
+		$countryRates = $this->config->get('billmate_partpayment_pclasses');
+		$countryRates = $countryRates['SWE'][0];
+
+		$lang = $this->language->get('code');
+		if($lang == 'sv' || $lang == 'en'){
+			$selectedLanguage = $lang;
+		} else {
+			$selectedLanguage = 'en';
+		}
+		$countryRates = $countryRates[$selectedLanguage];
 
 
        $method = array();
@@ -76,7 +84,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 				if ($pclass['type'] == 2) {
 					$monthly_cost = -1;
 				} else {
-					if ($total < $pclass['minamount'] || ($total > $pclass['maxamount'] && $pclass['maxamount'] > 0)) {
+					if ($total < ($pclass['minamount']/100) || ($total > ($pclass['maxamount']/100) && ($pclass['maxamount']/100) > 0)) {
 						continue;
 					}
 
@@ -88,8 +96,8 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$lowest_payment = $this->getLowestPaymentAccount($countryData['iso_code_3']);
 						$monthly_cost = 0;
 
-						$monthly_fee = $pclass['handlingfee'];
-						$start_fee = $pclass['startfee'];
+						$monthly_fee = $pclass['handlingfee']/100;
+						$start_fee = $pclass['startfee']/100;
 
 						$sum += $start_fee;
 
@@ -102,7 +110,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						} elseif ($pclass['interestrate'] == 0) {
 							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest_rate = $pclass['interestrate'] / 12;
+							$interest_rate = $pclass['interestrate'] /(100 * 12);
 							
 							$payment = $sum * $interest_rate / (1 - pow((1 + $interest_rate), -$pclass['nbrofmonths']));
 						}
@@ -115,7 +123,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$months = $pclass['nbrofmonths'];
 						
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interestrate'] / 12;
+							$interest = $balance * $pclass['interestrate'] / (100 * 12);
 							$new_balance = $balance + $interest + $monthly_fee;
 
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
@@ -158,6 +166,7 @@ class ModelPaymentBillmatePartpayment extends Model {
                 $i++;
 			}
 		}
+		error_log('po'.print_r($payment_option,true));
 		if (!$payment_option) {
 			$status = false;
 		}
@@ -202,7 +211,14 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$countryData    = $countryQuery->row;
 
 		$countryRates = $this->config->get('billmate_partpayment_pclasses');
-		$countryRates = $countryRates['SWE'][0];
+		$countryRates = $this->config->get('billmate_partpayment_pclasses');
+		$lang = $this->language->get('code');
+		if($lang == 'sv' || $lang == 'en'){
+			$selectedLanguage = $lang;
+		} else {
+			$selectedLanguage = 'en';
+		}
+		$countryRates = $countryRates['SWE'][$selectedLanguage][0];
 
 
 		$method = array();
@@ -241,7 +257,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 				if ($pclass['type'] == 2) {
 					$monthly_cost = -1;
 				} else {
-					if ($total < $pclass['minamount'] || ($total > $pclass['maxamount'] && $pclass['maxamount'] > 0)) {
+					if ($total < ($pclass['minamount']/100) || ($total > ($pclass['maxamount']/100) && ($pclass['maxamount']/100) > 0)) {
 						continue;
 					}
 
@@ -253,8 +269,8 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$lowest_payment = $this->getLowestPaymentAccount($countryData['iso_code_3']);
 						$monthly_cost = 0;
 
-						$monthly_fee = $pclass['handlingfee'];
-						$start_fee = $pclass['startfee'];
+						$monthly_fee = $pclass['handlingfee']/100;
+						$start_fee = $pclass['startfee']/100;
 
 						$sum += $start_fee;
 
@@ -267,7 +283,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						} elseif ($pclass['interestrate'] == 0) {
 							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest_rate = $pclass['interestrate'] / 12;
+							$interest_rate = $pclass['interestrate'] / (100 * 12);
 
 							$payment = $sum * $interest_rate / (1 - pow((1 + $interest_rate), -$pclass['nbrofmonths']));
 						}
@@ -280,7 +296,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 						$months = $pclass['nbrofmonths'];
 
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interestrate'] /  12;
+							$interest = $balance * $pclass['interestrate'] /  (100 * 12);
 							$new_balance = $balance + $interest + $monthly_fee;
 
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {

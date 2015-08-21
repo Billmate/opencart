@@ -430,6 +430,7 @@ class ModelPaymentBillmate extends Model {
                     continue;
                 }
                 $tmppclasses = $billmate->getPClasses();
+                error_log('pclasses'.print_r($tmppclasses,true));
                 $numFoundPClasses += count($tmppclasses);
             }
             if( empty($data[$countryCode])){

@@ -75,6 +75,14 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$billmate_partpayment = $this->config->get('billmate_partpayment');
 		    $countryRates = $this->config->get('billmate_partpayment_pclasses');
             $countryRates = $countryRates['SWE'][0];
+
+            $lang = $this->language->get('code');
+            if($lang == 'sv' || $lang == 'en'){
+                $selectedLanguage = $lang;
+            } else {
+                $selectedLanguage = 'en';
+            }
+            $countryRates = $countryRates[$selectedLanguage];
 			
 			$data['merchant'] = $billmate_partpayment['SWE']['merchant'];
 			$data['phone_number'] = $order_info['telephone'];
@@ -121,7 +129,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				if ($pclass['type'] == 2) {
 					$monthly_cost = -1;
 				} else {
-					if ($total < $pclass['minamount'] || ($total > $pclass['maxamount'] && $pclass['maxamount'] > 0)) {
+					if ($total < ($pclass['minamount']/100) || ($total > ($pclass['maxamount']/100) && ($pclass['maxamount']/100) > 0)) {
 						continue;
 					}
 					if ($pclass['type'] == 3) {
@@ -130,8 +138,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						$sum = $total;
 						$lowest_payment = $this->getLowestPaymentAccount($countryData['iso_code_3']);
 						$monthly_cost = 0;
-						$monthly_fee = $pclass['handlingfee'];
-						$start_fee = $pclass['startfee'];
+						$monthly_fee = $pclass['handlingfee']/100;
+						$start_fee = $pclass['startfee']/100;
 						$sum += $start_fee;
 						$base = ($pclass['type'] == 1);
 						$minimum_payment = ($pclass['type'] === 1) ? $this->getLowestPaymentAccount($countryData['iso_code_3']) : 0;
@@ -140,7 +148,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						} elseif ($pclass['interestrate'] == 0) {
 							$payment = $sum / $pclass['nbrofmonths'];
 						} else {
-							$interest = $pclass['interestrate'] / 12;
+							$interest = $pclass['interestrate'] / (100 * 12);
 							$payment = $sum * $interest / (1 - pow((1 + $interest), -$pclass['nbrofmonths']));
 						}
 						$payment += $monthly_fee;
@@ -149,7 +157,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 						$months = $pclass['nbrofmonths'];
 						
 						while (($months != 0) && ($balance > 0.01)) {
-							$interest = $balance * $pclass['interestrate'] /  12;
+							$interest = $balance * $pclass['interestrate'] / (100 * 12);
 							$new_balance = $balance + $interest + $monthly_fee;
 							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
 								$pay_data[] = $new_balance;
