@@ -101,6 +101,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$data['tab_log'] = $this->language->get('tab_log');
 		$data['regen_pclasses'] = $this->language->get('regen_pclasses');
         $data['no_pclasses_found'] = $this->language->get('no_pclasses_found');
+        $data['billmate_version'] = PLUGIN_VERSION;
 
 		$store_currency = $this->config->get('config_currency');
 		$store_country  = $this->config->get('config_country_id');

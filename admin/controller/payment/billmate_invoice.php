@@ -82,7 +82,9 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		
 		$data['tab_general'] = $this->language->get('tab_general');
 		$data['tab_log'] = $this->language->get('tab_log');
-				       
+        $data['billmate_version'] = PLUGIN_VERSION;
+
+
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {

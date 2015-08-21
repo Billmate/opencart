@@ -55,6 +55,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		$data['button_cancel'] = $this->language->get('button_cancel');
 		$data['entry_description'] = $this->language->get('entry_description');
         $data['entry_available_countries'] = $this->language->get('entry_available_countries');
+		$data['billmate_version'] = PLUGIN_VERSION;
 
 		$data['tab_general'] = $this->language->get('tab_general');
 

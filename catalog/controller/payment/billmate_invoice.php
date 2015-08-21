@@ -184,8 +184,11 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 			if (!$json) {
 				$billmate_invoice = $this->config->get('billmate_invoice');
-				
+                if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+                if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
 				require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+
     				
 				$eid = (int)$billmate_invoice['SWE']['merchant'];
 				$key = (int)$billmate_invoice['SWE']['secret'];
@@ -836,9 +839,9 @@ $db->query($sql);
 
         $ssl = true;
         $debug = false;
-        define('BILLMATE_SERVER','2.1.7');
-        define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
-        define('BILLMATE_LANGUAGE',$this->language->get('code'));
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
 
         $result = $k->getAddress(array('pno' => $this->request->post['pno']));

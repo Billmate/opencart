@@ -59,8 +59,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
+        $data['billmate_version'] = PLUGIN_VERSION;
 
-		$data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_general'] = $this->language->get('tab_general');
 
                 if (isset($this->error['merchant_id'])) {
                         $data['error_merchant_id'] = $this->error['merchant'];
