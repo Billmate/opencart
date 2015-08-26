@@ -26,9 +26,13 @@
     </form>
 
   </div>
-  <div style="margin-bottom: 3px;"><b><?php echo $text_additional; ?></b></div>
+
   <div class="content">
     <form class="form-horizontal">
+      <div class="form-group"><label class="col-sm-7 control-label" for="additional_info">
+          <b><?php echo $text_additional; ?></b>
+        </label></div>
+
       <?php if (!$company) { ?>
       <?php if ($iso_code_3 == 'DEU' || $iso_code_3 == 'NLD') { ?>
       <tr>

@@ -24,7 +24,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 				}
 			}
 			if(isset($billmate_partpayment['SWE']['maxtotal'])  && ($billmate_partpayment['SWE']['maxtotal'] != '' || $billmate_partpayment['SWE']['maxtotal'] != 0)){
-				if($total < $billmate_partpayment['SWE']['maxtotal']){
+				if($total > $billmate_partpayment['SWE']['maxtotal']){
 					$status = false;
 				}
 			}
@@ -44,7 +44,6 @@ class ModelPaymentBillmatePartpayment extends Model {
 
 		$countryRates = $this->config->get('billmate_partpayment_pclasses');
 		$countryRates = $countryRates['SWE'][0];
-
 		$lang = $this->language->get('code');
 		if($lang == 'sv' || $lang == 'en'){
 			$selectedLanguage = $lang;
@@ -211,14 +210,14 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$countryData    = $countryQuery->row;
 
 		$countryRates = $this->config->get('billmate_partpayment_pclasses');
-		$countryRates = $this->config->get('billmate_partpayment_pclasses');
+		$countryRates = $countryRates['SWE'][0];
 		$lang = $this->language->get('code');
 		if($lang == 'sv' || $lang == 'en'){
 			$selectedLanguage = $lang;
 		} else {
 			$selectedLanguage = 'en';
 		}
-		$countryRates = $countryRates['SWE'][$selectedLanguage][0];
+		$countryRates = $countryRates[$selectedLanguage];
 
 
 		$method = array();

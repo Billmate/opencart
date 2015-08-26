@@ -20,7 +20,7 @@ $_['entry_test']         = 'Testläge:';
 $_['entry_prompt_name']  = 'Visa namn i betalfönster:';
 $_['entry_3dsecure']     = 'Aktivera 3D secure:';
 $_['entry_total']        = 'Totalbelopp:';
-$_['help_total']         = '<br /><span class="help">Kundvagnens totalbelopp måste vara över detta för att aktivera betalningsmetoden.</span>';
+$_['help_total']         = 'Kundvagnens totalbelopp måste vara över detta för att aktivera betalningsmetoden.';
 $_['entry_order_status'] = 'Orderstatus:';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';

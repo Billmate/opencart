@@ -24,7 +24,7 @@ $_['entry_test']         = 'Test Mode:';
 $_['entry_prompt_name']  = 'Display Name:';
 $_['entry_3dsecure']     = 'Enable 3D Secure:';
 $_['entry_total']        = 'Total:';
-$_['help_total']         = '<br><span class="help">The checkout total the order must reach before this payment method becomes active.</span>';
+$_['help_total']         = 'The checkout total the order must reach before this payment method becomes active.';
 $_['entry_order_status'] = 'Order Status:';
 $_['entry_order_cancel_status'] = 'Cancelled Order Status:';
 $_['entry_geo_zone']     = 'Geo Zone:';
