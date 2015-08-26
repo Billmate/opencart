@@ -19,8 +19,8 @@
     <div class="warning"><?php echo $error_credentials; ?></div>
     <?php } ?>
   <div class="box">
-      <h1><img src="/billmate/images/billmate_bank_s.png" alt="" /> <?php echo $heading_title.' - '.$billmate_version; ?></h1>
     <div class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'pull-right' : 'heading'; ?>">
+        <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_title.' - '.$billmate_version; ?></h1>
 
       <div class="buttons"><a onclick="$('#form').submit();" class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'btn btn-primary' : 'button'; ?>"><?php echo $button_save; ?></a><a onclick="location = '<?php echo $cancel; ?>';" class="<?php echo version_compare(VERSION,'2.0.0','>=') ? 'btn btn-default' : 'button'; ?>"><?php echo $button_cancel; ?></a></div>
     </div>
