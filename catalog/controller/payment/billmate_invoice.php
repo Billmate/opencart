@@ -195,8 +195,6 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				
 				$ssl = true;
 				$debug = false;
-                define('BILLMATE_SERVER','2.1.7');
-                define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
                 $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
                 $values['PaymentData'] = array(
                     'method' => 1,
