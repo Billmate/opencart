@@ -511,8 +511,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                 $discountIncl = $percent * ($discountValue * 100);
 
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
-                                $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
-                                $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+                                //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                                $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
 
                                 $values['Articles'][] = array(
                                     'quantity'   => 1,
@@ -528,8 +528,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                             }
                         }
-                        $freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
-                        $freeshipTotal = $this->currency->convert($freeshipTotal,$this->config->get('config_currency'),$this->session->data['currency']);
+                        //$freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                        $freeshipTotal = $this->currency->convert(-$shipping['value'] * 100,$this->config->get('config_currency'),$this->session->data['currency']);
 
                         $values['Articles'][] = array(
                             'quantity'   => 1,
@@ -551,8 +551,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                             $percent      = $value / $productTotal;
                             $discount     = $percent * ($total['value'] * 100);
-                            $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
-                            $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+                            //$discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+                            $discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
 
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
@@ -610,8 +610,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         $discountIncl = $percent * ($discountValue * 100);
 
                         $discountExcl = $discountIncl / (1 + $tax / 100);
-                        $discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
-                        $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+                        //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                        $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
 
                         $values['Articles'][] = array(
                             'quantity'   => 1,
@@ -628,8 +628,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                     }
                 }
-                $freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
-                $freeshipTotal = $this->currency->convert($freeshipTotal,$this->config->get('config_currency'),$this->session->data['currency']);
+                //$freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                $freeshipTotal = $this->currency->convert(-$shipping['value'] * 100,$this->config->get('config_currency'),$this->session->data['currency']);
 
                 $values['Articles'][] = array(
                     'quantity'   => 1,
@@ -652,14 +652,14 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                     $percent      = $value / $productTotal;
                     $discount     = $percent * ($total['value'] * 100);
-                    $discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+                    //$discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
 
-                    $discountToArticle = $this->currency->convert($discountToArticle,$this->config->get('config_currency'),$this->session->data['currency']);
+                    $discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
                     $values['Articles'][] = array(
                         'quantity'   => 1,
                         'artnr'    => '',
                         'title'    => $total['title'].' '.$tax.'% tax',
-                        'aprice'    => (int)$discountToArticle,
+                        'aprice'    => $discountToArticle,
                         'taxrate'      => $tax,
                         'discount' => 0.0,
                         'withouttax'    => $discountToArticle
