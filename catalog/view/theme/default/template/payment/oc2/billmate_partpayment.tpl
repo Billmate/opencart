@@ -61,7 +61,7 @@
       <div class="form-group required">
         <label for="pno" class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_pno; ?>"><?php echo $entry_pno; ?></span></label>
         <div class="col-sm-3">
-          <input type="text" name="pno" class="form-control" value="" />
+          <input type="text" name="pno" id="pno" class="form-control" value="" />
         </div>
 
       </div>
@@ -141,7 +141,7 @@ function ajax_load(udata)
 		},		
 		success: function(json) {
 			if (json['error']) {
-				jQuery('#payment').before('<div class="warning">' + json['error'] + '</div>');
+				jQuery('#pno').before('<div class="alert alert-danger" role="alert">' + json['error'] + '</div>');
 			}
 			if(json['address'])
 			{ 
