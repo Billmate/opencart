@@ -30,9 +30,7 @@
 				"language" => $language,
 			);
 			$this->pclass[$language] = $k->getPaymentplans($additionalinfo);
-			if (is_array($this->pclass)) {
-				array_walk($this->pclass, 'correct_lang_billmate');
-			}
+
 		}
         return $this;
     }
@@ -140,12 +138,5 @@
     }
  }
  
-function correct_lang_billmate(&$item, $index){
 
-    $item['startfee'] = $item['startfee'] / 100;
-    $item['handlingfee'] = $item['handlingfee'] / 100;
-    $item['interestrate'] = $item['interestrate'] / 100;
-    $item['minamount'] = $item['minamount'] / 100;
-    $item['maxamount'] = $item['maxamount'] / 100;
-}
 ?>
