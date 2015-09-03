@@ -4,38 +4,7 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
 
 class ControllerPaymentBillmateInvoice extends Controller {
-	public function getDebugReport(){
-		$billmate_invoice = $this->config->get('billmate_invoice');
-		
-		require_once dirname(DIR_APPLICATION).'/billmate/billingapi/BillMate API/BillMate.php';
-			
-		$eid = 7270;//7320;
-		$key = 606250886062;//511461125114;
-		$ssl = true;
-		$debug = true;
 
-
-		$k = new BillMate($eid,$key,$ssl,$debug);
-
-
-		$additionalinfo = array(
-			"currency"=>0,//SEK
-			"country"=>209,//Sweden
-			"language"=>125,//Swedish
-		);
-
-		try {
-
-			$result = $k->FetchCampaigns($additionalinfo);
-			
-			//Result:
-		//    print_r($addr);
-			
-		} catch(Exception $e) {
-			//Something went wrong
-		//    echo "{$e->getMessage()} (#{$e->getCode()})\n";
-		}
-	}
     public function terms(){
         $this->language->load('payment/billmate_invoice');
         
@@ -90,7 +59,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		    $data['entry_phone_no'] = sprintf($this->language->get('entry_phone_no'),$order_info['email'] );
 		    $data['button_confirm'] = $this->language->get('button_confirm');
 			$data['wrong_person_number'] = $this->language->get('your_billing_wrong');
-			
+			$data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
 
 	
 		    // The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
@@ -240,6 +209,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $productTotal = 0;
                 $orderTotal = 0;
                 $taxTotal = 0;
+                $myocRounding = 0;
 
                 foreach ($products as $product) {
 
@@ -259,7 +229,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     $title = $product['name'];
                     if(count($product['option']) > 0){
                         foreach($product['option'] as $option){
-                            $title .= ' - '.$option['name'].': '.$option['option_value'];
+
+                            if(version_compare(VERSION,'2.0','>=')){
+                                $title .= ' - ' . $option['name'] . ': ' . $option['value'];
+                            } else {
+                                $title .= ' - ' . $option['name'] . ': ' . $option['option_value'];
+                            }
                         }
                     }
                     $productValue = $this->currency->format($price *100, $this->currency->getCode(), '', false);
@@ -339,17 +314,21 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         $totalTypeTotal = $this->currency->format($total['value']*100, $this->currency->getCode(), '', false);
                         $totalTypeTotal = $this->currency->convert($totalTypeTotal,$this->config->get('config_currency'),$this->session->data['currency']);
                         if($total['code'] != 'billmate_fee' && $total['code'] != 'shipping'){
-                            $values['Articles'][] = array(
-                                'quantity' => 1,
-                                'artnr' => '',
-                                'title' => $total['title'],
-                                'aprice' => $totalTypeTotal,
-                                'taxrate' => (float)$total['tax_rate'],
-                                'discount' => 0.0,
-                                'withouttax' => $totalTypeTotal,
-                            );
-                            $orderTotal += $totalTypeTotal;
-                            $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
+                            if($total['code'] != 'myoc_price_rounding') {
+                                $values['Articles'][] = array(
+                                    'quantity' => 1,
+                                    'artnr' => '',
+                                    'title' => $total['title'],
+                                    'aprice' => $totalTypeTotal,
+                                    'taxrate' => (float)$total['tax_rate'],
+                                    'discount' => 0.0,
+                                    'withouttax' => $totalTypeTotal,
+                                );
+                                $orderTotal += $totalTypeTotal;
+                                $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
+                            } else {
+                                $myocRounding = $totalTypeTotal;
+                            }
                         }
                         if($total['code'] == 'shipping'){
                             $values['Cart']['Shipping'] = array(
@@ -589,6 +568,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 } // End discount isset
                 $total = $this->currency->convert($order_info['total'],$this->config->get('config_currency'),$this->session->data['currency']);
                 $round = ($total*100) - ($orderTotal + $taxTotal);
+
+                if($myocRounding != $round){
+                    $round = $myocRounding;
+                }
                 $values['Cart']['Total'] = array(
                     'withouttax' => $orderTotal,
                     'tax' => $taxTotal,
@@ -807,7 +790,8 @@ $db->query($sql);
                         }else {
                             $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
                         }
-
+                        if(isset($this->session->data['billmate_pno']))
+                            unset($this->session->data['billmate_pno']);
 
                         $json['redirect'] = $this->url->link('checkout/success');
 					}
@@ -851,7 +835,7 @@ $db->query($sql);
             $countryinfo = $query->row;
 
             $result['country_id'] = $countryinfo['country_id'];
-
+            $this->session->data['billmate_pno'] = $this->request->post['pno'];
             $response['success'] = true;
             $response['data'] = $result;
         } else {

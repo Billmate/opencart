@@ -388,6 +388,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		$productTotal = 0;
         $orderTotal = 0;
         $taxTotal = 0;
+        $myocRounding = 0;
 
         foreach ($products as $product) {
 
@@ -407,7 +408,11 @@ class ControllerPaymentBillmateBankpay extends Controller {
             $title = $product['name'];
             if(count($product['option']) > 0){
                 foreach($product['option'] as $option){
-                    $title .= ' - '.$option['name'].': '.$option['option_value'];
+                    if(version_compare(VERSION,'2.0','>=')){
+                        $title .= ' - ' . $option['name'] . ': ' . $option['value'];
+                    } else {
+                        $title .= ' - ' . $option['name'] . ': ' . $option['option_value'];
+                    }
                 }
             }
             $productValue = $this->currency->format($price *100, $this->currency->getCode(), '', false);
@@ -487,17 +492,21 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $totalTypeTotal = $this->currency->format($total['value']*100, $this->currency->getCode(), '', false);
                 $totalTypeTotal = $this->currency->convert($totalTypeTotal,$this->config->get('config_currency'),$this->session->data['currency']);
                 if($total['code'] != 'billmate_fee' && $total['code'] != 'shipping'){
-                    $values['Articles'][] = array(
-                        'quantity' => 1,
-                        'artnr' => '',
-                        'title' => $total['title'],
-                        'aprice' => $totalTypeTotal,
-                        'taxrate' => (float)$total['tax_rate'],
-                        'discount' => 0.0,
-                        'withouttax' => $totalTypeTotal,
-                    );
-                    $orderTotal += $totalTypeTotal;
-                    $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
+                    if($total['code'] != 'myoc_price_rounding') {
+                        $values['Articles'][] = array(
+                            'quantity' => 1,
+                            'artnr' => '',
+                            'title' => $total['title'],
+                            'aprice' => $totalTypeTotal,
+                            'taxrate' => (float)$total['tax_rate'],
+                            'discount' => 0.0,
+                            'withouttax' => $totalTypeTotal,
+                        );
+                        $orderTotal += $totalTypeTotal;
+                        $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
+                    } else {
+                        $myocRounding = $totalTypeTotal;
+                    }
                 }
                 if($total['code'] == 'shipping'){
                     $values['Cart']['Shipping'] = array(
@@ -737,6 +746,9 @@ class ControllerPaymentBillmateBankpay extends Controller {
         } // End discount isset
         $total = $this->currency->convert($order_info['total'],$this->config->get('config_currency'),$this->session->data['currency']);
         $round = ($total*100) - ($orderTotal + $taxTotal);
+        if($myocRounding != $round){
+            $round = $myocRounding;
+        }
         $values['Cart']['Total'] = array(
             'withouttax' => $orderTotal,
             'tax' => $taxTotal,

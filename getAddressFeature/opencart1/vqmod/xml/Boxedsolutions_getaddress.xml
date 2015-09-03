@@ -60,7 +60,7 @@
     		<add>
     			<![CDATA[
     			<?php echo $entry_personnumber; ?><br/>
-                                </label><input id="payment_address_pno" type="text" value="" name="pno"/>
+                                </label><input id="payment_address_pno" type="text" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" name="pno"/>
 								<a class="button" id="fetch_address" href="#">
                                     <?php echo $fetchaddress; ?>
                                 </a>
