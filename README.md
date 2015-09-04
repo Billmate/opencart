@@ -1,4 +1,4 @@
-# Billmate Payment Gateway for Magento
+# Billmate Payment Gateway for Opencart
 By Billmate AB - http://billmate.se/
 
 Documentation with instructions on how to setup the plugin can be found at https://billmate.se/plugins/manual/Installation_Manual_Opencart_Billmate.pdf
@@ -25,7 +25,7 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 ##Changelog
 
 ###2.0(2015-09-04)
-51 commits and 41 issues closed
+55 commits and 41 issues closed
 
 * Enhancement - Compatibility with Opencart 2.0.
 * Enhancement - getAddress functionality.
