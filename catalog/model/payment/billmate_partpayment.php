@@ -165,7 +165,6 @@ class ModelPaymentBillmatePartpayment extends Model {
                 $i++;
 			}
 		}
-		error_log('po'.print_r($payment_option,true));
 		if (!$payment_option) {
 			$status = false;
 		}

@@ -21,7 +21,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $this->load->model('checkout/order');
 
         $data['description'] = $this->config->get('billmate_cardpay_description');
-        error_log('index bank');
+
         if(version_compare(VERSION,'2.0.0','>=')){
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_bankpay.tpl')) {

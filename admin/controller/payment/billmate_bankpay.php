@@ -18,7 +18,6 @@ class ControllerPaymentBillmateBankpay extends Controller {
         }
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->request->post['billmate_bankpay_version'] = PLUGIN_VERSION;
-			error_log(print_r($this->request->post,true));
 			$this->request->post['billmate_bankpay_country'] = $this->request->post['billmatebank-country'];
 
 			$this->model_setting_setting->editSetting('billmate_bankpay', $this->request->post);

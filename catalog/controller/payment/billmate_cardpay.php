@@ -15,7 +15,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $this->language->load('payment/billmate_cardpay');
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['text_wait'] = $this->language->get('text_wait');
-        error_log('test');
+
         $this->load->model('checkout/order');
 
 
