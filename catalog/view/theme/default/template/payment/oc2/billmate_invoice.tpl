@@ -43,7 +43,7 @@ function ajax_load(udata)
 		dataType: 'json',		
 		beforeSend: function() {
 			jQuery('#button-confirm').attr('disabled', true);
-			
+
 			jQuery('.warning, .error').remove();
 			
 			jQuery('#payment').before('<div class="attention"><img src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/images/loading.gif" alt="" /> <?php echo $text_wait; ?></div>');
@@ -55,7 +55,7 @@ function ajax_load(udata)
 		success: function(json) {	
 			
 			if (json['error']) {
-				jQuery('#pno').before('<div class="alert alert-danger" role="alert">' + json['error'] + '</div>');
+				jQuery('#pno').before('<div class="alert alert-danger error" role="alert">' + json['error'] + '</div>');
 			}
 			if(json['address'])
 			{ 

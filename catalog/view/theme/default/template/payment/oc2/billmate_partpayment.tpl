@@ -141,7 +141,7 @@ function ajax_load(udata)
 		},		
 		success: function(json) {
 			if (json['error']) {
-				jQuery('#pno').before('<div class="alert alert-danger" role="alert">' + json['error'] + '</div>');
+				jQuery('#pno').before('<div class="alert alert-danger error" role="alert">' + json['error'] + '</div>');
 			}
 			if(json['address'])
 			{ 
