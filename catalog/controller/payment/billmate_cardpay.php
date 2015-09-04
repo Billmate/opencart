@@ -345,6 +345,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
             $title = $product['name'];
             if(count($product['option']) > 0){
                 foreach($product['option'] as $option){
+
                     if(version_compare(VERSION,'2.0','>=')){
                         $title .= ' - ' . $option['name'] . ': ' . $option['value'];
                     } else {
@@ -522,18 +523,20 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
                                 //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
                                 $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                                if($discountToArticle != 0) {
+                                    $values['Articles'][] = array(
+                                        'quantity' => 1,
+                                        'artnr' => '',
+                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'aprice' => $discountToArticle,
+                                        'taxrate' => $tax,
+                                        'discount' => 0.0,
+                                        'withouttax' => $discountToArticle
 
-                                $values['Articles'][] = array(
-                                    'quantity'   => 1,
-                                    'artnr'    => '',
-                                    'title'    => $total['title'].' '.$tax.'% tax',
-                                    'aprice'    => $discountToArticle,
-                                    'taxrate'      => $tax,
-                                    'discount' => 0.0,
-                                    'withouttax'    => $discountToArticle
-
-                                );
-
+                                    );
+                                    $orderTotal += $discountToArticle;
+                                    $taxTotal += $discountToArticle * ($tax/100);
+                                }
 
                             }
                         }
@@ -621,19 +624,20 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         $discountExcl = $discountIncl / (1 + $tax / 100);
                         //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
                         $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                        if($discountToArticle != 0) {
+                            $values['Articles'][] = array(
+                                'quantity' => 1,
+                                'artnr' => '',
+                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                'aprice' => $discountToArticle,
+                                'taxrate' => $tax,
+                                'discount' => 0.0,
+                                'withouttax' => $discountToArticle
 
-                        $values['Articles'][] = array(
-                            'quantity'   => 1,
-                            'artnr'    => '',
-                            'title'    => $total['title'].' '.$tax.'% tax',
-                            'aprice'    => $discountToArticle,
-                            'taxrate'      => $tax,
-                            'discount' => 0.0,
-                            'withouttax'    => $discountToArticle
-
-                        );
-                        $orderTotal += $discountToArticle;
-                        $taxTotal += $discountToArticle * ($tax/100);
+                            );
+                            $orderTotal += $discountToArticle;
+                            $taxTotal += $discountToArticle * ($tax / 100);
+                        }
 
                     }
                 }

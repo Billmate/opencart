@@ -407,18 +407,20 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                         $discountExcl = $discountIncl / (1 + $tax / 100);
                                         //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
                                         $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                                        if($discountToArticle != 0) {
+                                            $values['Articles'][] = array(
+                                                'quantity' => 1,
+                                                'artnr' => '',
+                                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                                'aprice' => $discountToArticle,
+                                                'taxrate' => $tax,
+                                                'discount' => 0.0,
+                                                'withouttax' => $discountToArticle
 
-                                        $values['Articles'][] = array(
-                                            'quantity'   => 1,
-                                            'artnr'    => '',
-                                            'title'    => $total['title'].' '.$tax.'% tax',
-                                            'aprice'    => $discountToArticle,
-                                            'taxrate'      => $tax,
-                                            'discount' => 0.0,
-                                            'withouttax'    => $discountToArticle
-
-                                        );
-
+                                            );
+                                            $orderTotal += $discountToArticle;
+                                            $taxTotal += $discountToArticle * ($tax/100);
+                                        }
 
                                     }
                                 }
@@ -506,19 +508,20 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
                                 //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
                                 $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                                if($discountToArticle != 0) {
+                                    $values['Articles'][] = array(
+                                        'quantity' => 1,
+                                        'artnr' => '',
+                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'aprice' => $discountToArticle,
+                                        'taxrate' => $tax,
+                                        'discount' => 0.0,
+                                        'withouttax' => $discountToArticle
 
-                                $values['Articles'][] = array(
-                                    'quantity'   => 1,
-                                    'artnr'    => '',
-                                    'title'    => $total['title'].' '.$tax.'% tax',
-                                    'aprice'    => $discountToArticle,
-                                    'taxrate'      => $tax,
-                                    'discount' => 0.0,
-                                    'withouttax'    => $discountToArticle
-
-                                );
-                                $orderTotal += $discountToArticle;
-                                $taxTotal += $discountToArticle * ($tax/100);
+                                    );
+                                    $orderTotal += $discountToArticle;
+                                    $taxTotal += $discountToArticle * ($tax / 100);
+                                }
 
                             }
                         }
@@ -568,7 +571,6 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 } // End discount isset
                 $total = $this->currency->convert($order_info['total'],$this->config->get('config_currency'),$this->session->data['currency']);
                 $round = ($total*100) - ($orderTotal + $taxTotal);
-
                 if($myocRounding != $round){
                     $round = $myocRounding;
                 }

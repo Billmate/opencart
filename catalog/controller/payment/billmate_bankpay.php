@@ -585,18 +585,20 @@ class ControllerPaymentBillmateBankpay extends Controller {
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
                                 //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
                                 $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                                if($discountToArticle != 0) {
+                                    $values['Articles'][] = array(
+                                        'quantity' => 1,
+                                        'artnr' => '',
+                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'aprice' => $discountToArticle,
+                                        'taxrate' => $tax,
+                                        'discount' => 0.0,
+                                        'withouttax' => $discountToArticle
 
-                                $values['Articles'][] = array(
-                                    'quantity'   => 1,
-                                    'artnr'    => '',
-                                    'title'    => $total['title'].' '.$tax.'% tax',
-                                    'aprice'    => $discountToArticle,
-                                    'taxrate'      => $tax,
-                                    'discount' => 0.0,
-                                    'withouttax'    => $discountToArticle
-
-                                );
-
+                                    );
+                                    $orderTotal += $discountToArticle;
+                                    $taxTotal += $discountToArticle * ($tax/100);
+                                }
 
                             }
                         }
@@ -684,19 +686,20 @@ class ControllerPaymentBillmateBankpay extends Controller {
                         $discountExcl = $discountIncl / (1 + $tax / 100);
                         //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
                         $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                        if($discountToArticle != 0) {
+                            $values['Articles'][] = array(
+                                'quantity' => 1,
+                                'artnr' => '',
+                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                'aprice' => $discountToArticle,
+                                'taxrate' => $tax,
+                                'discount' => 0.0,
+                                'withouttax' => $discountToArticle
 
-                        $values['Articles'][] = array(
-                            'quantity'   => 1,
-                            'artnr'    => '',
-                            'title'    => $total['title'].' '.$tax.'% tax',
-                            'aprice'    => $discountToArticle,
-                            'taxrate'      => $tax,
-                            'discount' => 0.0,
-                            'withouttax'    => $discountToArticle
-
-                        );
-                        $orderTotal += $discountToArticle;
-                        $taxTotal += $discountToArticle * ($tax/100);
+                            );
+                            $orderTotal += $discountToArticle;
+                            $taxTotal += $discountToArticle * ($tax / 100);
+                        }
 
                     }
                 }
