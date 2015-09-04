@@ -749,7 +749,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
         } // End discount isset
         $total = $this->currency->convert($order_info['total'],$this->config->get('config_currency'),$this->session->data['currency']);
         $round = ($total*100) - ($orderTotal + $taxTotal);
-        if($myocRounding != $round){
+        if(abs($myocRounding) > abs($round)){
             $round = $myocRounding;
         }
         $values['Cart']['Total'] = array(
