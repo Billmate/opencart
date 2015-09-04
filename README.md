@@ -25,6 +25,7 @@ If currency setting is 0 Decimal places, better use Myoc Price Rounding plugin f
 ##Changelog
 
 ###2.0(2015-09-04)
+50commits and 40 issues closed
 
 * Enchancement - Compatibility with Opencart 2.0.
 * Enchancement - getaddress functionality.
