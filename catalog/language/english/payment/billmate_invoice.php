@@ -4,18 +4,18 @@
 $_['text_title']          = 'Billmate Invoice';
 $_['text_title_fee']      = 'Billmate Invoice - Pay within 14 days';
 $_['text_title_fee2']      = 'Pay within 14 days';
-$_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">Billmate Invoice <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">Billmate Invoice <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
-$_['text_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee: "%s"});
 });</script>';
-$_['text_no_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s<a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_no_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s<a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
-$_['text_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://efinance.se/billmate/base.js", function(){
+$_['text_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee: "%s"});
-});</script>';//$_['text_no_fee']         = 'Billmate Invoice - Pay within 14 days <a class="billmate_terms" href="javascript://" targeturl="https://efinance.se/billmate/villkor.html" rel="superbox[iframe][700x700]">Terms of invoice</a><script type="text/javascript">$.getScript("/billmate/jquery-superbox/jquery.superbox-min.js");$(\'<link rel="stylesheet" type="text/css" href="/billmate/jquery-superbox/jquery.superbox.css" />\').appendTo("head");$.getScript("/billmate/js/openbox.js");</script>';
+});</script>';
 $_['address_should_match'] = 'Address Should be match';
 $_['text_additional']     = 'Billmate Invoice requires some additional information before they can proccess your order.';
 $_['text_wait']           = 'Please wait!';
@@ -50,7 +50,7 @@ $_['page_title'] = 'Köpvillkor';
 $_['body_title'] = 'Köpvillkor';
 $_['subtitle']   = 'Handla nu - betala först efter leverans!';
 $_['short_description'] = '
-        När du betalar via faktura administreras detta av eFinance Nordic AB under varumärket Billmate. Detta
+        När du betalar via faktura administreras detta av Billmate AB under varumärket Billmate. Detta
 innebär att du handlar tryggt och enkelt. Du slipper uppge dina kortuppgifter, och betalar först efter det
 att du mottagit dina varor.';
 $_['subline'] = 'Detta erbjuder vi dig:';
@@ -67,8 +67,8 @@ eller en person över 18 år, vara folkbokförd i Sverige samt godkännas i den 
 genomförs vid köpet. Kreditprövningen kan i vissa fall innebära att en kreditupplysning tas. I sådana
 fall kommer ni bli meddelade om detta via e-post. Kreditupplysningen sköts via Bisnode och är inget
 som belastar när man ansöker om kredit hos kreditinstitut.<br>
-Personuppgifter hanteras i enlighet med gällande lagstiftning. eFinance behandlar personuppgifter i
+Personuppgifter hanteras i enlighet med gällande lagstiftning. Billmate behandlar personuppgifter i
 syfte att utföra kundanalys, identifikation, kreditkoll samt marknadsföring. Personnummer kan används
 som kundnummer i kundhanteringssyfte.';
 $_['footer_one'] = '* Gäller ej för alla varor och tjänster, t ex. flygresor, evenemang och specialtillverkade varor.';
-$_['footer_two'] = 'eFinance Nordic AB, organisationsnummer 556918-4129, telefonnummer 040-30 35 00.';
+$_['footer_two'] = 'Billmate AB, organisationsnummer 556918-4129, telefonnummer 040-30 35 00.';
