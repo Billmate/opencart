@@ -1,5 +1,5 @@
 <?php
-
+/**
  *
  * @author <hsivonen@iki.fi>
  * @param string $str UTF-8 encoded string

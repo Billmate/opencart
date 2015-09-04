@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+#payment_address_pno{
+	/*width: 100%!important;*/
+}
+
+#fetch_address {
+	/*width: 100%;*
+	/* height: 2.8em!important; */
+	padding: 0.5em;
+	font-weight: bold!important;
+	font-size: small;
+	/*float: right;
+	word-break: break-all; */
+}
+#fetch_address.ui-button-text-only > .ui-button-text {
+	font-weight: bold!important;
+	font-size: smaller;
+	word-break: break-all;
+	padding: 0.5em 0.2em;
+}
+.pno_error{
+	color: red;
+	display:block;
+}
+div.radio{
+	margin-top: 1px;
+	margin-left: -4px!important;
+}
+div.checker{
+	margin-right: 5px!important;
+	margin-top: -1px;
+	margin-left: -3px!important;
+	
+}
+
+.euvat-col{
+	width: 33%;
+	float: left;
+}

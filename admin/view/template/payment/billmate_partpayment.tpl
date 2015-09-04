@@ -1,4 +1,8 @@
+<?php if(version_compare(VERSION,'2.0.0','>=')): ?>
+<?php echo $header; ?><?php echo $column_left; ?>
+<?php else: ?>
 <?php echo $header; ?>
+<?php endif; ?>
 <script type="text/javascript">
     function submitBillmateForm(updatePClasses) {
         if(updatePClasses == true) {
@@ -13,15 +17,21 @@
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
+    <?php if($latest_release != ''){ ?>
+    <div class="warning"><?php echo $latest_release; ?></div>
+    <?php } ?>
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
   <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?></div>
   <?php } ?>
+    <?php if ($error_credentials) { ?>
+    <div class="warning"><?php echo $error_credentials; ?></div>
+    <?php } ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_title; ?></h1>
+      <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_title.' - '.$billmate_version; ?></h1>
       <div class="buttons"><a onclick="submitBillmateForm(true)" class="button"><?php echo $button_save; ?></a><a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a></div>
     </div>
     <div class="content">
@@ -38,11 +48,11 @@
           <div id="tab-<?php echo $country['code']; ?>" class="vtabs-content">
             <table class="form">
               <tr>
-                <td><?php echo $entry_merchant; ?></td>
+                <td><?php echo $entry_merchant.'<br /><span class="help">'.$entry_merchant_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][merchant]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['merchant'] : ''; ?>" /></td>
               </tr>
               <tr>
-                <td><?php echo $entry_secret; ?></td>
+                <td><?php echo $entry_secret.'<br /><span class="help">'.$entry_secret_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][secret]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['secret'] : ''; ?>" /></td>
               </tr>
               <tr>
@@ -85,27 +95,27 @@
                   </select></td>
               </tr>
               <tr>
-                <td><?php echo $entry_mintotal; ?></td>
+                <td><?php echo $entry_mintotal.'<br /><span class="help">'.$entry_mintotal_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][mintotal]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['mintotal'] : ''; ?>" /></td>
               </tr>
               <tr>
-                <td><?php echo $entry_maxtotal; ?></td>
+                <td><?php echo $entry_maxtotal.'<br /><span class="help">'.$entry_maxtotal_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][maxtotal]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['maxtotal'] : ''; ?>" /></td>
               </tr>
 
                 <tr>
                     <td><?php echo $entry_available_countries; ?></td>
-                    <td><input type="text" name="billmatepart-country" value="" /></td>
+                    <td><input type="text" name="billmatepartpayment-country" value="" /></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td><div id="billmatepart-country" class="scrollbox">
+                    <td><div id="billmatepartpayment-country" class="scrollbox">
                             <?php $class = 'odd'; ?>
                             <?php if(isset($billmate_country) && is_array($billmate_country)){ ?>
                             <?php foreach ($billmate_country as $key => $b_country) { ?>
                             <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                            <div id="billmate-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
-                                <input type="hidden" name="billmatepart-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
+                            <div id="billmatepartpayment-country<?php echo $key; ?>" class="<?php echo $class; ?>"><?php echo $b_country['name']; ?><img src="view/image/delete.png" alt="" />
+                                <input type="hidden" name="billmatepartpayment-country[<?php echo $key;?>][name];?>" value="<?php echo $b_country['name']; ?>" />
 
                             </div>
                             <?php } ?>
@@ -113,48 +123,13 @@
                         </div></td>
                 </tr>
                 <script type="text/javascript">
-
-                    $('input[name=\'billmatepart-country\']').autocomplete({
-                        delay: 500,
-                        source: function(request, response) {
-                            $.ajax({
-                                url: 'index.php?route=payment/billmate_invoice/country_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
-                                dataType: 'json',
-                                success: function(json) {
-                                    console.log(json);
-                                    response($.map(json, function(item) {
-                                        return {
-                                            label: item.name,
-                                            value: item.country_id
-                                        }
-                                    }));
-                                }
-                            });
-                        },
-                        select: function(event, ui) {
-                            $('#billmatepart-country' + ui.item.value).remove();
-
-                            $('#billmatepart-country').append('<div id="billmatepart-country' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="billmatepart-country['+ui.item.value+'][name]" value="' + ui.item.label + '" /></div>');
-
-                            $('#billmatepart-country div:odd').attr('class', 'odd');
-                            $('#billmatepart-country div:even').attr('class', 'even');
-
-                            return false;
-                        },
-                        focus: function(event, ui) {
-                            return false;
-                        }
-                    }).autocomplete("instance")._renderItem = function(ul, item){
-                        return $("<li>").append("<a>"+item.label +"</a>").appendTo(ul);
-                    };
-
-                    $('#billmatepart-country div img').live('click', function() {
-                        $(this).parent().remove();
-
-                        $('#billmatepart-country div:odd').attr('class', 'odd');
-                        $('#billmatepart-country div:even').attr('class', 'even');
-                    });
+                    var token = '<?php echo $token; ?>';
                 </script>
+                <?php if(version_compare(VERSION,'2.0.0','>=')): ?>
+                    <script src="/billmate/js/billmate.js"></script>
+                <?php else: ?>
+                    <script src="/billmate/js/legacy-billmate.js"></script>
+                <?php endif; ?>
                 <tr>
               <tr>
                 <td><?php echo $entry_status; ?></td>
@@ -189,26 +164,34 @@
         <div id="tab-pclasses">
           <table class="form">
 			<?php
+			if(isset($all_pclasses)){
 			$head = array();
-			if( is_array( $all_pclasses[0] )){
-				$head = array_keys($all_pclasses[0]);
-			}
-			?>
-            <tr>
-				<?php foreach($head as $row) echo '<th>',ucfirst(str_replace('_',' ', $row)),'</th>'; ?>
-            </tr>
-		  <?php
-			foreach($all_pclasses as $pclass){
+			if( is_array( $all_pclasses )){
+				$head = array_keys($all_pclasses[$lang_code][0]);
+                                }
+                                ?>
+              <tr>
+                  <?php foreach($head as $row) echo '<th>',ucfirst(str_replace('_',' ', $row)),'</th>'; ?>
+              </tr>
+              <?php
+		  foreach($all_pclasses as $pclasses){
 				echo '<tr>';
-				foreach($pclass as $key => $val){
-					if( $key == 'country' ){
-						echo '<td align="center">',($val==209? 'Sweden': $val),'</td>';
-					}else{
-						echo '<td align="center">',$val,'</td>';
-					}
-				}
-				echo '</tr>';
-			}
+              foreach($pclasses as $pclass){
+              if($pclass == 0) continue;
+              foreach($pclass as $key => $val){
+              if(in_array($key,array('minamount','maxamount','startfee','handlingfee','interestrate')))
+              $val = $val/100;
+              if( $key == 'country' ){
+              echo '<td align="center">',($val==209? 'Sweden': $val),'</td>';
+              }else{
+              echo '<td align="center">',$val,'</td>';
+              }
+              }
+              echo '</tr>';
+              }
+              }
+              } else
+              echo $no_pclasses_found
 		  ?>
           </table>
         </div>

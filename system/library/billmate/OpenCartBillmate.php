@@ -1,11 +1,11 @@
 <?php
 
  class OpenCartBillmate{
-    private $pclass = null;
+    private $pclass = array();
     public $allPclass = array();
     
  	public static function ocGetModuleVersion(){
- 	    return '1.0.0';
+ 	    return '2.0';
  	}
  	public function ocGetAllPClasses(){
         $pclasses = $this->getPCStorage();
@@ -14,28 +14,24 @@
 
     public function ocFetchPClasses($countryCode, $eid, $key, $server){
         $base = dirname(__FILE__);
-		require_once $base.'/BillMate.php';
-		include_once($base."/lib/xmlrpc.inc");
-		include_once($base."/lib/xmlrpcs.inc");
+		require_once $base.'/Billmate.php';
 		$ssl = true;
 		$debug = false;
 		$eid = (int)$eid;
 		$key = (int)$key;
 
-        $k = new BillMate( $eid ,$key,$ssl,$debug);
+        $k = new BillMate( $eid ,$key,$ssl,false,$debug);
         
         $countryInfo = $this->country_iso_code_3( $countryCode);
+		foreach(array('sv','en') as $language) {
+			$additionalinfo['PaymentData'] = array(
+				"currency" => 'SEK',
+				"country" => 'se',
+				"language" => $language,
+			);
+			$this->pclass[$language] = $k->getPaymentplans($additionalinfo);
 
-        $additionalinfo = array(
-	        "currency"=> $countryInfo['currency'],
-	        "country"=>$countryInfo['country'],
-	        "language"=>(int)$countryInfo['language'],
-        );
-        $this->pclass = $k->FetchCampaigns($additionalinfo);
-		if( is_array( $this->pclass) ){
-			array_walk($this->pclass, 'correct_lang_billmate');
 		}
-        
         return $this;
     }
     public function getPClasses(){
@@ -97,8 +93,8 @@
 		switch ($countrycode) {
 			// Sweden
 			case 'SWE':
-				$country = 209;
-				$language = 138;
+				$country = 'SE';
+				$language = 'sv';
 				$encoding = 2;
 				$currency = 0;
 				break;
@@ -142,14 +138,5 @@
     }
  }
  
-function correct_lang_billmate(&$item, $index){
-    $keys = array('pclassid', 'description','months', 'start_fee','invoice_fee','interest', 'mintotal', 'country', 'Type', 'expiry', 'maxtotal' );
-    $item[1] = utf8_encode($item[1]);
-    $item = array_combine( $keys, $item );
-    $item['start_fee'] = $item['start_fee'] / 100;
-    $item['invoice_fee'] = $item['invoice_fee'] / 100;
-    $item['interest'] = $item['interest'] / 100;
-    $item['mintotal'] = $item['mintotal'] / 100;
-    $item['maxtotal'] = $item['maxtotal'] / 100;	
-}
+
 ?>

@@ -4,57 +4,24 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
 
 class ControllerPaymentBillmateInvoice extends Controller {
-	public function getDebugReport(){
-		$billmate_invoice = $this->config->get('billmate_invoice');
-		
-		require_once dirname(DIR_APPLICATION).'/billmate/billingapi/BillMate API/BillMate.php';
-		include_once(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpc.inc");
-		include_once(dirname(DIR_APPLICATION)."/billmate/billingapi/BillMate API/xmlrpc-2.2.2/lib/xmlrpcs.inc");
-			
-		$eid = 7270;//7320;
-		$key = 606250886062;//511461125114;
-		$ssl = true;
-		$debug = true;
 
-
-		$k = new BillMate($eid,$key,$ssl,$debug);
-
-
-		$additionalinfo = array(
-			"currency"=>0,//SEK
-			"country"=>209,//Sweden
-			"language"=>125,//Swedish
-		);
-
-		try {
-
-			$result = $k->FetchCampaigns($additionalinfo);
-			
-			//Result:
-		//    print_r($addr);
-			
-		} catch(Exception $e) {
-			//Something went wrong
-		//    echo "{$e->getMessage()} (#{$e->getCode()})\n";
-		}
-	}
     public function terms(){
         $this->language->load('payment/billmate_invoice');
         
-        $this->data['page_title'] = $this->language->get('page_title');
-        $this->data['body_title'] = $this->language->get('body_title');
-        $this->data['subtitle'] = $this->language->get('subtitle');
-        $this->data['short_description'] = $this->language->get('short_description');
-        $this->data['subline'] = $this->language->get('subline');
-        $this->data['li1'] = $this->language->get('li1');
-        $this->data['li2'] = $this->language->get('li2');
-        $this->data['li3'] = $this->language->get('li3');
-        $this->data['li4'] = $this->language->get('li4');
-        $this->data['li5'] = $this->language->get('li5');
-        $this->data['li6'] = $this->language->get('li6');
-        $this->data['long_description'] = $this->language->get('long_description');
-        $this->data['footer_one'] = $this->language->get('footer_one');
-        $this->data['footer_two'] = $this->language->get('footer_two');
+        $data['page_title'] = $this->language->get('page_title');
+        $data['body_title'] = $this->language->get('body_title');
+        $data['subtitle'] = $this->language->get('subtitle');
+        $data['short_description'] = $this->language->get('short_description');
+        $data['subline'] = $this->language->get('subline');
+        $data['li1'] = $this->language->get('li1');
+        $data['li2'] = $this->language->get('li2');
+        $data['li3'] = $this->language->get('li3');
+        $data['li4'] = $this->language->get('li4');
+        $data['li5'] = $this->language->get('li5');
+        $data['li6'] = $this->language->get('li6');
+        $data['long_description'] = $this->language->get('long_description');
+        $data['footer_one'] = $this->language->get('footer_one');
+        $data['footer_two'] = $this->language->get('footer_two');
 	
 	    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/villkor.tpl')) {
 		    $this->template = $this->config->get('config_template') . '/template/payment/villkor.tpl';
@@ -68,7 +35,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		echo 'Billmate Plugin Version: '.PLUGIN_VERSION; 
 		phpinfo();
 	}
-    protected function index() {
+    public function index() {
 	    $this->load->model('checkout/order');
 
 	    $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -83,15 +50,16 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 			$this->language->load('payment/billmate_invoice');
 
-            $this->data['text_additional'] = $this->language->get('text_additional');
-            $this->data['text_payment_option'] = $this->language->get('text_payment_option');	
-		    $this->data['text_wait'] = $this->language->get('text_wait');		
+            $data['text_additional'] = $this->language->get('text_additional');
+            $data['text_payment_option'] = $this->language->get('text_payment_option');	
+		    $data['text_wait'] = $this->language->get('text_wait');		
 			
-		    $this->data['entry_pno'] = $this->language->get('entry_pno');
-		    $this->data['entry_phone_no'] = sprintf($this->language->get('entry_phone_no'),$order_info['email'] );
-		    $this->data['button_confirm'] = $this->language->get('button_confirm');
-			$this->data['wrong_person_number'] = $this->language->get('your_billing_wrong');
-			
+		    $data['entry_pno'] = $this->language->get('entry_pno');
+            $data['help_pno'] = $this->language->get('help_pno');
+		    $data['entry_phone_no'] = sprintf($this->language->get('entry_phone_no'),$order_info['email'] );
+		    $data['button_confirm'] = $this->language->get('button_confirm');
+			$data['wrong_person_number'] = $this->language->get('your_billing_wrong');
+			$data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
 
 	
 		    // The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
@@ -99,46 +67,56 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 		    $billmate_invoice = $this->config->get('billmate_invoice');
 	
-		    $this->data['merchant'] = (int)$billmate_invoice['SWE']['merchant'];
-		    $this->data['phone_number'] = $order_info['telephone'];
+		    $data['merchant'] = (int)$billmate_invoice['SWE']['merchant'];
+		    $data['phone_number'] = $order_info['telephone'];
 				
 		    if ($countryData['iso_code_3'] == 'DEU' || $countryData['iso_code_3'] == 'NLD') {
 			    $address = $this->splitAddress($order_info['payment_address_1']);
 		
-			    $this->data['street'] = $address[0];
-			    $this->data['street_number'] = $address[1];
-			    $this->data['street_extension'] = $address[2];
+			    $data['street'] = $address[0];
+			    $data['street_number'] = $address[1];
+			    $data['street_extension'] = $address[2];
 		
 			    if ($countryData['iso_code_3'] == 'DEU') {
-				    $this->data['street_number'] = trim($address[1] . ' ' . $address[2]);
+				    $data['street_number'] = trim($address[1] . ' ' . $address[2]);
 			    }
 		    } else {
-			    $this->data['street'] = '';
-			    $this->data['street_number'] = '';
-			    $this->data['street_extension'] = '';
+			    $data['street'] = '';
+			    $data['street_number'] = '';
+			    $data['street_extension'] = '';
 		    }
 
-		    $this->data['company'] = $order_info['payment_company'];
-		    $this->data['iso_code_2'] = $countryData['iso_code_2'];
-		    $this->data['iso_code_3'] = $countryData['iso_code_3'];
+		    $data['company'] = $order_info['payment_company'];
+		    $data['iso_code_2'] = $countryData['iso_code_2'];
+		    $data['iso_code_3'] = $countryData['iso_code_3'];
 	
 		    // Get the invoice fee
 		    $query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "order_total` WHERE `order_id` = " . (int) $order_info['order_id'] . " AND `code` = 'billmate_fee'");
 	        
 		    if ($query->num_rows && !$query->row['value']) {
-			    $this->data['billmate_fee'] = $query->row['value'];
+			    $data['billmate_fee'] = $query->row['value'];
 		    } else {
-			    $this->data['billmate_fee'] = '';
+			    $data['billmate_fee'] = '';
 		    }
-			$this->data['description'] = $billmate_invoice['SWE']['description'];
-			 
-		    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
-			    $this->template = $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl';
-		    } else {
-			    $this->template = 'default/template/payment/billmate_invoice.tpl';
-		    }
+			$data['description'] = $billmate_invoice['SWE']['description'];
 
-		    $this->render();
+            if(version_compare(VERSION,'2.0.0','>=')){
+
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_invoice.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_invoice.tpl',$data);
+                } else {
+                    return $this->load->view('default/template/payment/oc2/billmate_invoice.tpl',$data);
+                }
+            } else {
+                $this->data = $data;
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl')) {
+                    $this->template = $this->config->get('config_template') . '/template/payment/billmate_invoice.tpl';
+                } else {
+                    $this->template = 'default/template/payment/billmate_invoice.tpl';
+                }
+
+                $this->render();
+            }
 	    }
     }
 
@@ -169,195 +147,155 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		$this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-		
+		$order_id = $this->session->data['order_id'];
 		// Order must have identical shipping and billing address or have no shipping address at all
 		if ($order_info) {
 
 			if (!$json) {
 				$billmate_invoice = $this->config->get('billmate_invoice');
-				
-				require_once dirname(DIR_APPLICATION).'/billmate/BillMate.php';
-				include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpc.inc');
-				include_once(dirname(DIR_APPLICATION).'/billmate/lib/xmlrpcs.inc');
+                if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+                if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
+				require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+
     				
 				$eid = (int)$billmate_invoice['SWE']['merchant'];
 				$key = (int)$billmate_invoice['SWE']['secret'];
 				
 				$ssl = true;
 				$debug = false;
-				$k = new BillMate($eid,$key,$ssl,$debug, $billmate_invoice['SWE']['server'] == 'beta' );
+                $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
+                $values['PaymentData'] = array(
+                    'method' => 1,
+                    'currency' => $this->currency->getCode(),
+                    'language' => $this->language->get('code'),
+                    'country' => 'SE',
+                    'autoactivate' => 0,
+                    'orderid' => $order_id
+                );
 
-				$country_to_currency = array(
-					'NOR' => 'NOK',
-					'SWE' => 'SEK',
-					'FIN' => 'EUR',
-					'DNK' => 'DKK',
-					'DEU' => 'EUR',
-					'NLD' => 'EUR',
-				);
+                $values['PaymentInfo'] = array(
+                    'paymentdate' => date('Y-m-d')
+                );
 
-				$shippiISO = 'SWE'; // !empty( $order_info['shipping_iso_code_3'] ) ? $order_info['shipping_iso_code_3'] : $order_info['payment_iso_code_3'];
-				
-				switch ($shippiISO) {
-					// Sweden
-					case 'SWE':
-						$country = 209;
-						$language = 138;
-						$encoding = 2;
-						$currency = 0;
-						break;
-					// Finland
-					case 'FIN':
-						$country = 73;
-						$language = 37;
-						$encoding = 4;
-						$currency = 2;
-						break;
-					// Denmark
-					case 'DNK':
-						$country = 59;
-						$language = 27;
-						$encoding = 5;
-						$currency = 3;
-						break;
-					// Norway	
-					case 'NOR':
-						$country = 164;
-						$language = 97;
-						$encoding = 3;
-						$currency = 1;
+                $values['Customer']['nr'] = $this->customer->getId();
+                $values['Customer']['pno'] = $this->request->post['pno'];
+                $values['Customer']['Shipping'] = array(
+                    'email'           => $order_info['email'],
+                    'firstname'           => $order_info['shipping_firstname'],
+                    'lastname'           => $order_info['shipping_lastname'],
+                    'company'         => $order_info['shipping_company'],
+                    'street'          => $order_info['shipping_address_1'],
+                    'zip'             => $order_info['shipping_postcode'],
+                    'city'            => $order_info['shipping_city'],
+                    'country'         => $order_info['shipping_iso_code_2'],
+                );
 
+                $values['Customer']['Billing'] = array(
+                    'email'           => $order_info['email'],
+                    'firstname'           => $order_info['payment_firstname'],
+                    'lastname'           => $order_info['payment_lastname'],
+                    'company'         => $order_info['payment_company'],
+                    'street'          => $order_info['payment_address_1'],
+                    'zip'             => $order_info['payment_postcode'],
+                    'city'            => $order_info['payment_city'],
+                    'country'         => $order_info['payment_iso_code_2'],
+                );
 
-						break;
-					// Germany	
-					case 'DEU':
-						$country = 81;
-						$language = 28;
-						$encoding = 6;
-						$currency = 2;
-						break;
-					// Netherlands															
-					case 'NLD':
-						$country = 154;
-						$language = 101;
-						$encoding = 7;
-						$currency = 2;
-						break;
-				}
-				$ship_address = $bill_address = array();
-				
-				if( !empty( $order_info['shipping_firstname'] ) ) {
-				    $ship_address = array(
-					    'email'           => $order_info['email'],
-					    'telno'           => '',
-					    'cellno'          => '',
-					    'fname'           => $order_info['shipping_firstname'],
-					    'lname'           => $order_info['shipping_lastname'],
-					    'company'         => $order_info['shipping_company'],
-					    'careof'          => '',
-					    'street'          => $order_info['shipping_address_1'],
-					    'house_number'    => isset($house_no)? $house_no: '',
-					    'house_extension' => isset($house_ext)?$house_ext:'',
-					    'zip'             => $order_info['shipping_postcode'],
-					    'city'            => $order_info['shipping_city'],
-					    'country'         => $country,
-				    );
-				}
-				
-				if( !empty( $order_info['payment_firstname'] ) ) {
-				    $bill_address = array(
-					    'email'           => $order_info['email'],
-					    'telno'           => '',
-					    'cellno'          => '',
-					    'fname'           => $order_info['payment_firstname'],
-					    'lname'           => $order_info['payment_lastname'],
-					    'company'         => $order_info['payment_company'],
-					    'careof'          => '',
-					    'street'          => $order_info['payment_address_1'],
-					    'house_number'    => '',
-					    'house_extension' => '',
-					    'zip'             => $order_info['payment_postcode'],
-					    'city'            => $order_info['payment_city'],
-					    'country'         => $country,
-				    );
-				}
-				//$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int) $order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int) $order_info['order_id'])->rows;	
+                $products = $this->cart->getProducts();
+                $prepareDiscount = array();
+                $subtotal = 0;
+                $prepareProductDiscount = array();
+                $productTotal = 0;
+                $orderTotal = 0;
+                $taxTotal = 0;
+                $myocRounding = 0;
 
-				
-				$products = $this->cart->getProducts();
-				$goods_list = array();
-				$prepareDiscount = array();
-				$subtotal = 0;
-				$productTotal = 0;
-				$prepareProductDiscount = array();
-				foreach ($products as $product) {
-					$product_total_qty = $product['quantity'];
-					
+                foreach ($products as $product) {
 
-					if ($product['minimum'] > $product_total_qty) {
-						$this->data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
-					}
-					$rates=0;
+                    $product_total_qty = $product['quantity'];
 
-					$tax_rates = $this->tax->getRates($product['price'],$product['tax_class_id']);
-					foreach($tax_rates as $rate){
-						$rates+= $rate['rate'];
-					}
+                    if ($product['minimum'] > $product_total_qty) {
+                        $data['error_warning'] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+                    }
+                    $rates=0;
+
+                    $price = $product['price'];
+                    $price = $this->currency->convert($price,$this->config->get('config_currency'),$this->session->data['currency']);
+                    $tax_rates = $this->tax->getRates($price,$product['tax_class_id']);
+                    foreach($tax_rates as $rate){
+                        $rates+= $rate['rate'];
+                    }
                     $title = $product['name'];
                     if(count($product['option']) > 0){
                         foreach($product['option'] as $option){
-                            $title .= ' - '.$option['name'].': '.$option['option_value'];
+
+                            if(version_compare(VERSION,'2.0','>=')){
+                                $title .= ' - ' . $option['name'] . ': ' . $option['value'];
+                            } else {
+                                $title .= ' - ' . $option['name'] . ': ' . $option['option_value'];
+                            }
                         }
                     }
-					
-					$goods_list[] = array(
-						'qty'   => (int)$product_total_qty,
-						'goods' => array(
-							'artno'    => $product['model'],
-							'title'    => $title,
-							'price'    => $this->currency->format($product['price']*100,$this->currency->getCode(), '', false),
-							'vat'      => (float)($rates),
-							'discount' => 0.0,
-							'flags'    => 0,
-						)
-					);
-					$subtotal += ($product['price'] * 100) * $product_total_qty;
-					$productTotal += ($product['price'] * 100) * $product_total_qty;
-					if(isset($prepareDiscount[$rates])){
-						$prepareDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
-					} else {
-						$prepareDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
-					}
+                    $productValue = $this->currency->format($price *100, $this->currency->getCode(), '', false);
+                    $values['Articles'][] = array(
+                        'quantity'   => (int)$product_total_qty,
+                        'artnr'    => $product['model'],
+                        'title'    => $title,
+                        'aprice'    => $price * 100,
+                        'taxrate'      => (float)($rates),
+                        'discount' => 0.0,
+                        'withouttax'    => $product_total_qty * ($price *100),
 
-					if(isset($prepareProductDiscount[$rates])){
-						$prepareProductDiscount[$rates] += ($product['price'] * 100) * $product_total_qty;
-					} else {
-						$prepareProductDiscount[$rates] = ($product['price'] * 100) * $product_total_qty;
-					}
-				}
+                    );
+                    $orderTotal += $product_total_qty * ($price *100);
+                    $taxTotal += ($product_total_qty * ($price *100)) * ($rates/100);
 
-                $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$this->session->data['order_id']);
+                    $subtotal += ($price * 100) * $product_total_qty;
+                    $productTotal += ($price * 100) * $product_total_qty;
+                    if(isset($prepareDiscount[$rates])){
+                        $prepareDiscount[$rates] += ($price * 100) * $product_total_qty;
+                    } else {
+                        $prepareDiscount[$rates] = ($price * 100) * $product_total_qty;
+                    }
+                    if(isset($prepareProductDiscount[$rates])){
+                        $prepareProductDiscount[$rates] += ($price * 100) * $product_total_qty;
+                    } else {
+                        $prepareProductDiscount[$rates] = ($price * 100) * $product_total_qty;
+                    }
+                }
+
+
+                $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$order_id);
                 $billmate_tax = array();
                 $total_data = array();
                 $total = 0;
                 $totals = $totals->rows;
+
                 foreach ($totals as $result) {
                     if ($this->config->get($result['code'] . '_status')) {
                         $this->load->model('total/' . $result['code']);
+
                         $taxes = array();
+
                         $func = create_function('','');
                         $oldhandler = set_error_handler($func);
                         @$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                         set_error_handler($oldhandler);
+
                         $amount = 0;
+
                         foreach ($taxes as $tax_id => $value) {
                             $amount += $value;
                         }
+
                         $billmate_tax[$result['code']] = $amount;
                     }
                 }
+
                 foreach ($totals as $key => $value) {
                     $sort_order[$key] = $value['sort_order'];
+
                     if (isset($billmate_tax[$value['code']])) {
                         if ($billmate_tax[$value['code']]) {
                             $totals[$key]['tax_rate'] = abs($billmate_tax[$value['code']] / $value['value'] * 100);
@@ -369,255 +307,297 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     }
                 }
 
+                foreach ($totals as $total) {
+                    if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total' && $total['code'] != 'coupon') {
 
-				foreach ($totals as $total) {
-					if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total' && $total['code'] != 'coupon') {
-					    $flag = $total['code'] == 'billmate_fee' ? 16 : ( $total['code'] == 'shipping' && $total['tax_rate'] == 25 ? 8 : 0);
-						$total['value'] = round( $total['value'], 2 );
-						$goods_list[] = array(
-							'qty'   => 1,
-							'goods' => array(
-								'artno'    => '',
-								'title'    => $total['title'],
-								'price'    => $this->currency->format($total['value']*100, $this->currency->getCode(), '', false),
-								'vat'      => (float)$total['tax_rate'],
-								'discount' => 0.0,
-								'flags'    => $flag,
-							)
-						);
-						if($total['code'] != 'myoc_price_rounding' )
-						{
-							if (isset($prepareDiscount[$total['tax_rate']]))
-								$prepareDiscount[$total['tax_rate']] += $total['value'] * 100;
-							else
-								$prepareDiscount[$total['tax_rate']] = $total['value'] * 100;
-							$subtotal += $total['value'] * 100;
-						}
-					}
-				}
-				if(isset($this->session->data['advanced_coupon'])){
-					$coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'advanced_coupon' AND order_id = ".$this->session->data['order_id']);
-					$total = $coupon->row;
-
-					$this->load->model('checkout/advanced_coupon');
-					$codes = array_unique($this->session->data['advanced_coupon']);
-					foreach ($codes as $code) {
-						# code...
-						$coupons_info[] = $this->model_checkout_advanced_coupon->getAdvancedCoupon($code);
-					}
-
-					if(isset($coupons_info)){
-						foreach($coupons_info as $coupon_info){
-							if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 1)
-							{
-								$shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
-								$shipping = $shipping->row;
-								$shiptax = array();
-								$shiptotal = 0;
-								$shiptotal_data = array();
-								$shippingtax = 0;
-								if ($this->config->get($shipping['code'].'_status'))
-								{
-									$this->load->model('total/'.$shipping['code']);
-
-									$this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
-
-									foreach ($shiptax as $key => $value)
-									{
-										$shippingtax += $value;
-									}
-									$shippingtax = $shippingtax / $shipping['value'];
-
-								}
-								if($total['value'] < $shipping['value'])
-								{
-
-									foreach ($prepareProductDiscount as $tax => $value)
-									{
-
-										$discountValue = $total['value'] + $shipping['value'];
-										$percent       = $value / $productTotal;
-
-										$discountIncl = $percent * ($discountValue * 100);
-
-										$discountExcl = $discountIncl / (1 + $tax / 100);
-										$goods_list[] = array(
-											'qty'   => 1,
-											'goods' => array(
-												'artno'    => '',
-												'title'    => $total['title'].' '.$tax.'% tax',
-												'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
-												'vat'      => $tax,
-												'discount' => 0.0,
-												'flags'    => 0
-											)
-										);
+                        $total['value'] = round( $total['value'], 2 );
+                        $totalTypeTotal = $this->currency->format($total['value']*100, $this->currency->getCode(), '', false);
+                        $totalTypeTotal = $this->currency->convert($totalTypeTotal,$this->config->get('config_currency'),$this->session->data['currency']);
+                        if($total['code'] != 'billmate_fee' && $total['code'] != 'shipping'){
+                            if($total['code'] != 'myoc_price_rounding') {
+                                $values['Articles'][] = array(
+                                    'quantity' => 1,
+                                    'artnr' => '',
+                                    'title' => $total['title'],
+                                    'aprice' => $totalTypeTotal,
+                                    'taxrate' => (float)$total['tax_rate'],
+                                    'discount' => 0.0,
+                                    'withouttax' => $totalTypeTotal,
+                                );
+                                $orderTotal += $totalTypeTotal;
+                                $taxTotal += $totalTypeTotal * ($total['tax_rate'] / 100);
+                            } else {
+                                $myocRounding = $totalTypeTotal;
+                            }
+                        }
+                        if($total['code'] == 'shipping'){
+                            $values['Cart']['Shipping'] = array(
+                                'withouttax' => $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100,
+                                'taxrate' => $total['tax_rate']
+                            );
+                            $orderTotal += $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            $taxTotal += ($this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100) * ($total['tax_rate']/100);
+                        }
+                        if($total['code'] == 'billmate_fee'){
+                            $values['Cart']['Handling'] = array(
+                                'withouttax' => $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100,
+                                'taxrate' => $total['tax_rate']
+                            );
+                            $orderTotal +=$this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            $taxTotal += ($this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100) * ($total['tax_rate']/100);
+                        }
 
 
-									}
-								}
-								$goods_list[] = array(
-									'qty'   => 1,
-									'goods' => array(
-										'artno'    => '',
-										'title'    => $total['title'].' Free Shipping',
-										'price'    => $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false),
-										'vat'      => $shippingtax * 100,
-										'discount' => 0.0,
-										'flags'    => 0
-									)
-								);
+                        if($total['code'] != 'myoc_price_rounding' )
+                        {
+                            if (isset($prepareDiscount[$total['tax_rate']]))
+                                $prepareDiscount[$total['tax_rate']] += $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            else
+                                $prepareDiscount[$total['tax_rate']] = $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                            $subtotal += $this->currency->convert($total['value'],$this->config->get('config_currency'),$this->session->data['currency']) * 100;
+                        }
+                    }
+                }
 
-							} else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 0){
+                if(isset($this->session->data['advanced_coupon'])){
+                    $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'advanced_coupon' AND order_id = ".$this->session->data['order_id']);
+                    $total = $coupon->row;
 
+                    $this->load->model('checkout/advanced_coupon');
+                    $codes = array_unique($this->session->data['advanced_coupon']);
+                    foreach ($codes as $code) {
+                        # code...
+                        $coupons_info[] = $this->model_checkout_advanced_coupon->getAdvancedCoupon($code);
+                    }
 
-									foreach ($prepareProductDiscount as $tax => $value)
-									{
+                    if(isset($coupons_info)){
+                        foreach($coupons_info as $coupon_info){
+                            if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 1)
+                            {
+                                $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
+                                $shipping = $shipping->row;
+                                $shiptax = array();
+                                $shiptotal = 0;
+                                $shiptotal_data = array();
+                                $shippingtax = 0;
+                                if ($this->config->get($shipping['code'].'_status'))
+                                {
+                                    $this->load->model('total/'.$shipping['code']);
 
-										$percent      = $value / $productTotal;
-										$discount     = $percent * ($total['value'] * 100);
+                                    $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
 
-										$goods_list[] = array(
-											'qty'   => 1,
-											'goods' => array(
-												'artno'    => '',
-												'title'    => $total['title'].' '.$tax.'% tax',
-												'price'    => (int)$this->currency->format($discount, $this->currency->getCode(), '', false),
-												'vat'      => $tax,
-												'discount' => 0.0,
-												'flags'    => 0
-											)
-										);
+                                    foreach ($shiptax as $key => $value)
+                                    {
+                                        $shippingtax += $value;
+                                    }
+                                    $shippingtax = $shippingtax / $shipping['value'];
 
-									}
-							}
-						}
-					}
-					
-				}
+                                }
+                                if($total['value'] < $shipping['value'])
+                                {
 
-				if(isset($this->session->data['coupon'])){
-					$coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
-					$total = $coupon->row;
-					$this->load->model('checkout/coupon');
-					$coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-					if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 1)
-					{
-						$shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
-						$shipping = $shipping->row;
-						$shiptax = array();
-						$shiptotal = 0;
-						$shiptotal_data = array();
-						$shippingtax = 0;
-						if ($this->config->get($shipping['code'].'_status'))
-						{
-							$this->load->model('total/'.$shipping['code']);
+                                    foreach ($prepareProductDiscount as $tax => $value)
+                                    {
 
-							$this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+                                        $discountValue = $total['value'] + $shipping['value'];
+                                        $percent       = $value / $productTotal;
 
-							foreach ($shiptax as $key => $value)
-							{
-								$shippingtax += $value;
-							}
-							$shippingtax = $shippingtax / $shipping['value'];
+                                        $discountIncl = $percent * ($discountValue * 100);
 
-						}
-						if($total['value'] < $shipping['value'])
-						{
+                                        $discountExcl = $discountIncl / (1 + $tax / 100);
+                                        //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                                        $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                                        if($discountToArticle != 0) {
+                                            $values['Articles'][] = array(
+                                                'quantity' => 1,
+                                                'artnr' => '',
+                                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                                'aprice' => $discountToArticle,
+                                                'taxrate' => $tax,
+                                                'discount' => 0.0,
+                                                'withouttax' => $discountToArticle
 
-							foreach ($prepareProductDiscount as $tax => $value)
-							{
+                                            );
+                                            $orderTotal += $discountToArticle;
+                                            $taxTotal += $discountToArticle * ($tax/100);
+                                        }
 
-								$discountValue = $total['value'] + $shipping['value'];
-								$percent       = $value / $productTotal;
+                                    }
+                                }
+                                //$freeshipTotal = $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                                $freeshipTotal = $this->currency->convert(-$shipping['value'] * 100,$this->config->get('config_currency'),$this->session->data['currency']);
 
-								$discountIncl = $percent * ($discountValue * 100);
+                                $values['Articles'][] = array(
+                                    'quantity'   => 1,
+                                    'artnr'    => '',
+                                    'title'    => $total['title'].' Free Shipping',
+                                    'aprice'    => $freeshipTotal,
+                                    'taxrate'      => $shippingtax * 100,
+                                    'discount' => 0.0,
+                                    'withouttax'    => $freeshipTotal
+                                );
+                                $orderTotal += $freeshipTotal;
+                                $taxTotal += $freeshipTotal * $shippingtax;
 
-								$discountExcl = $discountIncl / (1 + $tax / 100);
-								$goods_list[] = array(
-									'qty'   => 1,
-									'goods' => array(
-										'artno'    => '',
-										'title'    => $total['title'].' '.$tax.'% tax',
-										'price'    => $this->currency->format($discountIncl, $this->currency->getCode(), '', false),
-										'vat'      => $tax,
-										'discount' => 0.0,
-										'flags'    => 0
-									)
-								);
-
-
-							}
-						}
-						$goods_list[] = array(
-							'qty'   => 1,
-							'goods' => array(
-								'artno'    => '',
-								'title'    => $total['title'].' Free Shipping',
-								'price'    => $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false),
-								'vat'      => $shippingtax * 100,
-								'discount' => 0.0,
-								'flags'    => 0
-							)
-						);
-
-					} else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 0){
+                            } else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F' || $coupon_info['type'] == 'FP') && $coupon_info['shipping'] == 0){
 
 
-							foreach ($prepareProductDiscount as $tax => $value)
-							{
+                                foreach ($prepareProductDiscount as $tax => $value)
+                                {
 
-								$percent      = $value / $productTotal;
-								$discount     = $percent * ($total['value'] * 100);
+                                    $percent      = $value / $productTotal;
+                                    $discount     = $percent * ($total['value'] * 100);
+                                    //$discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+                                    $discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
 
-								$goods_list[] = array(
-									'qty'   => 1,
-									'goods' => array(
-										'artno'    => '',
-										'title'    => $total['title'].' '.$tax.'% tax',
-										'price'    => (int)$this->currency->format($discount, $this->currency->getCode(), '', false),
-										'vat'      => $tax,
-										'discount' => 0.0,
-										'flags'    => 0
-									)
-								);
+                                    $values['Articles'][] = array(
+                                        'quantity'   => 1,
+                                        'artnr'    => '',
+                                        'title'    => $total['title'].' '.$tax.'% tax',
+                                        'aprice'    => (int)$discountToArticle,
+                                        'taxrate'      => $tax,
+                                        'discount' => 0.0,
+                                        'withouttax'    => $discountToArticle
+                                    );
+                                    $orderTotal += $discountToArticle;
+                                    $taxTotal += $discountToArticle * ($tax/100);
+                                }
+                            }
+                        }
+                    }
 
-							}
-					}
+                }
 
-				} // End discount isset
+                if(isset($this->session->data['coupon'])){
+                    $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
+                    $total = $coupon->row;
+                    $this->load->model('checkout/coupon');
+                    $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+                    if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 1)
+                    {
+                        $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
+                        $shipping = $shipping->row;
+                        $shiptax = array();
+                        $shiptotal = 0;
+                        $shiptotal_data = array();
+                        $shippingtax = 0;
+                        if ($this->config->get($shipping['code'].'_status'))
+                        {
+                            $this->load->model('total/'.$shipping['code']);
+
+                            $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+
+                            foreach ($shiptax as $key => $value)
+                            {
+                                $shippingtax += $value;
+                            }
+                            $shippingtax = $shippingtax / $shipping['value'];
+
+                        }
+                        if($total['value'] < $shipping['value'])
+                        {
+
+                            foreach ($prepareProductDiscount as $tax => $value)
+                            {
+
+                                $discountValue = $total['value'] + $shipping['value'];
+                                $percent       = $value / $productTotal;
+
+                                $discountIncl = $percent * ($discountValue * 100);
+
+                                $discountExcl = $discountIncl / (1 + $tax / 100);
+                                //$discountToArticle = $this->currency->format($discountIncl, $this->currency->getCode(), '', false);
+                                $discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
+                                if($discountToArticle != 0) {
+                                    $values['Articles'][] = array(
+                                        'quantity' => 1,
+                                        'artnr' => '',
+                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'aprice' => $discountToArticle,
+                                        'taxrate' => $tax,
+                                        'discount' => 0.0,
+                                        'withouttax' => $discountToArticle
+
+                                    );
+                                    $orderTotal += $discountToArticle;
+                                    $taxTotal += $discountToArticle * ($tax / 100);
+                                }
+
+                            }
+                        }
+                        //$freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $this->currency->getCode(), '', false);
+                        $freeshipTotal = $this->currency->convert(-$shipping['value'] * 100,$this->config->get('config_currency'),$this->session->data['currency']);
+
+                        $values['Articles'][] = array(
+                            'quantity'   => 1,
+                            'artnr'    => '',
+                            'title'    => $total['title'].' Free Shipping',
+                            'aprice'    => $freeshipTotal,
+                            'taxrate'      => $shippingtax * 100,
+                            'discount' => 0.0,
+                            'withouttax'    => $freeshipTotal
+
+                        );
+                        $orderTotal += $freeshipTotal;
+                        $taxTotal += $freeshipTotal * $shippingtax;
+
+                    } else if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 0){
+
+
+                        foreach ($prepareProductDiscount as $tax => $value)
+                        {
+
+                            $percent      = $value / $productTotal;
+                            $discount     = $percent * ($total['value'] * 100);
+                            //$discountToArticle = $this->currency->format($discount, $this->currency->getCode(), '', false);
+
+                            $discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
+                            $values['Articles'][] = array(
+                                'quantity'   => 1,
+                                'artnr'    => '',
+                                'title'    => $total['title'].' '.$tax.'% tax',
+                                'aprice'    => $discountToArticle,
+                                'taxrate'      => $tax,
+                                'discount' => 0.0,
+                                'withouttax'    => $discountToArticle
+
+                            );
+                            $orderTotal += $discountToArticle;
+                            $taxTotal += $discountToArticle * ($tax/100);
+
+                        }
+                    }
+
+                } // End discount isset
+                $total = $this->currency->convert($order_info['total'],$this->config->get('config_currency'),$this->session->data['currency']);
+                $round = ($total*100) - ($orderTotal + $taxTotal);
+
+                if(abs($myocRounding) > abs($round)){
+                    $round = $myocRounding;
+                }
+                $values['Cart']['Total'] = array(
+                    'withouttax' => $orderTotal,
+                    'tax' => $taxTotal,
+                    'rounding' => $round,
+                    'withtax' => $orderTotal + $taxTotal + $round
+                );
 				$pno = trim($this->request->post['pno']);
-				$pclass = -1;
-				
-				$transaction = array(
-					"order1"=>(string)$this->session->data['order_id'],
-					"comment"=>'',
-					"gender"=>0,
-					"flags"=>0,
-					"reference"=>"",
-					"reference_code"=>"",
-					"currency"=>$this->currency->getCode(),//$currency,
-					"country"=>$country,
-					"language"=>$this->language->get('code'),//$language,
-					"pclass"=>$pclass,
-					"shipInfo"=>array("delay_adjust"=>"1"),
-					"travelInfo"=>array(),
-					"incomeInfo"=>array(),
-					"bankInfo"=>array(),
-					"sid"=>array("time"=>microtime(true)),
-					"extraInfo"=>array(array("cust_no"=>(string)$order_info['customer_id']))
-				);
+
 
 				try {
-					$addr = $k->GetAddress($pno);
-					
+
+                    $addr = $k->GetAddress(array('pno' => $pno));
 					if( !is_array( $addr ) ){
 				        $json['error'] = utf8_encode( $addr );//.'<br/><br/>'.$this->language->get('close_other_payment').'<br/><input type="button" onclick="modalWin.HideModalPopUp();jQuery(\'#payment-method a\').first().trigger(\'click\');" class="button" value="'.$this->language->get('Close').'" />'
 				        $this->response->setOutput(my_json_encode($json ));
 				        return;
-					}
-					foreach( $addr[0] as $key => $col ){
-						$addr[0][$key] = utf8_encode($col);
+					} else if(isset($addr['code'])){
+                        $json['error'] = utf8_encode($addr['message']);
+                        $this->response->setOutput(my_json_encode($json ));
+                        return;
+                    }
+					foreach( $addr as $key => $col ){
+						$addr[$key] = mb_convert_encoding($col,'UTF-8','auto');
 					}
 
 					if(isset($addr['error']))
@@ -633,20 +613,16 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $db = $this->registry->get('db');
                 if( $db == NULL ) $db = $this->db;
 
-                $countriesdata = array(209 =>'sweden', 73=> 'finland',59=> 'denmark', 164 => 'norway', 81 => 'germany', 15 => 'austria', 154 => 'netherlands' );
-                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE LOWER(name) = '" . $countriesdata[$addr[0][5]]. "' AND status = '1'");
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = '" . $addr['country']. "' AND status = '1'");
                 $countryinfo = $query->row;
-				
-				if( $addr[0][5] != 209 ){
-					$countryname = $countryinfo['name'];
-				} else {
-					$countryname = '';
-				}
+
+				$countryname = $countryinfo['name'];
+
                 $fullname = $order_info['payment_firstname']. ' '.$order_info['payment_lastname'];
-				if( empty( $addr[0][0])){
+				if( empty( $addr['firstname'])){
 					$apiName = $fullname;
 				} else {
-					$apiName  = $addr[0][0].' '.$addr[0][1];
+					$apiName  = $addr['firstname'].' '.$addr['lastname'];
                 }
                 if( !function_exists('match_usernamevp')){
                     function match_usernamevp( $str1, $str2 ){
@@ -672,12 +648,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				$firstArr = explode(' ', $order_info['shipping_firstname'] );
 				$lastArr  = explode(' ', $order_info['shipping_lastname'] );
 				
-				if( empty( $addr[0][0] ) ){
+				if( empty( $addr['firstname'] ) ){
 					$apifirst = $firstArr;
 					$apilast  = $lastArr ;
 				}else {
-					$apifirst = explode(' ', $addr[0][0] );
-					$apilast  = explode(' ', $addr[0][1] );
+					$apifirst = explode(' ', $addr['firstname'] );
+					$apilast  = explode(' ', $addr['lastname'] );
 				}
 				$matchedFirst = array_intersect($apifirst, $firstArr );
 				$matchedLast  = array_intersect($apilast, $lastArr );
@@ -686,18 +662,23 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 
                 $this->session->data['mismatch'] = false;
 				if( !( 
-			            $this->matchString( $order_info['payment_city'], $addr[0][4]) && 
-			            $this->matchString( $order_info['payment_postcode'], $addr[0][3]) &&
-			            $this->matchString( $order_info['payment_address_1'],$addr[0][2]) && 
+			            $this->matchString( $order_info['payment_city'], $addr['city']) &&
+			            $this->matchString( $order_info['payment_postcode'], $addr['zip']) &&
+			            $this->matchString( $order_info['payment_address_1'],$addr['street']) &&
 			            $apiMatchedName
 				) || !$address_same ){
 				    
 				    $this->session->data['mismatch'] = true;
                     if(!(isset($this->request->get['geturl']) and $this->request->get['geturl']=="yes")){
 
+                    if(isset($addr['company'])) {
 
-                    $json['address'] = $addr[0][0].' '.$addr[0][1].'<br>'.$addr[0][2].'<br>'.$addr[0][3].'<br>'.$addr[0][4].'<br/>'.$countryname.'<div style="padding: 17px 0px;"></div><div><input type="button" value="'.$this->language->get('bill_yes').'" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >'.$this->language->get('bill_no').'</a></div>';
-                    $json['error'] = "";
+                        $json['address'] = $addr['company'] . '<br>' . $addr['street'] . '<br>' . $addr['zip'] . '<br>' . $addr['city'] . '<br/>' . $countryname . '<div style="padding: 17px 0px;"></div><div><input type="button" value="' . $this->language->get('bill_yes') . '" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >' . $this->language->get('bill_no') . '</a></div>';
+                    } else {
+                        $json['address'] = $addr['firstname'] . ' ' . $addr['lastname'] . '<br>' . $addr['street'] . '<br>' . $addr['zip'] . '<br>' . $addr['city'] . '<br/>' . $countryname . '<div style="padding: 17px 0px;"></div><div><input type="button" value="' . $this->language->get('bill_yes') . '" onclick="modalWin.HideModalPopUp();ajax_load(\'&geturl=yes\');" class="billmate_button"/></div><div><a onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="linktag" >' . $this->language->get('bill_no') . '</a></div>';
+
+                    }
+                        $json['error'] = "";
                     }
 
 				}
@@ -705,41 +686,39 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				$ship_api_address = array();
 				try {
                     $data = array(
-                        'fname'      => Encoding::fixUTF8($addr[0][0]),
-                        'lname'       => Encoding::fixUTF8($addr[0][1]),
-                        'address_1'      => Encoding::fixUTF8($addr[0][2]),
+                        'fname'      => Encoding::fixUTF8($addr['firstname']),
+                        'lname'       => Encoding::fixUTF8($addr['lastname']),
+                        'address_1'      => Encoding::fixUTF8($addr['street']),
                         'company'      => '',
                         'address_2'      => '',
-                        'postcode'       => Encoding::fixUTF8($addr[0][3]),
-                        'city'           => Encoding::fixUTF8($addr[0][4]),
+                        'postcode'       => Encoding::fixUTF8($addr['zip']),
+                        'city'           => Encoding::fixUTF8($addr['city']),
                         'country_id'     => (int)$countryinfo['country_id'],
                         'zone_id'        => 0
                     );
-				    if( empty($addr[0][0])){
+				    if( empty($addr['firstname'])){
                         $ship_api_address = array(
-                            'company'         => Encoding::fixUTF8($addr[0][1]),
-                            'street'          => Encoding::fixUTF8($addr[0][2]),
-                            'zip'             => Encoding::fixUTF8($addr[0][3]),
-                            'city'            => Encoding::fixUTF8($addr[0][4]),
+                            'company'         => Encoding::fixUTF8($addr['company']),
+                            'street'          => Encoding::fixUTF8($addr['street']),
+                            'zip'             => Encoding::fixUTF8($addr['zip']),
+                            'city'            => Encoding::fixUTF8($addr['city']),
                         );
-                        $data['company']   = $addr[0][1];
+                        $data['company']   = $addr['company'];
                         $data['fname'] = $order_info['payment_firstname'];
                         $data['lname']  = $order_info['payment_lastname'];
 				    } else{
                         $ship_api_address = array(
-                            'fname'           => Encoding::fixUTF8($addr[0][0]),
-                            'lname'           => Encoding::fixUTF8($addr[0][1]),
+                            'firstname'           => Encoding::fixUTF8($addr['firstname']),
+                            'lastname'           => Encoding::fixUTF8($addr['lastname']),
 							'company'		  => '',
-                            'street'          => Encoding::fixUTF8($addr[0][2]),
-                            'zip'             => Encoding::fixUTF8($addr[0][3]),
-                            'city'            => Encoding::fixUTF8($addr[0][4]),
+                            'street'          => Encoding::fixUTF8($addr['street']),
+                            'zip'             => Encoding::fixUTF8($addr['zip']),
+                            'city'            => Encoding::fixUTF8($addr['city']),
                         );
                     }
 
                     $zonename = '';
 
-					$ship_address = array_merge($ship_address, $ship_api_address );
-                    $bill_address = array_merge($bill_address, $ship_api_address );
 
                     $this->load->model('account/address');
 					$data['firstname'] = $data['fname'];
@@ -761,49 +740,63 @@ class ControllerPaymentBillmateInvoice extends Controller {
 $sql = "UPDATE `" . DB_PREFIX . "order` SET shipping_company='".$data['company']."', payment_company='".$data['company']."', shipping_firstname = '" . $db->escape($data['fname']) . "',firstname = '" . $db->escape($data['fname']) . "', lastname = '" . $db->escape($data['lname']) . "', payment_firstname = '" . $db->escape($data['fname']) . "', payment_lastname = '" . $db->escape($data['lname']) . "', payment_address_1 = '" . $db->escape($data['address_1']) . "', payment_address_2 = '', payment_city = '" . $db->escape($data['city']) . "', payment_postcode = '" . $db->escape($data['postcode']) . "', payment_zone = '" . $db->escape($zonename) . "', payment_zone_id = '" . (int)$data['zone_id'] . "', shipping_lastname = '" . $db->escape($data['lname']) . "', shipping_address_1 = '" . $db->escape($data['address_1']) . "', shipping_address_2 = '', shipping_city = '" . $db->escape($data['city']) . "', shipping_postcode = '" . $db->escape($data['postcode']) . "', shipping_zone = '', shipping_zone_id = '0', date_modified = NOW(), shipping_country = '" . $this->db->escape($countryinfo['name']) . "', shipping_country_id = '" . (int)$countryinfo['country_id'] . "' where order_id = ". $this->session->data['order_id'];
 $db->query($sql);
 
-//header('Content-Type:text/html');
-                    foreach( $ship_address as $key => $col ){
-                        if( !is_array( $col )) {
-                            $ship_address[$key] = utf8_decode( Encoding::fixUTF8($col));
-                        }
-                    }
-                    foreach( $bill_address as $key => $col ){
-                        if( !is_array( $col )) {
-                            $bill_address[$key] = utf8_decode( Encoding::fixUTF8($col));
-                        }
-                    }
+                    $order_info_updated = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+                    $values['Customer']['Shipping'] = array(
+                        'email'           => $order_info_updated['email'],
+                        'firstname'           => $order_info_updated['shipping_firstname'],
+                        'lastname'           => $order_info_updated['shipping_lastname'],
+                        'company'         => $order_info_updated['shipping_company'],
+                        'street'          => $order_info_updated['shipping_address_1'],
+                        'zip'             => $order_info_updated['shipping_postcode'],
+                        'city'            => $order_info_updated['shipping_city'],
+                        'country'         => $order_info_updated['shipping_iso_code_2'],
+                    );
+                    $values['Customer']['Billing'] = array(
+                        'email'           => $order_info_updated['email'],
+                        'firstname'           => $order_info_updated['shipping_firstname'],
+                        'lastname'           => $order_info_updated['shipping_lastname'],
+                        'company'         => $order_info_updated['shipping_company'],
+                        'street'          => $order_info_updated['shipping_address_1'],
+                        'zip'             => $order_info_updated['shipping_postcode'],
+                        'city'            => $order_info_updated['shipping_city'],
+                        'country'         => $order_info_updated['shipping_iso_code_2'],
+                    );
+
 					$func = create_function('','');
 					$oldhandler = set_error_handler($func);
 
-					if( empty( $goods_list ) ){
-						$result1 = 'Unable to find product in cart';
-					} else {
-						$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_invoice', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+					$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_invoice', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 						
-						$result1 = $k->AddInvoice($pno,$bill_address,$ship_address,$goods_list,$transaction);
-					}
-					if(!is_array($result1))
+					$result1 = $k->AddPayment($values);
+
+					if(isset($result1['code']))
 					{ 
-						$json['address'] = '<p>'.utf8_encode($result1).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="button" />';
+						$json['address'] = '<p>'.utf8_encode($result1['message']).'</p><input type="button" style="float:right" value="'.$this->language->get('close').'" onclick="modalWin.HideModalPopUp();if(jQuery(\'#supercheckout-fieldset\').size() ==0){jQuery(\'#payment-method a\').first().trigger(\'click\');}" class="button" />';
 						$json['title'] = $this->language->get('payment_error');
 						$json['height'] = 150;
 					}
 					else
 					{
-						$billmate_order_status = $result1['2'];
-						if ($billmate_order_status == '1') {
+						$billmate_order_status = $result1['status'];
+						if ($billmate_order_status == 'Created') {
                             $order_status = $billmate_invoice['SWE']['accepted_status_id'];
-						} elseif ($billmate_order_status == '2') {
+						} elseif ($billmate_order_status == 'Pending') {
                             $order_status = $billmate_invoice['SWE']['pending_status_id'];
 						} else {
 							$order_status = $this->config->get('config_order_status_id');
 						}
 						
-						$comment = sprintf($this->language->get('text_comment'), $result1[0]);
-						
-						$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
-						
-						$json['redirect'] = $this->url->link('checkout/success'); 
+						$comment = sprintf($this->language->get('text_comment'), $result1['number']);
+
+                        if(version_compare(VERSION,'2.0.0','>=')) {
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $order_status, $comment, false);
+                        }else {
+                            $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
+                        }
+                        if(isset($this->session->data['billmate_pno']))
+                            unset($this->session->data['billmate_pno']);
+
+                        $json['redirect'] = $this->url->link('checkout/success');
 					}
 					set_error_handler($oldhandler);
 				 } catch(Exception $e) {
@@ -819,61 +812,41 @@ $db->query($sql);
 		$data = @my_json_encode($json);
 		$this->response->setOutput($data);
     }
-    
-    private function constructXmlrpc($data) {
-        $type = gettype($data);
 
-        switch ($type) {
-            case 'boolean':
-                if ($data == true) {
-                    $value = 1;
-                } else {
-                    $value = false;
-                }
-                
-                $xml = '<boolean>' . $value . '</boolean>';
-                break;
-            case 'integer':
-                $xml = '<int>' . (int)$data . '</int>';
-                break;
-            case 'double':
-                $xml = '<double>' . (float)$data . '</double>';
-                break;
-            case 'string':
-                $xml = '<string>' . htmlspecialchars($data) . '</string>';
-                break;
-            case 'array':
-                // is numeric ?
-                if ($data === array_values($data)) {
-                    $xml = '<array><data>';
-                    
-                    foreach ($data as $value) {
-                        $xml .= '<value>' . $this->constructXmlrpc($value) . '</value>';
-                    }
-                    
-                    $xml .= '</data></array>';
-                    
-                } else {
-                    // array is associative
-                    $xml = '<struct>';
-                    
-                    foreach ($data as $key => $value) {
-                        $xml .= '<member>';
-                        $xml .= '  <name>' . htmlspecialchars($key) . '</name>';
-                        $xml .= '  <value>' . $this->constructXmlrpc($value) . '</value>';
-                        $xml .= '</member>';
-                    }
-                    
-                    $xml .= '</struct>';
-                }
-                
-                break;
-            default:
-                $xml = '<nil/>';
-                break;
+    public function getaddress()
+    {
+        $billmate_invoice = $this->config->get('billmate_invoice');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+
+        $eid = (int)$billmate_invoice['SWE']['merchant'];
+        $key = (int)$billmate_invoice['SWE']['secret'];
+
+        $ssl = true;
+        $debug = false;
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
+        $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
+
+        $result = $k->getAddress(array('pno' => $this->request->post['pno']));
+        if(!isset($result['code'])){
+            $db = $this->registry->get('db');
+            if( $db == NULL ) $db = $this->db;
+
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = '" . $result['country']. "' AND status = '1'");
+            $countryinfo = $query->row;
+
+            $result['country_id'] = $countryinfo['country_id'];
+            $this->session->data['billmate_pno'] = $this->request->post['pno'];
+            $response['success'] = true;
+            $response['data'] = $result;
+        } else {
+            $response['success'] = false;
+            $response['error'] = $result['message'];
         }
-        
-        return $xml;
+        $this->response->setOutput(json_encode($response));
+
     }
     
     private function splitAddress($address) {

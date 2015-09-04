@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Billmate Show Partpay from on productpage</name>
+    <author>Boxedsolutions Skaraborg</author>
+    <link>http://www.billmate.se</link>
+    <version>1.1.1</version>
+    <code>billmate_partpayment</code>
+    <file name="catalog/view/theme/default/template/product/category.tpl">
+        <operation>
+            <search position="after">
+                <![CDATA[
+                <input type="button" value="<?php echo $button_cart; ?>" onclick="addToCart('<?php echo $product['product_id']; ?>');" class="button" />
+            ]]>
+            </search>
+            <add>
+                <![CDATA[
+                <br/><?php echo $product['billmate_payfrom']; ?>
+            ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/view/theme/default/template/product/product.tpl">
+        <operation>
+            <search position="after">
+                <![CDATA[
+                <?php if ($price) { ?>
+            ]]>
+            </search>
+            <add>
+                <![CDATA[
+                <?php if($billmate_payfrom){ ?>
+                <div><span class="billmate-partpay-from"><?php echo $billmate_payfrom; ?></span></div>
+                <?php } ?>
+            ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/controller/product/product.php">
+        <operation>
+            <search position="before">
+                <![CDATA[
+                    if ($this->config->get('config_tax')) {
+                ]]>
+            </search>
+            <add>
+                <![CDATA[
+                    $this->load->model('payment/billmate_partpayment');
+                $this->load->language('payment/billmate_partpayment');
+                if($this->data['special'])
+                    $spPart = str_replace('.','',$this->data['special']);
+                $prPart = str_replace('.','',$this->data['price']);
+
+                $payfrom = $this->model_payment_billmate_partpayment->getLowestPaymentFromTotal(($product_info['special']) ? $spPart : $prPart);
+
+                if($payfrom){
+                    $this->data['billmate_payfrom'] = sprintf($this->language->get('billmate_payfrom'),$this->currency->getSymbolLeft(),$payfrom['monthly_cost'],$this->currency->getSymbolRight());
+                } else {
+                    $this->data['billmate_payfrom'] = false;
+                }
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/language/english/payment/billmate_partpayment.php">
+        <operation>
+            <search position="after">
+                <![CDATA[
+                    $_['requried_confirm_verify_email']='Please check the checkbox for confirm email is valid';
+                ]]>
+            </search>
+            <add>
+                <![CDATA[
+                    $_['billmate_payfrom']='Pay from  %s%s%s / month';
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/language/swedish/payment/billmate_partpayment.php">
+        <operation>
+            <search position="after">
+                <![CDATA[
+                    $_['requried_confirm_verify_email']='Vänligen kryssa i rutan för att bekräfta att er e-postadress är giltig.';
+                ]]>
+            </search>
+            <add>
+                <![CDATA[
+                    $_['billmate_payfrom']='Betala från %s%s%s / månad';
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/controller/product/category.php">
+        <operation>
+            <search position="before">
+                <![CDATA[
+                if ($this->config->get('config_review_status')) {
+            ]]>
+            </search>
+            <add>
+                <![CDATA[
+                $this->load->model('payment/billmate_partpayment');
+                $this->load->language('payment/billmate_partpayment');
+                if($special)
+                    $spPart = str_replace('.','',$special);
+                $prPart = str_replace('.','',$price);
+
+                $payfrom = $this->model_payment_billmate_partpayment->getLowestPaymentFromTotal(($special) ? $spPart : $prPart);
+
+                if($payfrom){
+                    $billmate_payfrom = sprintf($this->language->get('billmate_payfrom'),$this->currency->getSymbolLeft(),$payfrom['monthly_cost'],$this->currency->getSymbolRight());
+                } else {
+                    $billmate_payfrom = false;
+                }
+            ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="after">
+                <![CDATA[
+                'price'       => $price,
+            ]]>
+            </search>
+            <add>
+                <![CDATA[
+                'billmate_payfrom' => $billmate_payfrom,
+            ]]>
+            </add>
+        </operation>
+    </file>
+</modification>

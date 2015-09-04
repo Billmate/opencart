@@ -12,7 +12,7 @@ class ModelPaymentBillmateBankPay extends Model {
 		} 
 		
 		if( $status){
-            $available_countries = array_keys($this->config->get('billmatebank-country'));
+            $available_countries = array_keys($this->config->get('billmate_bankpay_country'));
             if(in_array($address['country_id'],$available_countries)){
                 $status = true;
             } else {
@@ -28,7 +28,8 @@ class ModelPaymentBillmateBankPay extends Model {
       		$method_data = array( 
         		'code'       => 'billmate_bankpay',
         		'title'      => sprintf($this->language->get('text_title'),$description),
-				'sort_order' => $this->config->get('billmate_bankpay_sort_order')
+				'sort_order' => $this->config->get('billmate_bankpay_sort_order'),
+				'terms' => false
       		);
     	}
    

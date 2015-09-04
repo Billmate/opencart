@@ -2,6 +2,8 @@
 
 require_once(DIR_SYSTEM . 'library/billmate/OpenCartBillmate.php');
 
+require_once(DIR_SYSTEM . 'library/billmate/Billmate.php');
+
 class ModelPaymentBillmate extends Model {
     private $moduleType;
 
@@ -256,6 +258,34 @@ class ModelPaymentBillmate extends Model {
         }
     }
 
+    public function validateCredentials($billmateId, $secret)
+    {
+        //require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+
+        $eid = (int)$billmateId;
+        $key = (int)$secret;
+        $ssl = true;
+        $debug = false;
+
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
+        $billmate = new BillMate($eid,$key,$ssl,false,$debug);
+        $values['PaymentData'] = array(
+            'currency' => 'SEK',
+            'language' => 'sv',
+            'country' => 'se'
+        );
+        $result = $billmate->getPaymentplans($values);
+
+        $response = array();
+        if(isset($result['code']) && ($result['code'] == 9013 || $result['code'] == 9010 || $result['code'] == 9012)){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     public function validate(&$errors) {
         $this->moduleType = $this->request->post['billmate_module_type'];
 
@@ -291,6 +321,9 @@ class ModelPaymentBillmate extends Model {
     }
 
     public function getPClasses() {
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $billmate = new OpenCartBillmate();
 
         $allPClasses = array();
@@ -306,7 +339,7 @@ class ModelPaymentBillmate extends Model {
                 $this->currency->set($currency);
                 foreach($EIDs AS $eid => $PIDs) {
                     foreach($PIDs AS $pid => $pclass) {
-                        $expiryDate = $pclass->getExpire();
+                        $expiryDate = $pclass->getExpirydate();
                         if($expiryDate) {
                             $expiryDate = date('Y-m-d', $expiryDate);
                         } else {
@@ -321,11 +354,11 @@ class ModelPaymentBillmate extends Model {
                             'country' => $country,
                             'pid' => $pid,
                             'desc' => $pclass->getDescription(),
-                            'interest_rate' => $pclass->getInterestRate() . '%',
-                            'minimum_amount' => $this->currency->format($pclass->getMinAmount(), $currency, 1),
-							'maximum_amount' => $this->currency->format($pclass->getMaxAmount(), $currency, 1),
-                            'invoice_fee' => $this->currency->format($pclass->getInvoiceFee(), $currency, 1),
-                            'starting_fee' => $this->currency->format($pclass->getStartFee(), $currency, 1),
+                            'interest_rate' => $pclass->getInterestrate() . '%',
+                            'minimum_amount' => $this->currency->format($pclass->getMinamount(), $currency, 1),
+							'maximum_amount' => $this->currency->format($pclass->getMaxamount(), $currency, 1),
+                            'invoice_fee' => $this->currency->format($pclass->getHandlingfee(), $currency, 1),
+                            'starting_fee' => $this->currency->format($pclass->getStartfee(), $currency, 1),
                             'expiry_date' => $expiryDate
                         );
                     }
@@ -336,8 +369,11 @@ class ModelPaymentBillmate extends Model {
     }
 
     public function updatePClasses() {
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $billmate = new OpenCartBillmate();
-
+        $this->load->model('setting/setting');
        // $billmate->ocClearPClasses();
 
         // Loop through all enabled countries and find unique country/eid/server combinations
@@ -384,6 +420,7 @@ class ModelPaymentBillmate extends Model {
 
             foreach($countryConfigurations AS $config) {
                 try {
+
                     $billmate->ocFetchPClasses(
                         $countryCode,
                         $config['eid'],
@@ -403,7 +440,7 @@ class ModelPaymentBillmate extends Model {
 
         }
 		
-        $this->model_setting_setting->editSetting( 'billmate_partpayment_country', $data );
+        $this->model_setting_setting->editSetting( 'billmate_partpayment', array('billmate_partpayment_pclasses' => $data) );
         return $numFoundPClasses;
     }
 
@@ -422,6 +459,28 @@ class ModelPaymentBillmate extends Model {
         } else {
             $data[$option] = $this->config->get($moduleOption);
         }
+    }
+
+    public function isLatestRelease($version)
+    {
+        $ch = curl_init('https://api.github.com/repos/Billmate/opencart/releases/latest');
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch,CURLOPT_POST,0);
+        curl_setopt($ch,CURLOPT_HEADER,0);
+        curl_setopt($ch,CURLOPT_USERAGENT,'billmate-opencart');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ));
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = json_decode($result,true);
+        if(version_compare($version,$result['tag_name'],'<')){
+            return false;
+        }
+
+        return true;
     }
 
 }

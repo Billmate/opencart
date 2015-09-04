@@ -16,13 +16,19 @@ $_['text_norway']           = 'Norway';
 $_['text_finland']          = 'Finland';
 $_['text_denmark']          = 'Denmark';
 $_['entry_description']     = 'Description:';
+$_['entry_test']         = 'Test Mode:';
+$_['latest_release']     = 'There is a new version released for this plugin';
 
 // Entry
-$_['entry_merchant']        = 'Billmate ID:<br /><span class="help">(estore id) to use for the Billmate service (provided by Billmate).</span>';
-$_['entry_secret']          = 'Billmate Key:<br /><span class="help">Shared secret to use with the Billmate service (provided by Billmate).</span>';
+$_['entry_merchant']        = 'Billmate ID:';
+$_['entry_merchant_help']   = '(estore id) to use for the Billmate service (provided by Billmate).';
+$_['entry_secret']          = 'Billmate Key:';
+$_['entry_secret_help']     = 'Shared secret to use with the Billmate service (provided by Billmate).';
 $_['entry_server']          = 'Server:';
-$_['entry_mintotal']           = 'Minimum Total:<br /><span class="help">The checkout total the order must reach minimum this payment method becomes active.</span>';
-$_['entry_maxtotal']           = 'maximum Total:<br /><span class="help">The checkout total the order must reach maximum this payment method becomes active.</span>';
+$_['entry_mintotal']           = 'Minimum Total:';
+$_['entry_mintotal_help']   = 'The minimum checkout total the order must reach before this payment method becomes active.';
+$_['entry_maxtotal']           = 'Maximum Total:';
+$_['entry_maxtotal_help']   =  'The maximum checkout total the order must reach before this payment method becomes active.';
 $_['entry_pending_status']  = 'Pending Status:';
 $_['entry_accepted_status'] = 'Accepted Status:';
 $_['entry_geo_zone']        = 'Geo Zone:';
@@ -37,4 +43,8 @@ $_['error_permission']      = 'Warning: You do not have permission to modify pay
 $_['regen_pclasses'] = 'Save & Regen Pclasses';
 $_['text_pclasses_updated'] = 'Successful update: fetched {count} PClasses from Billmate.';
 $_['text_pclasses_updated_link'] = 'Would you like to view them?';
+$_['no_pclasses_found'] = 'Couldnt find any saved paymentplans';
+$_['error_credentials']  = 'Please check your credentials';
+$_['error_merchant_id']     = 'Billmate ID missing';
+$_['error_secret']     = 'Billmate key missing';
 
