@@ -5,7 +5,7 @@
     <link>http://www.billmate.se</link>
     <version>1.1.1</version>
     <code>billmate_partpayment</code>
-    <file path="catalog/view/theme/default/template/product/category.tpl">
+    <file name="catalog/view/theme/default/template/product/category.tpl">
         <operation>
             <search position="after">
                 <![CDATA[
@@ -19,7 +19,7 @@
             </add>
         </operation>
     </file>
-    <file path="catalog/view/theme/default/template/product/product.tpl">
+    <file name="catalog/view/theme/default/template/product/product.tpl">
         <operation>
             <search position="after">
                 <![CDATA[
@@ -35,7 +35,7 @@
             </add>
         </operation>
     </file>
-    <file path="catalog/controller/product/product.php">
+    <file name="catalog/controller/product/product.php">
         <operation>
             <search position="before">
                 <![CDATA[
@@ -61,7 +61,7 @@
             </add>
         </operation>
     </file>
-    <file path="catalog/language/english/payment/billmate_partpayment.php">
+    <file name="catalog/language/english/payment/billmate_partpayment.php">
         <operation>
             <search position="after">
                 <![CDATA[
@@ -75,7 +75,7 @@
             </add>
         </operation>
     </file>
-    <file path="catalog/language/swedish/payment/billmate_partpayment.php">
+    <file name="catalog/language/swedish/payment/billmate_partpayment.php">
         <operation>
             <search position="after">
                 <![CDATA[
@@ -89,7 +89,7 @@
             </add>
         </operation>
     </file>
-    <file path="catalog/controller/product/category.php">
+    <file name="catalog/controller/product/category.php">
         <operation>
             <search position="before">
                 <![CDATA[
