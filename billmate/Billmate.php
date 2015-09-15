@@ -81,9 +81,9 @@ class BillMate{
 			return $response;
 		if(is_array($response)) {
 			$response_array['credentials'] = json_decode($response['credentials'], true);
-            echo json_last_error();
+
 			$response_array['data'] = json_decode($response['data'],true);
-            echo json_last_error();
+
 		}
 		//If it is a valid response without any errors, it will be verified with the hash.
 		if(isset($response_array["credentials"])){

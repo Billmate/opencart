@@ -24,6 +24,10 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 ##Changelog
 
+###2.0.1(2015-09-15)
+* Fix - Headers Already sent error
+* Fix - Undefined variables partpayment cost ocmod
+
 ###2.0(2015-09-04)
 55 commits and 41 issues closed
 
