@@ -24,6 +24,12 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 ##Changelog
 
+###2.0.2.1(2015-09-27)
+* Fix - Recover lost template files.
+
+###2.0.2(2015-09-27)
+* Enhancement - Better support for multi store and multi currency
+
 ###2.0.1(2015-09-15)
 * Fix - Headers Already sent error
 * Fix - Undefined variables partpayment cost ocmod
