@@ -88,7 +88,7 @@
         <operation>
             <search>
                 <![CDATA[
-                if ($this->config->get('config_review_status')) {
+                if ($this->config->get('config_tax')) {
             ]]>
             </search>
             <add position="before">
