@@ -263,7 +263,7 @@ class ModelPaymentBillmate extends Model {
         //require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
         $eid = (int)$billmateId;
-        $key = (int)$secret;
+        $key = $secret;
         $ssl = true;
         $debug = false;
 
