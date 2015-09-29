@@ -54,10 +54,17 @@
                         <div class="col-sm-10">
                             <input type="text" name="billmate_bankpay_merchant_id" value="<?php echo $billmate_bankpay_merchant_id; ?>" placeholder="<?php echo $entry_merchant_id; ?>" id="input-merchant_id" class="form-control" />
                         </div>
-                    </div><div class="form-group">
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-secret"><span data-toggle="tooltip" title="<?php echo $entry_secret_help; ?>"><?php echo $entry_secret; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" name="billmate_bankpay_secret" value="<?php echo $billmate_bankpay_secret; ?>" placeholder="<?php echo $entry_secret; ?>" id="input-secret" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secret"><span data-toggle="tooltip" title="<?php echo $entry_logo_help; ?>"><?php echo $entry_logo; ?></span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="billmate_bankpay_logo" value="<?php echo $billmate_bankpay_logo; ?>" placeholder="<?php echo $entry_logo; ?>" id="input-logo" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">

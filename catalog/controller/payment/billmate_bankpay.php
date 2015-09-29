@@ -345,7 +345,8 @@ class ControllerPaymentBillmateBankpay extends Controller {
             'language' => $this->language->get('code'),
             'country' => 'SE',
             'autoactivate' => 0,
-            'orderid' => $order_id
+            'orderid' => $order_id,
+            'logo' => (strlen($this->config->get('billmate_bankpay_logo')) > 0) ? $this->config->get('billmate_bankpay_logo') : ''
         );
 
 		$values['PaymentInfo'] = array(

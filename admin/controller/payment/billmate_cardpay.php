@@ -36,6 +36,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $data['text_yes'] = $this->language->get('text_yes');
         $data['text_no'] = $this->language->get('text_no');
 
+        $data['entry_logo'] = $this->language->get('entry_logo');
+        $data['entry_logo_help'] = $this->language->get('entry_logo_help');
+
 		$data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
         $data['entry_merchant_help'] = $this->language->get('entry_merchant_help');
 		$data['entry_secret'] = $this->language->get('entry_secret');
@@ -63,17 +66,18 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
         $data['tab_general'] = $this->language->get('tab_general');
 
-                if (isset($this->error['merchant_id'])) {
-                        $data['error_merchant_id'] = $this->error['merchant'];
-                } else {
-                        $data['error_merchant_id'] = '';
-                }
+        if (isset($this->error['merchant_id'])) {
+                $data['error_merchant_id'] = $this->error['merchant'];
+        } else {
+                $data['error_merchant_id'] = '';
+        }
 
-                if (isset($this->error['secret'])) {
-                        $data['error_secret'] = $this->error['secret'];
-                } else {
-                        $data['error_secret'] = '';
-                }
+        if (isset($this->error['secret'])) {
+                $data['error_secret'] = $this->error['secret'];
+        } else {
+                $data['error_secret'] = '';
+        }
+
 
  		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
@@ -109,39 +113,45 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');	
 
-                if (isset($this->request->post['billmate_cardpay_merchant_id'])) {
-                        $data['billmate_cardpay_merchant_id'] = $this->request->post['billmate_cardpay_merchant_id'];
-                } else {
-                        $data['billmate_cardpay_merchant_id'] = $this->config->get('billmate_cardpay_merchant_id');
-                }
-               
-                if (isset($this->request->post['billmate_cardpay_secret'])) {
-                        $data['billmate_cardpay_secret'] = $this->request->post['billmate_cardpay_secret'];
-                } else {
-                        $data['billmate_cardpay_secret'] = $this->config->get('billmate_cardpay_secret');
-                }
- 
-                if (isset($this->request->post['billmate_prompt_name'])) {
-                        $data['billmate_prompt_name'] = $this->request->post['billmate_prompt_name'];
-                } else {
-                        $data['billmate_prompt_name'] = $this->config->get('billmate_prompt_name');
-                }
-               if (isset($this->request->post['billmate_cardpay_description'])) {
-                        $data['billmate_cardpay_description'] = $this->request->post['billmate_cardpay_description'];
-                } else {
-                        $data['billmate_cardpay_description'] = $this->config->get('billmate_cardpay_description');
-                }
-                if (isset($this->request->post['billmate_enable_3dsecure'])) {
-                        $data['billmate_enable_3dsecure'] = $this->request->post['billmate_enable_3dsecure'];
-                } else {
-                        $data['billmate_enable_3dsecure'] = $this->config->get('billmate_enable_3dsecure');
-                }
-				
-                if (isset($this->request->post['billmate_cardpay_test'])) {
-                        $data['billmate_cardpay_test'] = $this->request->post['billmate_cardpay_test'];
-                } else {
-                        $data['billmate_cardpay_test'] = $this->config->get('billmate_cardpay_test');
-                }
+        if (isset($this->request->post['billmate_cardpay_merchant_id'])) {
+                $data['billmate_cardpay_merchant_id'] = $this->request->post['billmate_cardpay_merchant_id'];
+        } else {
+                $data['billmate_cardpay_merchant_id'] = $this->config->get('billmate_cardpay_merchant_id');
+        }
+
+        if (isset($this->request->post['billmate_cardpay_secret'])) {
+                $data['billmate_cardpay_secret'] = $this->request->post['billmate_cardpay_secret'];
+        } else {
+                $data['billmate_cardpay_secret'] = $this->config->get('billmate_cardpay_secret');
+        }
+
+        if (isset($this->request->post['billmate_prompt_name'])) {
+                $data['billmate_prompt_name'] = $this->request->post['billmate_prompt_name'];
+        } else {
+                $data['billmate_prompt_name'] = $this->config->get('billmate_prompt_name');
+        }
+       if (isset($this->request->post['billmate_cardpay_description'])) {
+                $data['billmate_cardpay_description'] = $this->request->post['billmate_cardpay_description'];
+        } else {
+                $data['billmate_cardpay_description'] = $this->config->get('billmate_cardpay_description');
+        }
+        if (isset($this->request->post['billmate_enable_3dsecure'])) {
+                $data['billmate_enable_3dsecure'] = $this->request->post['billmate_enable_3dsecure'];
+        } else {
+                $data['billmate_enable_3dsecure'] = $this->config->get('billmate_enable_3dsecure');
+        }
+
+        if (isset($this->request->post['billmate_cardpay_test'])) {
+                $data['billmate_cardpay_test'] = $this->request->post['billmate_cardpay_test'];
+        } else {
+                $data['billmate_cardpay_test'] = $this->config->get('billmate_cardpay_test');
+        }
+
+        if (isset($this->request->post['billmate_cardpay_logo'])) {
+            $data['billmate_cardpay_logo'] = $this->request->post['billmate_cardpay_logo'];
+        } else {
+            $data['billmate_cardpay_logo'] = $this->config->get('billmate_cardpay_logo');
+        }
 	
 		if (isset($this->request->post['billmate_cardpay_total'])) {
 			$data['billmate_cardpay_total'] = $this->request->post['billmate_cardpay_total'];

@@ -287,7 +287,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     'language' => $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,
-                    'orderid' => $order_id
+                    'orderid' => $order_id,
+                    'logo' => (strlen($billmate_partpayment['SWE']['logo']) > 0) ? $billmate_partpayment['SWE']['logo'] : ''
+
                 );
 
                 $values['PaymentInfo'] = array(

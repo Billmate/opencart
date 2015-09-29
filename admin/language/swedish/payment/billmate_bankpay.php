@@ -15,6 +15,8 @@ $_['entry_secret_help']     = 'Hemlig nyckel för att använda Billmates tjänst
 $_['latest_release']     = 'Det finns en nyare version av denna plugin';
 
 
+$_['entry_logo']         = 'Logotype som visas på fakturan';
+$_['entry_logo_help']         = 'Ange namnet på logotypen (finns i Billmate Online). Lämna tom om ni endast har en logotype.';
 
 $_['entry_test']         = 'Testläge:';
 $_['entry_prompt_name']  = 'Visa namn i betalfönster:';

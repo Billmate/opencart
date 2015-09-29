@@ -43,7 +43,12 @@
               <span class="error"><?php echo $error_secret; ?></span>
               <?php } ?></td>
           </tr>
-		  
+            <tr>
+                <td><?php echo $entry_logo; ?><br/><span class="help"><?php echo $entry_logo_help; ?></span></td>
+                <td>
+                    <input type="text" name="billmate_bankpay_logo" value="<?php echo $billmate_bankpay_logo; ?>" />
+                </td>
+            </tr>
           <tr>
             <td valign="top"><?php echo $entry_description; ?></td>
             <td><textarea cols="84" rows="10" name="billmate_bankpay_description"><?php echo $billmate_bankpay_description; ?></textarea>
