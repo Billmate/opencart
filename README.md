@@ -23,6 +23,10 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 
 ##Changelog
+###2.1(2015-09-29)
+* Enhancement - Added possibility to select logo for display on invoice.
+* Fix - Int 32 bits problem.
+* Fix - CURLOPT_SSL_VERIFYHOST error notice
 
 ###2.0.2.1(2015-09-27)
 * Fix - Recover lost template files.
