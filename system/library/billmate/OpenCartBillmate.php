@@ -5,7 +5,7 @@
     public $allPclass = array();
     
  	public static function ocGetModuleVersion(){
- 	    return '2.0';
+ 	    return '2.1';
  	}
  	public function ocGetAllPClasses(){
         $pclasses = $this->getPCStorage();
@@ -13,8 +13,7 @@
  	}
 
     public function ocFetchPClasses($countryCode, $eid, $key, $server){
-        $base = dirname(__FILE__);
-		require_once $base.'/Billmate.php';
+		require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 		$ssl = true;
 		$debug = false;
 		$eid = (int)$eid;

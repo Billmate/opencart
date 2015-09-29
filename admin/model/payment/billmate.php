@@ -1,8 +1,8 @@
 <?php
 
 require_once(DIR_SYSTEM . 'library/billmate/OpenCartBillmate.php');
-
-require_once(DIR_SYSTEM . 'library/billmate/Billmate.php');
+require_once dirname(DIR_APPLICATION).'/billmate/commonfunctions.php';
+require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
 class ModelPaymentBillmate extends Model {
     private $moduleType;
