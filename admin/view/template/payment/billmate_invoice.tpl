@@ -43,9 +43,15 @@
                 <td><input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][merchant]" value="<?php echo isset($billmate_invoice[$country['code']]) ? $billmate_invoice[$country['code']]['merchant'] : ''; ?>" /></td>
               </tr>
               <tr>
-                <td><?php echo $entry_secret.'<br /><span class="help">'.$entry_secret_help; ?>; ?></td>
+                <td><?php echo $entry_secret.'<br /><span class="help">'.$entry_secret_help; ?></td>
                 <td><input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][secret]" value="<?php echo isset($billmate_invoice[$country['code']]) ? $billmate_invoice[$country['code']]['secret'] : ''; ?>" /></td>
               </tr>
+                <tr>
+                    <td><?php echo $entry_logo; ?><br/><span class="help"><?php echo $entry_logo_help; ?></span></td>
+                    <td>
+                        <input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][logo]" value="<?php echo isset($billmate_invoice[$country['code']]['logo']) ? $billmate_invoice[$country['code']]['logo'] : ''; ?>" />
+                    </td>
+                </tr>
               <tr>
                 <td valign="top"><?php echo $entry_description; ?></td>
                 <td><textarea cols="84" rows="10" name="billmate_invoice[<?php echo $country['code']; ?>][description]"><?php echo isset($billmate_invoice[$country['code']]['description']) ? $billmate_invoice[$country['code']]['description'] : ''; ?></textarea></td>

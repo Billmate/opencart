@@ -72,6 +72,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		$data['text_finland'] = $this->language->get('text_finland');
 		$data['text_denmark'] = $this->language->get('text_denmark');
 
+        $data['entry_logo'] = $this->language->get('entry_logo');
+        $data['entry_logo_help'] = $this->language->get('entry_logo_help');
+
         $data['entry_merchant'] = $this->language->get('entry_merchant');
         $data['entry_merchant_help'] = $this->language->get('entry_merchant_help');
         $data['entry_secret'] = $this->language->get('entry_secret');

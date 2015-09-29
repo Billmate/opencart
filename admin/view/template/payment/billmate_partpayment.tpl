@@ -55,6 +55,12 @@
                 <td><?php echo $entry_secret.'<br /><span class="help">'.$entry_secret_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][secret]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['secret'] : ''; ?>" /></td>
               </tr>
+                <tr>
+                    <td><?php echo $entry_logo; ?><br/><span class="help"><?php echo $entry_logo_help; ?></span></td>
+                    <td>
+                        <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][logo]" value="<?php echo isset($billmate_partpayment[$country['code']]['logo']) ? $billmate_partpayment[$country['code']]['logo'] : ''; ?>" />
+                    </td>
+                </tr>
               <tr>
                 <td><?php echo $entry_server; ?></td>
                 <td><select name="billmate_partpayment[<?php echo $country['code']; ?>][server]">

@@ -9,6 +9,10 @@ $_['text_payment']       = 'Payment';
 $_['text_success']       = 'Success: You have modified Billmate Bank payment module!';
 
 // Entry
+$_['entry_logo']         = 'Logo to be displayed in the invoice';
+$_['entry_logo_help']         = 'Enter the name of the logo (shown in Billmate Online). Leave empty if you only have one logo.';
+
+
 $_['entry_merchant_id']     = 'Billmate ID:';
 $_['entry_merchant_help']   = '(estore id) to use for the Billmate service (provided by Billmate).';
 $_['latest_release']     = 'There is a new version released for this plugin';

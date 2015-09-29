@@ -171,7 +171,9 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     'language' => $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,
-                    'orderid' => $order_id
+                    'orderid' => $order_id,
+                    'logo' => (strlen($billmate_invoice['SWE']['logo']) > 0) ? $billmate_invoice['SWE']['logo'] : ''
+
                 );
 
                 $values['PaymentInfo'] = array(

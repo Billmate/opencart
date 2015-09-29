@@ -38,6 +38,9 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $data['text_yes'] = $this->language->get('text_yes');
         $data['text_no'] = $this->language->get('text_no');
 
+		$data['entry_logo'] = $this->language->get('entry_logo');
+		$data['entry_logo_help'] = $this->language->get('entry_logo_help');
+
 		$data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
 		$data['entry_merchant_help'] = $this->language->get('entry_merchant_help');
 		$data['entry_secret'] = $this->language->get('entry_secret');
@@ -105,28 +108,34 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
 		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
-                if (isset($this->request->post['billmate_bankpay_merchant_id'])) {
-                        $data['billmate_bankpay_merchant_id'] = $this->request->post['billmate_bankpay_merchant_id'];
-                } else {
-                        $data['billmate_bankpay_merchant_id'] = $this->config->get('billmate_bankpay_merchant_id');
-                }
-               
-                if (isset($this->request->post['billmate_bankpay_secret'])) {
-                        $data['billmate_bankpay_secret'] = $this->request->post['billmate_bankpay_secret'];
-                } else {
-                        $data['billmate_bankpay_secret'] = $this->config->get('billmate_bankpay_secret');
-                }
-				
-                if (isset($this->request->post['billmate_bankpay_test'])) {
-                        $data['billmate_bankpay_test'] = $this->request->post['billmate_bankpay_test'];
-                } else {
-                        $data['billmate_bankpay_test'] = $this->config->get('billmate_bankpay_test');
-                }
-                if (isset($this->request->post['billmate_bankpay_description'])) {
-                        $data['billmate_bankpay_description'] = $this->request->post['billmate_bankpay_description'];
-                } else {
-                        $data['billmate_bankpay_description'] = $this->config->get('billmate_bankpay_description');
-                }
+		if (isset($this->request->post['billmate_bankpay_merchant_id'])) {
+				$data['billmate_bankpay_merchant_id'] = $this->request->post['billmate_bankpay_merchant_id'];
+		} else {
+				$data['billmate_bankpay_merchant_id'] = $this->config->get('billmate_bankpay_merchant_id');
+		}
+
+		if (isset($this->request->post['billmate_bankpay_secret'])) {
+				$data['billmate_bankpay_secret'] = $this->request->post['billmate_bankpay_secret'];
+		} else {
+				$data['billmate_bankpay_secret'] = $this->config->get('billmate_bankpay_secret');
+		}
+
+		if (isset($this->request->post['billmate_bankpay_test'])) {
+				$data['billmate_bankpay_test'] = $this->request->post['billmate_bankpay_test'];
+		} else {
+				$data['billmate_bankpay_test'] = $this->config->get('billmate_bankpay_test');
+		}
+		if (isset($this->request->post['billmate_bankpay_description'])) {
+				$data['billmate_bankpay_description'] = $this->request->post['billmate_bankpay_description'];
+		} else {
+				$data['billmate_bankpay_description'] = $this->config->get('billmate_bankpay_description');
+		}
+
+		if (isset($this->request->post['billmate_bankpay_logo'])) {
+			$data['billmate_bankpay_logo'] = $this->request->post['billmate_bankpay_logo'];
+		} else {
+			$data['billmate_bankpay_logo'] = $this->config->get('billmate_bankpay_logo');
+		}
 	
 		if (isset($this->request->post['billmate_bankpay_total'])) {
 			$data['billmate_bankpay_total'] = $this->request->post['billmate_bankpay_total'];

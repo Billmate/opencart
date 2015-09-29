@@ -282,7 +282,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
             'language' => $this->language->get('code'),
             'country' => 'SE',
             'autoactivate' => ($this->config->get('billmate_cardpay_transaction_method') == 'sale') ? 1 : 0,
-            'orderid' => $order_id
+            'orderid' => $order_id,
+            'logo' => (strlen($this->config->get('billmate_cardpay_logo')) > 0) ? $this->config->get('billmate_cardpay_logo') : ''
+
         );
 
         $values['PaymentInfo'] = array(

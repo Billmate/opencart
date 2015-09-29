@@ -62,6 +62,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secret"><span data-toggle="tooltip" title="<?php echo $entry_logo_help; ?>"><?php echo $entry_logo; ?></span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="billmate_cardpay_logo" value="<?php echo $billmate_cardpay_logo; ?>" placeholder="<?php echo $entry_logo; ?>" id="input-logo" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-description"><?php echo $entry_description; ?></label>
                         <div class="col-sm-10">
                             <textarea cols="84" rows="10" name="billmate_cardpay_description"><?php echo $billmate_cardpay_description; ?></textarea>
