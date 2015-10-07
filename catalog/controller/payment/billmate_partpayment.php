@@ -270,12 +270,12 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 				
 				$eid = (int)$billmate_partpayment['SWE']['merchant'];
-				$key = (int)$billmate_partpayment['SWE']['secret'];
+				$key = $billmate_partpayment['SWE']['secret'];
 				$ssl = true;
 				$debug = false;
 
                 if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.1');
                 if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
                 $k = new BillMate($eid,$key,$ssl,$billmate_partpayment['SWE']['server'] == 'beta' ,$debug);
 

@@ -50,7 +50,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$post = empty($_POST)? $_GET : $_POST;
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
-        $key = (int)$this->config->get('billmate_cardpay_secret');
+        $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
@@ -196,7 +196,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $post = json_decode(file_get_contents('php://input'),true);
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
-        $key = (int)$this->config->get('billmate_cardpay_secret');
+        $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
@@ -267,13 +267,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		
 		$eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 		
-		$key = (int)$this->config->get('billmate_cardpay_secret');
+		$key = $this->config->get('billmate_cardpay_secret');
 		$ssl = true;
 
 		$debug = false;
 
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.0');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.1');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
         $values['PaymentData'] = array(
