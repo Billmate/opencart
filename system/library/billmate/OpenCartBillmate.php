@@ -5,7 +5,7 @@
     public $allPclass = array();
     
  	public static function ocGetModuleVersion(){
- 	    return '2.1';
+ 	    return '2.1.1';
  	}
  	public function ocGetAllPClasses(){
         $pclasses = $this->getPCStorage();
@@ -17,7 +17,6 @@
 		$ssl = true;
 		$debug = false;
 		$eid = (int)$eid;
-		$key = (int)$key;
 
         $k = new BillMate( $eid ,$key,$ssl,false,$debug);
         
