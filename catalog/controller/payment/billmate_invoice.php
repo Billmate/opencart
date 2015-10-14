@@ -172,7 +172,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     'country' => 'SE',
                     'autoactivate' => 0,
                     'orderid' => $order_id,
-                    'logo' => (strlen($billmate_invoice['SWE']['logo']) > 0) ? $billmate_invoice['SWE']['logo'] : ''
+                    'logo' => (isset($billmate_invoice['SWE']['logo']) && strlen($billmate_invoice['SWE']['logo']) > 0) ? $billmate_invoice['SWE']['logo'] : ''
 
                 );
 
@@ -685,9 +685,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			if(!isset($json['error'])){
 				$ship_api_address = array();
 				try {
+
                     $data = array(
-                        'fname'      => Encoding::fixUTF8($addr['firstname']),
-                        'lname'       => Encoding::fixUTF8($addr['lastname']),
+                        'fname'      => empty($addr['firstname']) ? '' : Encoding::fixUTF8($addr['firstname']),
+                        'lname'       => empty($addr['lastname']) ? '' : Encoding::fixUTF8($addr['lastname']),
                         'address_1'      => Encoding::fixUTF8($addr['street']),
                         'company'      => '',
                         'address_2'      => '',
