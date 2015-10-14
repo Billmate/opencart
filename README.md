@@ -23,6 +23,10 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 
 ##Changelog
+###2.1.2(2015-10-14)
+* Fix - Company checkout.
+* Fix - Undefined logo error.
+
 ###2.1.1(2015-10-07)
 * Fix - Plugin Version.
 * Fix - More int 32 bit issues.

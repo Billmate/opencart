@@ -275,7 +275,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$debug = false;
 
                 if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.1');
+                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.2');
                 if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
                 $k = new BillMate($eid,$key,$ssl,$billmate_partpayment['SWE']['server'] == 'beta' ,$debug);
 
@@ -288,7 +288,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     'country' => 'SE',
                     'autoactivate' => 0,
                     'orderid' => $order_id,
-                    'logo' => (strlen($billmate_partpayment['SWE']['logo']) > 0) ? $billmate_partpayment['SWE']['logo'] : ''
+                    'logo' => (isset($billmate_partpayment['SWE']['logo']) && strlen($billmate_partpayment['SWE']['logo']) > 0) ? $billmate_partpayment['SWE']['logo'] : ''
 
                 );
 
@@ -811,8 +811,8 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     $ship_api_address = array();
                     try {
                         $data = array(
-                            'fname'      => Encoding::fixUTF8($addr['firstname']),
-                            'lname'       => Encoding::fixUTF8($addr['lastname']),
+                            'fname'      => empty($addr['firstname']) ? $order_info['payment_firstname'] : Encoding::fixUTF8($addr['firstname']),
+                            'lname'       => empty($addr['lastname']) ? $order_info['payment_lastname'] : Encoding::fixUTF8($addr['lastname']),
                             'address_1'      => Encoding::fixUTF8($addr['street']),
                             'company'      => '',
                             'address_2'      => '',

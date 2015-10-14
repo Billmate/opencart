@@ -154,7 +154,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			if (!$json) {
 				$billmate_invoice = $this->config->get('billmate_invoice');
                 if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.1');
+                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.2');
                 if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
 				require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
@@ -172,7 +172,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     'country' => 'SE',
                     'autoactivate' => 0,
                     'orderid' => $order_id,
-                    'logo' => (strlen($billmate_invoice['SWE']['logo']) > 0) ? $billmate_invoice['SWE']['logo'] : ''
+                    'logo' => (isset($billmate_invoice['SWE']['logo']) && strlen($billmate_invoice['SWE']['logo']) > 0) ? $billmate_invoice['SWE']['logo'] : ''
 
                 );
 
@@ -685,9 +685,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			if(!isset($json['error'])){
 				$ship_api_address = array();
 				try {
+
                     $data = array(
-                        'fname'      => Encoding::fixUTF8($addr['firstname']),
-                        'lname'       => Encoding::fixUTF8($addr['lastname']),
+                        'fname'      => empty($addr['firstname']) ? '' : Encoding::fixUTF8($addr['firstname']),
+                        'lname'       => empty($addr['lastname']) ? '' : Encoding::fixUTF8($addr['lastname']),
                         'address_1'      => Encoding::fixUTF8($addr['street']),
                         'company'      => '',
                         'address_2'      => '',
@@ -825,7 +826,7 @@ $db->query($sql);
         $ssl = true;
         $debug = false;
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.1');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.2');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
 
