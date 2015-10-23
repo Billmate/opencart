@@ -50,6 +50,20 @@
                                 <?php foreach ($countries as $country) { ?>
                                     <div class="tab-pane" id="tab-<?php echo $country['code']; ?>">
                                         <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                                            <div class="col-sm-10">
+                                                <select name="billmate_invoice[<?php echo $country['code']; ?>][status]" id="input-status" class="form-control">
+                                                    <?php if ($billmate_invoice[$country['code']]['status']) { ?>
+                                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                                    <?php } else { ?>
+                                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-sm-2 control-label" for="input-merchant"><span data-toggle="tooltip" title="<?php echo $entry_merchant_help; ?>"><?php echo $entry_merchant; ?></span></label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="billmate_invoice[<?php echo $country['code']; ?>][merchant]" value="<?php echo $billmate_invoice[$country['code']]['merchant']; ?>" id="input-merchant" class="form-control" />
@@ -73,20 +87,7 @@
                                                 <textarea cols="84" rows="10" name="billmate_invoice[<?php echo $country['code'];?>][description]"><?php echo isset($billmate_invoice[$country['code']]['description']) ? $billmate_invoice[$country['code']]['description'] : ''; ?></textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                            <div class="col-sm-10">
-                                                <select name="billmate_invoice[<?php echo $country['code']; ?>][status]" id="input-status" class="form-control">
-                                                    <?php if ($billmate_invoice[$country['code']]['status']) { ?>
-                                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                                    <?php } else { ?>
-                                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
+
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label" for="input-mintotal"><span data-toggle="tooltip" title="<?php echo $entry_mintotal_help; ?>"><?php echo $entry_mintotal; ?></span></label>
                                             <div class="col-sm-10">

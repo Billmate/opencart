@@ -47,6 +47,18 @@
           <?php foreach ($countries as $country) { ?>
           <div id="tab-<?php echo $country['code']; ?>" class="vtabs-content">
             <table class="form">
+                <tr>
+                    <td><?php echo $entry_status; ?></td>
+                    <td><select name="billmate_partpayment[<?php echo $country['code']; ?>][status]">
+                            <?php if (isset($billmate_partpayment[$country['code']]) && $billmate_partpayment[$country['code']]['status']) { ?>
+                            <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                            <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                            <option value="1"><?php echo $text_enabled; ?></option>
+                            <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select></td>
+                </tr>
               <tr>
                 <td><?php echo $entry_merchant.'<br /><span class="help">'.$entry_merchant_help; ?></span></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][merchant]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['merchant'] : ''; ?>" /></td>
