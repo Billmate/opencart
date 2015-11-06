@@ -31,7 +31,7 @@ $_['help_total']         = 'The checkout total the order must reach before this 
 $_['entry_order_status'] = 'Order Status:';
 $_['entry_order_cancel_status'] = 'Cancelled Order Status:';
 $_['entry_geo_zone']     = 'Geo Zone:';
-$_['entry_status']       = 'Status:';
+$_['entry_status']       = 'Activated:';
 $_['entry_sort_order']   = 'Sort Order:';
 $_['entry_available_countries'] = 'Available countries (autocomplete)';
 
