@@ -155,7 +155,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 				$billmate_invoice = $this->config->get('billmate_invoice');
                 if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
                 if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.2');
-                if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
+                if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
 				require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
     				
@@ -168,7 +168,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $values['PaymentData'] = array(
                     'method' => 1,
                     'currency' => $this->currency->getCode(),
-                    'language' => $this->language->get('code'),
+                    'language' => ($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,
                     'orderid' => $order_id,

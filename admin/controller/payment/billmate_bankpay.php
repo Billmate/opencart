@@ -218,7 +218,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 	}
     public function install()
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = 'SE' ORDER BY name ASC");
         $country = $query->row;
         $this->load->model('setting/setting');
         $this->model_setting_setting->editSetting('billmate_bankpay',array('billmate_bankpay_version' => PLUGIN_VERSION,'billmate_bankpay_country' =>array($country['country_id'] => array('name' => $country['name']))));

@@ -79,6 +79,9 @@ class ControllerPaymentBillmatePartpayment extends Controller {
             $countryRates = $countryRates['SWE'][0];
 
             $lang = $this->language->get('code');
+            if($lang == 'se'){
+                $lang = 'sv';
+            }
             if($lang == 'sv' || $lang == 'en'){
                 $selectedLanguage = $lang;
             } else {
@@ -276,7 +279,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                 if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
                 if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.2');
-                if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
+                if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
                 $k = new BillMate($eid,$key,$ssl,$billmate_partpayment['SWE']['server'] == 'beta' ,$debug);
 
 
@@ -284,7 +287,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                     'method' => 4,
                     'paymentplanid' => isset($this->request->post['code']) ? $this->request->post['code'] : '',
                     'currency' => $this->currency->getCode(),
-                    'language' => $this->language->get('code'),
+                    'language' => ($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,
                     'orderid' => $order_id,
