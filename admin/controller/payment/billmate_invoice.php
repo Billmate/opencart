@@ -315,7 +315,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
     public function install()
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE name = 'Sweden' ORDER BY name ASC");
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = 'SE' ORDER BY name ASC");
         $country = $query->row;
         $this->load->model('setting/setting');
         $this->model_setting_setting->editSetting('billmate_invoice',array('billmate_invoice_version' => PLUGIN_VERSION,'billmate_invoice_country' =>array($country['country_id'] => array('name' => $country['name']))));

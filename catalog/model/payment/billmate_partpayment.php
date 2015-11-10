@@ -45,6 +45,8 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$countryRates = $this->config->get('billmate_partpayment_pclasses');
 		$countryRates = $countryRates['SWE'][0];
 		$lang = $this->language->get('code');
+        if($lang == 'se')
+            $lang = 'sv';
 		if($lang == 'sv' || $lang == 'en'){
 			$selectedLanguage = $lang;
 		} else {
@@ -211,6 +213,8 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$countryRates = $this->config->get('billmate_partpayment_pclasses');
 		$countryRates = $countryRates['SWE'][0];
 		$lang = $this->language->get('code');
+        if($lang == 'se')
+            $lang = 'sv';
 		if($lang == 'sv' || $lang == 'en'){
 			$selectedLanguage = $lang;
 		} else {
