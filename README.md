@@ -23,6 +23,11 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 
 ##Changelog
+
+###2.1.3(2015-11-10)
+* Fix - Install issue when country name was not in english.
+* Enhancement - Consequent testmode text in admin.
+
 ###2.1.2(2015-10-14)
 * Fix - Company checkout.
 * Fix - Undefined logo error.
