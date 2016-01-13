@@ -23,6 +23,8 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 
 ##Changelog
+### 2.1.4 (2016-01-13)
+* Compatibility - Coupon compatibility for OpenCart 2.0
 
 ###2.1.3(2015-11-10)
 * Fix - Install issue when country name was not in english.

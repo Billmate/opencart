@@ -268,7 +268,7 @@ class ModelPaymentBillmate extends Model {
         $debug = false;
 
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.3');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $billmate = new BillMate($eid,$key,$ssl,false,$debug);
         $values['PaymentData'] = array(
@@ -322,7 +322,7 @@ class ModelPaymentBillmate extends Model {
 
     public function getPClasses() {
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.3');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $billmate = new OpenCartBillmate();
 
@@ -370,7 +370,7 @@ class ModelPaymentBillmate extends Model {
 
     public function updatePClasses() {
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.3');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $billmate = new OpenCartBillmate();
         $this->load->model('setting/setting');

@@ -335,7 +335,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		$debug = false;
 
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.3');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
 		$k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_bankpay_test') == 1 ,$debug);
 		$values['PaymentData'] = array(
@@ -649,8 +649,14 @@ class ControllerPaymentBillmateBankpay extends Controller {
         if(isset($this->session->data['coupon'])){
             $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
             $total = $coupon->row;
-            $this->load->model('checkout/coupon');
-            $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+            if(version_compare(VERSION,'2.0.0','>=')){
+                $this->load->model('total/coupon');
+                $coupon_info = $this->model_total_coupon->getCoupon($this->session->data['coupon']);
+            } else {
+                $this->load->model('checkout/coupon');
+                $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+            }
+
             if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 1)
             {
                 $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
