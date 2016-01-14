@@ -6,7 +6,7 @@ $_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) 
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %, 
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: "%s",effectiverate:34});
 });</script>';
-$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment" style="float: left;margin: 2px 6px;">Pay from %s/month <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment" >Pay from %s/month <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %,
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: "%s",effectiverate:34});
 });</script>';

@@ -10,10 +10,10 @@ $_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMA
 $_['text_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee: "%s"});
 });</script>';
-$_['text_no_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s<a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice">%s<a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
-$_['text_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee: "%s"});
 });</script>';
 $_['address_should_match'] = 'Address Should be match';

@@ -81,9 +81,9 @@ class ModelPaymentBillmateInvoice extends Model {
 
                 $method = array(
                     'code' => 'billmate_invoice',
-                    'title' => $this->language->get('text_title'),
+                    'title' => $title,//$this->language->get('text_title'),
                     'sort_order' => $billmate_invoice['SWE']['sort_order'],
-                    'terms' => $title
+                    'terms' => ''//$title
                 );
             }
         }
