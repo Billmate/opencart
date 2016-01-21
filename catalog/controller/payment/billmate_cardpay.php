@@ -273,7 +273,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$debug = false;
 
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.5');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
         $values['PaymentData'] = array(
@@ -692,15 +692,15 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
         } // End discount isset
         $total = $this->currency->format($order_info['total'],$order_info['currency_code'],$order_info['currency_value'],false);
-        $round = ($total*100) - ($orderTotal + $taxTotal);
+        $round = round($total*100) - round($orderTotal + $taxTotal);
         if(abs($myocRounding) > abs($round)){
             $round = $myocRounding;
         }
         $values['Cart']['Total'] = array(
-            'withouttax' => $orderTotal,
-            'tax' => $taxTotal,
-            'rounding' => $round,
-            'withtax' => $orderTotal + $taxTotal + $round
+            'withouttax' => round($orderTotal),
+            'tax' => round($taxTotal),
+            'rounding' => round($round),
+            'withtax' => round($orderTotal + $taxTotal + $round)
         );
 
 

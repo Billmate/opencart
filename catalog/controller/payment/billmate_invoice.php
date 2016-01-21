@@ -154,7 +154,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			if (!$json) {
 				$billmate_invoice = $this->config->get('billmate_invoice');
                 if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
+                if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.5');
                 if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
 				require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
@@ -576,17 +576,17 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                 } // End discount isset
                 $total = $this->currency->format($order_info['total'],$order_info['currency_code'],$order_info['currency_value'],false);
-                $round = ($total*100) - ($orderTotal + $taxTotal);
+                $round = round($total*100) - round($orderTotal + $taxTotal);
                 if(abs($myocRounding) > abs($round)){
                     $round = $myocRounding;
                 }
                 $values['Cart']['Total'] = array(
-                    'withouttax' => $orderTotal,
-                    'tax' => $taxTotal,
-                    'rounding' => $round,
-                    'withtax' => $orderTotal + $taxTotal + $round
+                    'withouttax' => round($orderTotal),
+                    'tax' => round($taxTotal),
+                    'rounding' => round($round),
+                    'withtax' => round($orderTotal + $taxTotal + $round)
                 );
-				$pno = trim($this->request->post['pno']);
+                $pno = trim($this->request->post['pno']);
 
 
 				try {
@@ -831,7 +831,7 @@ $db->query($sql);
         $ssl = true;
         $debug = false;
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.4');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.5');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',$this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
 
