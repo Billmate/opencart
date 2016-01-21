@@ -754,20 +754,20 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         } // End discount isset
         $total = $this->currency->format($order_info['total'],$order_info['currency_code'],$order_info['currency_value'],false);
-        $round = ($total*100) - ($orderTotal + $taxTotal);
+        $round = round($total*100) - round($orderTotal + $taxTotal);
         if(abs($myocRounding) > abs($round)){
             $round = $myocRounding;
         }
         $values['Cart']['Total'] = array(
-            'withouttax' => $orderTotal,
-            'tax' => $taxTotal,
-            'rounding' => $round,
-            'withtax' => $orderTotal + $taxTotal + $round
+            'withouttax' => round($orderTotal),
+            'tax' => round($taxTotal),
+            'rounding' => round($round),
+            'withtax' => round($orderTotal + $taxTotal + $round)
         );
-		
 
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_bankpay',  `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+
+        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_bankpay',  `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
         $result1 = $k->addPayment($values);
         if(isset($result1['code'])){

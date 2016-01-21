@@ -692,15 +692,15 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
         } // End discount isset
         $total = $this->currency->format($order_info['total'],$order_info['currency_code'],$order_info['currency_value'],false);
-        $round = ($total*100) - ($orderTotal + $taxTotal);
+        $round = round($total*100) - round($orderTotal + $taxTotal);
         if(abs($myocRounding) > abs($round)){
             $round = $myocRounding;
         }
         $values['Cart']['Total'] = array(
-            'withouttax' => $orderTotal,
-            'tax' => $taxTotal,
-            'rounding' => $round,
-            'withtax' => $orderTotal + $taxTotal + $round
+            'withouttax' => round($orderTotal),
+            'tax' => round($taxTotal),
+            'rounding' => round($round),
+            'withtax' => round($orderTotal + $taxTotal + $round)
         );
 
 
