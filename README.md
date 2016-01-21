@@ -23,6 +23,10 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 
 ##Changelog
+
+### 2.1.5 (2016-01-21)
+* Fix - Rounding on totals.
+
 ### 2.1.4 (2016-01-13)
 * Compatibility - Coupon compatibility for OpenCart 2.0
 * Enhancement - Payment options design OpenCart 2.0
