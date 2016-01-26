@@ -24,6 +24,9 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 ##Changelog
 
+### 2.1.6(2016-01-26)
+* Fix - Optimized Billmate.php
+
 ### 2.1.5 (2016-01-21)
 * Fix - Rounding on totals.
 
