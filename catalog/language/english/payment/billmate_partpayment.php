@@ -49,4 +49,5 @@ $_['error_deu_terms']      = 'You must agree to Billmate\'s privacy policy (Date
 $_['error_address_match']  = 'Billing and Shipping addresses must match if you want to use Billmate Payments';
 $_['error_network']        = 'Error occurred while connecting to Billmate. Please try again later.';
 $_['payment_error'] = 'The payment with Billmate failed';
-?>
+$_['tax_discount'] = '% tax';
+

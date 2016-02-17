@@ -599,7 +599,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
                                     $values['Articles'][] = array(
                                         'quantity' => 1,
                                         'artnr' => '',
-                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('% tax'),
                                         'aprice' => $discountToArticle,
                                         'taxrate' => $tax,
                                         'discount' => 0.0,
@@ -641,7 +641,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
                                 'artnr'    => '',
-                                'title'    => $total['title'].' '.$tax.'% tax',
+                                'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                                 'aprice'    => (int)$discountToArticle,
                                 'taxrate'      => $tax,
                                 'discount' => 0.0,
@@ -666,7 +666,6 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $this->load->model('checkout/coupon');
                 $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
             }
-
             if(($coupon_info['type'] == 'P' || $coupon_info['type'] == 'F') && $coupon_info['shipping'] == 1)
             {
                 $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
@@ -706,7 +705,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
                             $values['Articles'][] = array(
                                 'quantity' => 1,
                                 'artnr' => '',
-                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
                                 'aprice' => $discountToArticle,
                                 'taxrate' => $tax,
                                 'discount' => 0.0,
@@ -749,7 +748,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
                     $values['Articles'][] = array(
                         'quantity'   => 1,
                         'artnr'    => '',
-                        'title'    => $total['title'].' '.$tax.'% tax',
+                        'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                         'aprice'    => $discountToArticle,
                         'taxrate'      => $tax,
                         'discount' => 0.0,
@@ -762,7 +761,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 }
             }
 
-        } // End discount isset
+        }  // End discount isset
         $total = $this->currency->format($order_info['total'],$order_info['currency_code'],$order_info['currency_value'],false);
         $round = round($total*100) - round($orderTotal + $taxTotal);
         if(abs($myocRounding) > abs($round)){

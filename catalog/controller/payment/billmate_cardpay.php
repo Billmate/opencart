@@ -538,7 +538,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                     $values['Articles'][] = array(
                                         'quantity' => 1,
                                         'artnr' => '',
-                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
                                         'aprice' => $discountToArticle,
                                         'taxrate' => $tax,
                                         'discount' => 0.0,
@@ -580,7 +580,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
                                 'artnr'    => '',
-                                'title'    => $total['title'].' '.$tax.'% tax',
+                                'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                                 'aprice'    => (int)$discountToArticle,
                                 'taxrate'      => $tax,
                                 'discount' => 0.0,
@@ -644,7 +644,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                             $values['Articles'][] = array(
                                 'quantity' => 1,
                                 'artnr' => '',
-                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
                                 'aprice' => $discountToArticle,
                                 'taxrate' => $tax,
                                 'discount' => 0.0,
@@ -687,7 +687,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     $values['Articles'][] = array(
                         'quantity'   => 1,
                         'artnr'    => '',
-                        'title'    => $total['title'].' '.$tax.'% tax',
+                        'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                         'aprice'    => $discountToArticle,
                         'taxrate'      => $tax,
                         'discount' => 0.0,
@@ -700,7 +700,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 }
             }
 
-        } // End discount isset
+        }  // End discount isset
         $total = $this->currency->format($order_info['total'],$order_info['currency_code'],$order_info['currency_value'],false);
         $round = round($total*100) - round($orderTotal + $taxTotal);
         if(abs($myocRounding) > abs($round)){

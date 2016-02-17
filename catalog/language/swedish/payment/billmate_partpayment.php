@@ -53,3 +53,4 @@ $_['required_pno']        = 'Personnummer krävs.';
 $_['requried_confirm_verify_email']='Vänligen kryssa i rutan för att bekräfta att er e-postadress är giltig.';
 $_['close'] = 'Stäng';
 $_['payment_error'] = 'Betalning med Billmate misslyckades';
+$_['tax_discount'] = '% moms';

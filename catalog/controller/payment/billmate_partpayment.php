@@ -542,7 +542,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                                             $values['Articles'][] = array(
                                                 'quantity' => 1,
                                                 'artnr' => '',
-                                                'title' => $total['title'] . ' ' . $tax . '% tax',
+                                                'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
                                                 'aprice' => $discountToArticle,
                                                 'taxrate' => $tax,
                                                 'discount' => 0.0,
@@ -584,7 +584,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                                     $values['Articles'][] = array(
                                         'quantity'   => 1,
                                         'artnr'    => '',
-                                        'title'    => $total['title'].' '.$tax.'% tax',
+                                        'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                                         'aprice'    => (int)$discountToArticle,
                                         'taxrate'      => $tax,
                                         'discount' => 0.0,
@@ -648,7 +648,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                                     $values['Articles'][] = array(
                                         'quantity' => 1,
                                         'artnr' => '',
-                                        'title' => $total['title'] . ' ' . $tax . '% tax',
+                                        'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
                                         'aprice' => $discountToArticle,
                                         'taxrate' => $tax,
                                         'discount' => 0.0,
@@ -691,7 +691,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
                                 'artnr'    => '',
-                                'title'    => $total['title'].' '.$tax.'% tax',
+                                'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                                 'aprice'    => $discountToArticle,
                                 'taxrate'      => $tax,
                                 'discount' => 0.0,

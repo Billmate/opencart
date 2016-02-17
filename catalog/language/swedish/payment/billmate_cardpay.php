@@ -8,4 +8,5 @@ $_['text_failed']         = 'Billmate kort transaktion misslyckades';
 $_['text_com']		= 'Billmate kort kommunikationsfel';	
 $_['text_error_msg']	= '<p>Tyvärr kunde inte din betalning genomföras.</p><p><b>Varning: </b>%s</p>';
 $_['text_wait'] = 'Vänligen vänta';
-?>
+$_['tax_discount'] = '% moms';
+

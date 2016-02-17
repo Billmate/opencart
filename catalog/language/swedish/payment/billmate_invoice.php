@@ -74,3 +74,4 @@ som kundnummer i kundhanteringssyfte.';
 $_['footer_one'] = '* Gäller ej för alla varor och tjänster, t ex. flygresor, evenemang och specialtillverkade varor.';
 $_['footer_two'] = 'Billmate AB, organisationsnummer 556918-4129, telefonnummer 040-30 35 00.';
 $_['close'] = 'Stäng';
+$_['tax_discount'] = '% moms';

@@ -8,5 +8,4 @@ $_['text_declined']       = 'Payment was declined by Billmate Card';
 $_['text_failed']         = 'Billmate Card Transaction Failed';
 $_['text_com']		= 'Billmate Card Communication Error';	
 $_['text_error_msg']	= '<p>Unfortunately there was an error processing your payment.</p><p><b>Warning: </b>%s</p>';
-
-?>
+$_['tax_discount'] = '% tax';
