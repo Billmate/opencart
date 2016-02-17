@@ -71,14 +71,14 @@
           <tr>
              <td><?php echo $prompt_name_entry; ?></td>
             <td><?php if ($billmate_prompt_name == 'YES') { ?>
-              <input type="radio" name="billmate_prompt_name" value="YES" checked="checked" />
+              <input type="radio" name="billmate_cardpay_prompt_name" value="YES" checked="checked" />
               <?php echo $text_yes; ?>
-              <input type="radio" name="billmate_prompt_name" value="NO" />
+              <input type="radio" name="billmate_cardpay_prompt_name" value="NO" />
               <?php echo $text_no; ?>
               <?php } else { ?>
-              <input type="radio" name="billmate_prompt_name" value="YES" />
+              <input type="radio" name="billmate_cardpay_prompt_name" value="YES" />
               <?php echo $text_yes; ?>
-              <input type="radio" name="billmate_prompt_name" value="NO" checked="checked" />
+              <input type="radio" name="billmate_cardpay_prompt_name" value="NO" checked="checked" />
               <?php echo $text_no; ?>
               <?php } ?></td>
           </tr>
@@ -86,14 +86,14 @@
           <tr>
              <td><?php echo $enable_3dsecure; ?></td>
             <td><?php if ($billmate_enable_3dsecure == 'NO') { ?>
-              <input type="radio" name="billmate_enable_3dsecure" value="YES" />
+              <input type="radio" name="billmate_cardpay_enable_3dsecure" value="YES" />
               <?php echo $text_yes; ?>
-              <input type="radio" name="billmate_enable_3dsecure" value="NO" checked="checked" />
+              <input type="radio" name="billmate_cardpay_enable_3dsecure" value="NO" checked="checked" />
               <?php echo $text_no; ?>
               <?php } else { ?>
-              <input type="radio" name="billmate_enable_3dsecure" value="YES" checked="checked" />
+              <input type="radio" name="billmate_cardpay_enable_3dsecure" value="YES" checked="checked" />
               <?php echo $text_yes; ?>
-              <input type="radio" name="billmate_enable_3dsecure" value="NO" />
+              <input type="radio" name="billmate_cardpay_enable_3dsecure" value="NO" />
               <?php echo $text_no; ?>
               <?php } ?></td>
           </tr>
