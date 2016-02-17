@@ -448,20 +448,30 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     }
                 }
                 if($total['code'] == 'shipping'){
-                    $values['Cart']['Shipping'] = array(
-                        'withouttax' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false) * 100,
-                        'taxrate' => $total['tax_rate']
-                    );
-                    $orderTotal += $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false) * 100;
-                    $taxTotal += ($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false) * 100) * ($total['tax_rate']/100);
+                    if($total['value'] > 0) {
+                        $values['Cart']['Shipping'] = array(
+                            'withouttax' => $this->currency->format($total['value'], $order_info['currency_code'],
+                                    $order_info['currency_value'], false) * 100,
+                            'taxrate' => $total['tax_rate']
+                        );
+                        $orderTotal += $this->currency->format($total['value'], $order_info['currency_code'],
+                                $order_info['currency_value'], false) * 100;
+                        $taxTotal += ($this->currency->format($total['value'], $order_info['currency_code'],
+                                    $order_info['currency_value'], false) * 100) * ($total['tax_rate'] / 100);
+                    }
                 }
                 if($total['code'] == 'billmate_fee'){
-                    $values['Cart']['Handling'] = array(
-                        'withouttax' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false) * 100,
-                        'taxrate' => $total['tax_rate']
-                    );
-                    $orderTotal +=$this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false) * 100;
-                    $taxTotal += ($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false) * 100) * ($total['tax_rate']/100);
+                    if($total['value'] > 0) {
+                        $values['Cart']['Handling'] = array(
+                            'withouttax' => $this->currency->format($total['value'], $order_info['currency_code'],
+                                    $order_info['currency_value'], false) * 100,
+                            'taxrate' => $total['tax_rate']
+                        );
+                        $orderTotal += $this->currency->format($total['value'], $order_info['currency_code'],
+                                $order_info['currency_value'], false) * 100;
+                        $taxTotal += ($this->currency->format($total['value'], $order_info['currency_code'],
+                                    $order_info['currency_value'], false) * 100) * ($total['tax_rate'] / 100);
+                    }
                 }
 
 
