@@ -10,7 +10,11 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$store_country  = $this->config->get('config_country_id');
 		$countryQuery   = $this->db->query('select * from '. DB_PREFIX.'country where country_id = '.$store_country);
 		$countryData    = $countryQuery->row;
-
+		$allowedCurrencies = array(
+			'SEK'
+		);
+		if(!in_array($this->currency->getCode(),$allowedCurrencies))
+			$status = false;
 		if (!isset($billmate_partpayment['SWE'])) {
 			$status = false;
 		} elseif (!$billmate_partpayment['SWE']['status']) {

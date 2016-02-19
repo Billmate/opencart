@@ -4,7 +4,16 @@ class ModelPaymentBillmateInvoice extends Model {
         $this->language->load('payment/billmate_invoice');
 		
 		$status = true;
-		
+		$allowedCurrencies = array(
+            'SEK',
+            'NOK',
+            'DKK',
+            'EUR',
+            'USD',
+            'GBP'
+        );
+        if(!in_array($this->currency->getCode(),$allowedCurrencies))
+            $status = false;
 		$billmate_invoice = $this->config->get('billmate_invoice');
 		$store_currency = $this->config->get('config_currency');
 		$store_country  = $this->config->get('config_country_id');
