@@ -65,7 +65,7 @@ class ModelPaymentBillmateInvoice extends Model {
 			if(version_compare(VERSION,'2.0','<')) {
                 $description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee') : $billmate_invoice['SWE']['description'];
 
-                if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status']) {
+                if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status'] && $billmate_fee[$countryData['iso_code_3']]['fee'] > 0) {
                     $title = sprintf($this->language->get('text_fee'), $description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
 
                 } else {
@@ -81,7 +81,7 @@ class ModelPaymentBillmateInvoice extends Model {
             } else {
                 $description = empty($billmate_invoice['SWE']['description']) ? $this->language->get('text_title_fee2') : $billmate_invoice['SWE']['description'];
 
-                if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status']) {
+                if (isset($billmate_fee[$countryData['iso_code_3']]) && $billmate_fee[$countryData['iso_code_3']]['status'] && $billmate_fee[$countryData['iso_code_3']]['fee'] > 0)  {
                     $title = sprintf($this->language->get('text_fee2'), $description, $this->currency->format($this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']), '', ''), $this->tax->calculate($billmate_fee[$countryData['iso_code_3']]['fee'], $billmate_fee[$countryData['iso_code_3']]['tax_class_id']));
 
                 } else {
