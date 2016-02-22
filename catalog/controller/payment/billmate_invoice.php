@@ -482,7 +482,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 if(isset($this->session->data['coupon'])){
                     $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
                     $total = $coupon->row;
-                    if(version_compare(VERSION,'2.0.0','>=')){
+                    if(version_compare(VERSION,'2.1.0','>=')){
                         $this->load->model('total/coupon');
                         $coupon_info = $this->model_total_coupon->getCoupon($this->session->data['coupon']);
                     } else {

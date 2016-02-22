@@ -26,6 +26,7 @@
                 var result = JSON.parse(json);
                 if (!result.success) {
                     jQuery('#payment').before('<div class="warning">' + result.message + '</div>');
+                    jQuery('#button-confirm').attr('disabled', false);
                 }
 
 

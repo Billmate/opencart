@@ -52,6 +52,7 @@ function ajax_load(udata)
 			
 			if (json['error']) {
 				jQuery('#payment').before('<div class="warning">' + json['error'] + '</div>');
+				jQuery('#button-confirm').attr('disabled', false);
 			}
 			if(json['address'])
 			{ 
