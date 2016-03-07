@@ -208,6 +208,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 
 	public function getLowestPaymentFromTotal($total)
 	{
+		$this->log->write('total'.$total);
 		$billmate_partpayment = $this->config->get('billmate_partpayment');
 		$store_currency = $this->config->get('config_currency');
 		$store_country  = $this->config->get('config_country_id');

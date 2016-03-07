@@ -47,10 +47,10 @@
                     $this->load->model('payment/billmate_partpayment');
                 $this->load->language('payment/billmate_partpayment');
                 if($this->data['special'])
-                    $spPart = str_replace('.','',$this->data['special']);
-                $prPart = str_replace('.','',$this->data['price']);
+                    $spPart = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $prPart = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
 
-                $payfrom = $this->model_payment_billmate_partpayment->getLowestPaymentFromTotal(($product_info['special']) ? $spPart : $prPart);
+                $payfrom = $this->model_payment_billmate_partpayment->getLowestPaymentFromTotal(($this->data['special']) ? $spPart : $prPart);
 
                 if($payfrom){
                     $this->data['billmate_payfrom'] = sprintf($this->language->get('billmate_payfrom'),$this->currency->getSymbolLeft(),$payfrom['monthly_cost'],$this->currency->getSymbolRight());
@@ -101,8 +101,9 @@
                 $this->load->model('payment/billmate_partpayment');
                 $this->load->language('payment/billmate_partpayment');
                 if($special)
-                    $spPart = str_replace('.','',$special);
-                $prPart = str_replace('.','',$price);
+                     $spPart = $this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax'));
+                $prPart = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+
 
                 $payfrom = $this->model_payment_billmate_partpayment->getLowestPaymentFromTotal(($special) ? $spPart : $prPart);
 
