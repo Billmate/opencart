@@ -14,10 +14,10 @@ $_['entry_logo_help']         = 'Enter the name of the logo (shown in Billmate O
 
 
 $_['entry_merchant_id']     = 'Billmate ID:';
-$_['entry_merchant_help']   = '(estore id) to use for the Billmate service (provided by Billmate).';
+$_['entry_merchant_help']   = 'To use Billmates services, you\'ll need a Billmate ID ';
 $_['latest_release']     = 'There is a new version released for this plugin';
 $_['entry_secret']     = 'Billmate Key:';
-$_['entry_secret_help']     = 'Shared secret to use with the Billmate service (provided by Billmate).';
+$_['entry_secret_help']     = 'To use Billmates services, you\'ll need a Billmate Key';
 
 $_['entry_description']     = 'Description:';
 

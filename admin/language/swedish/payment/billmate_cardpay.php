@@ -10,9 +10,9 @@ $_['text_all_countries'] = 'Alla länder';
 
 // Entry
 $_['entry_merchant_id']     = 'Billmate ID';
-$_['entry_merchant_help']   = 'Affärens ID för att använda Billmates tjänster (fås av Billmate).';
+$_['entry_merchant_help']   = 'Billmate-Id för att använda Billmates tjänster';
 $_['entry_secret']     = 'Billmate Nyckel:';
-$_['entry_secret_help']     = 'Hemlig nyckel för att använda Billmates tjänster (fås av Billmate).';
+$_['entry_secret_help']     = 'Billmatenyckel (Secret) för att använda Billmates tjänster';
 $_['latest_release']     = 'Det finns en nyare version av denna plugin';
 
 $_['entry_logo']         = 'Logotype som visas på fakturan';
