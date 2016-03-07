@@ -234,9 +234,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
 
+
             $order_info = $this->model_checkout_order->getOrder($post['orderid']);
 
-            if(($post['status'] == 'Paid') && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
+
+
+            if(($post['status'] == 'Paid' && ($order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id'))) && (NULL == $this->cache->get('order'.$post['orderid']))){
                 $this->cache->set('order'.$post['orderid'],1);
 
                 $order_id = $post['orderid'];
@@ -247,13 +250,13 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $msg .= 'invoice_id: ' . $post['number'] . "\n";
                 $msg .= 'status: '. $post['status'] . "\n";
                 if(version_compare(VERSION,'2.0.0','>='))
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id'),$msg,false);
+                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id'),$msg,false);
                 else
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_bankpay_order_status_id'), $msg, 1);
+                    $this->model_checkout_order->update($order_id, $this->config->get('billmate_bankpay_order_status_id'), $msg, false);
 
                 $this->cache->delete('order'.$post['orderid']);
 
-            }else if($post['status'] == 'Pending' && $order_info && $order_info['order_status_id'] != $this->config->get('billmate_cardpay_order_status_id') && !$this->cache->get('order'.$post['orderid'])){
+            }else if(($post['status'] == 'Pending' && ($order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id'))) && (NULL === $this->cache->get('order'.$post['orderid']))){
                 $this->cache->set('order'.$post['orderid'],1);
 
                 $order_id = $post['orderid'];
@@ -273,7 +276,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
                     $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,false));
 
                 $this->cache->delete('order'.$post['orderid']);
-            } elseif($this->cache->get('order'.$post['orderid'])) {
+            } elseif(NULL != $this->cache->get('order'.$post['orderid'])) {
 
                 die('ERROR');
             }
