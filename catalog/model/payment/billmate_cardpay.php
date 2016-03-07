@@ -32,7 +32,7 @@ class ModelPaymentBillmateCardpay extends Model {
 			$description = strlen( $description) ? $description : 'Billmate Kort - Betala med Visa & Mastercard';
       		$method_data = array( 
         		'code'       => 'billmate_cardpay',
-        		'title'      => sprintf($this->language->get('text_title'),$description),
+        		'title'      => sprintf($this->language->get('text_title_name'),$description),
 				'sort_order' => $this->config->get('billmate_cardpay_sort_order'),
 				'terms' => false
       		);

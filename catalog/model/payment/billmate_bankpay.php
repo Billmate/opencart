@@ -33,7 +33,7 @@ class ModelPaymentBillmateBankPay extends Model {
 			$description = strlen( $description) ? $description : 'Betala med banköverföring.';
       		$method_data = array( 
         		'code'       => 'billmate_bankpay',
-        		'title'      => sprintf($this->language->get('text_title'),$description),
+        		'title'      => sprintf($this->language->get('text_title_name'),$description),
 				'sort_order' => $this->config->get('billmate_bankpay_sort_order'),
 				'terms' => false
       		);

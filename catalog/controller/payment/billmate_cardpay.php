@@ -719,7 +719,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 
 
-        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_cardpay',  `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title_name'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
+        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_cardpay',  `payment_method` = '" . $this->db->escape(strip_tags($this->language->get('text_title'))) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
         $result1 = $k->addPayment($values);
         if(isset($result1['code'])){
