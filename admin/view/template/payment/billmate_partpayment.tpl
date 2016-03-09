@@ -68,6 +68,10 @@
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][secret]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['secret'] : ''; ?>" /></td>
               </tr>
                 <tr>
+                    <td><?php echo $entry_description; ?></td>
+                    <td><textarea cols="84" rows="10" name="billmate_partpayment[<?php echo $country['code'];?>][description]"><?php echo isset($billmate_partpayment[$country['code']]['description']) ? $billmate_partpayment[$country['code']]['description'] :'' ; ?></textarea></td>
+                </tr>
+                <tr>
                     <td><?php echo $entry_logo; ?><br/><span class="help"><?php echo $entry_logo_help; ?></span></td>
                     <td>
                         <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][logo]" value="<?php echo isset($billmate_partpayment[$country['code']]['logo']) ? $billmate_partpayment[$country['code']]['logo'] : ''; ?>" />
