@@ -24,6 +24,13 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 ##Changelog
 
+### 2.1.7 (2016-03-10)
+* Fix - Partpayment on product page improved calculations.
+* Fix - Bankpay order statuses Opencart 1.5
+* Fix - Improved currencies for Invoice.
+* Fix - Improved data sent to Api.
+
+
 ### 2.1.6(2016-01-26)
 * Fix - Optimized Billmate.php
 
