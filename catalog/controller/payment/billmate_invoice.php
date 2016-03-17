@@ -413,16 +413,16 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                         $discountValue = $total['value'] + $shipping['value'];
                                         $percent       = $value / $productTotal;
 
-                                        $discountIncl = $percent * ($discountValue * 100);
+                                        $discountIncl = $percent * ($discountValue);
 
                                         $discountExcl = $discountIncl / (1 + $tax / 100);
-                                        $discountToArticle = $this->currency->format($discountIncl, $order_info['currency_code'], $order_info['currency_value'], false);
+                                        $discountToArticle = $this->currency->format($discountIncl, $order_info['currency_code'], $order_info['currency_value'], false) * 100;
                                         //$discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
                                         if($discountToArticle != 0) {
                                             $values['Articles'][] = array(
                                                 'quantity' => 1,
                                                 'artnr' => '',
-                                                'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
+                                                'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('% tax'),
                                                 'aprice' => $discountToArticle,
                                                 'taxrate' => $tax,
                                                 'discount' => 0.0,
@@ -457,8 +457,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                 {
 
                                     $percent      = $value / $productTotal;
-                                    $discount     = $percent * ($total['value'] * 100);
-                                    $discountToArticle = $this->currency->format($discount, $order_info['currency_code'], $order_info['currency_value'], false);
+                                    $discount     = $percent * ($total['value']);
+                                    $discountToArticle = $this->currency->format($discount, $order_info['currency_code'], $order_info['currency_value'], false) * 100;
                                     //$discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
 
                                     $values['Articles'][] = array(
@@ -519,10 +519,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                 $discountValue = $total['value'] + $shipping['value'];
                                 $percent       = $value / $productTotal;
 
-                                $discountIncl = $percent * ($discountValue * 100);
+                                $discountIncl = $percent * ($discountValue);
 
                                 $discountExcl = $discountIncl / (1 + $tax / 100);
-                                $discountToArticle = $this->currency->format($discountIncl, $order_info['currency_code'], $order_info['currency_value'], false);
+                                $discountToArticle = $this->currency->format($discountIncl, $order_info['currency_code'], $order_info['currency_value'], false) * 100;
                                 //$discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
                                 if($discountToArticle != 0) {
                                     $values['Articles'][] = array(
@@ -564,8 +564,8 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         {
 
                             $percent      = $value / $productTotal;
-                            $discount     = $percent * ($total['value'] * 100);
-                            $discountToArticle = $this->currency->format($discount, $order_info['currency_code'],$order_info['currency_value'], false);
+                            $discount     = $percent * ($total['value']);
+                            $discountToArticle = $this->currency->format($discount, $order_info['currency_code'],$order_info['currency_value'], false) * 100;
                             //$discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
