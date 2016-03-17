@@ -685,8 +685,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                     $percent      = $value / $productTotal;
                     $discount     = $percent * ($total['value'] * 100);
-                    $discountToArticle = $this->currency->format($discount, $order_info['currency_code'], '', false);
-
+                    $discountToArticle = $this->currency->format($discount, $order_info['currency_code'],$order_info['currency_value'], false);
                     //$discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
                     $values['Articles'][] = array(
                         'quantity'   => 1,
