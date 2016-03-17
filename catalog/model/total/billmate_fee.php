@@ -13,6 +13,8 @@ class ModelTotalBillmateFee extends Model {
 			$status = false;
 		} elseif (!$billmate_fee['SWE']['status']) {
 			$status = false;
+		} elseif($billmate_fee['SWE']['fee'] == 0 || strlen($billmate_fee['SWE']['fee']) == 0){
+			$status = false;
 		}
 		
 		
