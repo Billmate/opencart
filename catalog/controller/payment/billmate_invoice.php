@@ -61,9 +61,6 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			$data['wrong_person_number'] = $this->language->get('your_billing_wrong');
 			$data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
 
-	
-		    // The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
-        	$this->document->addScript('catalog/view/javascript/jquery/social/init_socialbutton.js');
 
 		    $billmate_invoice = $this->config->get('billmate_invoice');
 	
