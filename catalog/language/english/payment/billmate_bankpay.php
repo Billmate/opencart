@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title_name'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/billmate_bank_s.png" alt="Billmate card">Pay by Bank Transfer.';
+$_['text_title_name'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/billmate_bank_s.png" alt="Billmate bank" style="margin-left:10px;"> %s';
 $_['text_title'] = 'Billmate Bank';
 $_['text_wait'] = 'Redirecting to Payment gateway';
 $_['text_unable']         = 'Unable to locate or update your order status';

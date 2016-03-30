@@ -1,7 +1,7 @@
 <?php
 // Text
 $_['text_title'] = 'Billmate bank';
-$_['text_title_name'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/billmate_bank_s.png" alt="Billmate bank">%s';
+$_['text_title_name'] = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/billmate_bank_s.png" alt="Billmate bank" style="margin-left:10px;"> %s';
 $_['text_unable']         = 'Kunde inte hitta eller uppdatera din order status';
 $_['text_declined']       = 'Betalning nekades av billmate bank';
 $_['text_failed']         = 'Billmate bank transaktion misslyckades';
