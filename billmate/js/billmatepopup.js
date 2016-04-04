@@ -256,7 +256,9 @@ AddEvent(window,'resize',function(){
 			modalWin.ResizePopUp(370,250);
 		}else if(matchMedia('(min-width: 800px)').matches){
 			modalWin.ResizePopUp(260,500);
-		}
+		} else {
+            modalWin.ShowMessage(content,400,250,wtitle);
+        }
 	}
 });
  function ShowDivInCenter(divId)

@@ -2,12 +2,12 @@
 // Text
 $_['text_title']           = 'Billmate delbetalning';
 $_['text_pay_month']  = 
-$_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning" style="float: left;margin: 2px 6px;">Billmate delbetalning - Betala från %s/månad <a id="terms-delbetalning">Köpvillkor</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning"> Billmate delbetalning - %s (Betala från %s/månad) <a id="terms-delbetalning">Köpvillkor</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:29});
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %%, 
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: %s,effectiverate:34});
 });</script>';
-$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning" >Betala från %s/månad <a id="terms-delbetalning">Köpvillkor</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate delbetalning" > %s (Betala från %s/månad) <a id="terms-delbetalning">Köpvillkor</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:29});
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %%,
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: %s,effectiverate:34});
@@ -53,3 +53,4 @@ $_['required_pno']        = 'Personnummer krävs.';
 $_['requried_confirm_verify_email']='Vänligen kryssa i rutan för att bekräfta att er e-postadress är giltig.';
 $_['close'] = 'Stäng';
 $_['payment_error'] = 'Betalning med Billmate misslyckades';
+$_['tax_discount'] = '% moms';

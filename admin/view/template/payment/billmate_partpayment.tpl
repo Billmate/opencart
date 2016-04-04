@@ -68,6 +68,10 @@
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][secret]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['secret'] : ''; ?>" /></td>
               </tr>
                 <tr>
+                    <td><?php echo $entry_description; ?></td>
+                    <td><textarea cols="84" rows="10" name="billmate_partpayment[<?php echo $country['code'];?>][description]"><?php echo isset($billmate_partpayment[$country['code']]['description']) ? $billmate_partpayment[$country['code']]['description'] :'' ; ?></textarea></td>
+                </tr>
+                <tr>
                     <td><?php echo $entry_logo; ?><br/><span class="help"><?php echo $entry_logo_help; ?></span></td>
                     <td>
                         <input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][logo]" value="<?php echo isset($billmate_partpayment[$country['code']]['logo']) ? $billmate_partpayment[$country['code']]['logo'] : ''; ?>" />
@@ -149,18 +153,7 @@
                     <script src="/billmate/js/legacy-billmate.js"></script>
                 <?php endif; ?>
                 <tr>
-              <tr>
-                <td><?php echo $entry_status; ?></td>
-                <td><select name="billmate_partpayment[<?php echo $country['code']; ?>][status]">
-                    <?php if (isset($billmate_partpayment[$country['code']]) && $billmate_partpayment[$country['code']]['status']) { ?>
-                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                    <option value="0"><?php echo $text_disabled; ?></option>
-                    <?php } else { ?>
-                    <option value="1"><?php echo $text_enabled; ?></option>
-                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                    <?php } ?>
-                  </select></td>
-              </tr>
+
               <tr>
                 <td><?php echo $entry_sort_order ?></td>
                 <td><input type="text" name="billmate_partpayment[<?php echo $country['code']; ?>][sort_order]" value="<?php echo isset($billmate_partpayment[$country['code']]) ? $billmate_partpayment[$country['code']]['sort_order'] : ''; ?>" /></td>

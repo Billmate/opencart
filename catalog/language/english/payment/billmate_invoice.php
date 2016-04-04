@@ -4,16 +4,16 @@
 $_['text_title']          = 'Billmate Invoice';
 $_['text_title_fee']      = 'Billmate Invoice - Pay within 14 days';
 $_['text_title_fee2']      = 'Pay within 14 days';
-$_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">Billmate Invoice <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice"> Billmate Invoice <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
-$_['text_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" style="float: left;margin: 2px 6px;" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_fee']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice"> %s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee: "%s"});
 });</script>';
-$_['text_no_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice">%s<a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice"> %s<a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee:0});
 });</script>';
-$_['text_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice">%s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_fee2']         = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_faktura_l.png" alt="Billmate Invoice"> %s (%s handling fee is added to your order) <a id="terms">Terms of invoice</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		$("#terms").Terms("villkor",{invoicefee: "%s"});
 });</script>';
 $_['address_should_match'] = 'Address Should be match';
@@ -72,3 +72,4 @@ syfte att utföra kundanalys, identifikation, kreditkoll samt marknadsföring. P
 som kundnummer i kundhanteringssyfte.';
 $_['footer_one'] = '* Gäller ej för alla varor och tjänster, t ex. flygresor, evenemang och specialtillverkade varor.';
 $_['footer_two'] = 'Billmate AB, organisationsnummer 556918-4129, telefonnummer 040-30 35 00.';
+$_['tax_discount'] = '% tax';

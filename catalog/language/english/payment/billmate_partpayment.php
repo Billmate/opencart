@@ -2,11 +2,11 @@
 // Text
 $_['text_title']           = 'Billmate Part Payment';
 $_['text_pay_month']  = 
-$_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment" style="float: left;margin: 2px 6px;">Billmate Partpayment - Pay from %s/month <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment"> Billmate Partpayment - %s (Pay from %s/month) <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %, 
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: "%s",effectiverate:34});
 });</script>';
-$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment" >Pay from %s/month <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
+$_['text_no_fee2']     = '<img src="'.(defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER).'/billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment" > %s (Pay from %s/month) <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
 		//effectiverate=(monthlyfee*numberofmonths-1)/100 %,
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: "%s",effectiverate:34});
 });</script>';
@@ -49,4 +49,5 @@ $_['error_deu_terms']      = 'You must agree to Billmate\'s privacy policy (Date
 $_['error_address_match']  = 'Billing and Shipping addresses must match if you want to use Billmate Payments';
 $_['error_network']        = 'Error occurred while connecting to Billmate. Please try again later.';
 $_['payment_error'] = 'The payment with Billmate failed';
-?>
+$_['tax_discount'] = '% tax';
+

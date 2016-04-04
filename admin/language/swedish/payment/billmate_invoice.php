@@ -24,9 +24,9 @@ $_['entry_logo']         = 'Logotype som visas på fakturan';
 $_['entry_logo_help']         = 'Ange namnet på logotypen (finns i Billmate Online). Lämna tom om ni endast har en logotype.';
 
 $_['entry_merchant']        = 'Billmate ID:';
-$_['entry_merchant_help']   = 'Affärens ID för att använda Billmates tjänster (fås av Billmate).';
+$_['entry_merchant_help']   = 'Billmate-Id för att använda Billmates tjänster';
 $_['entry_secret']          = 'Billmate Nyckel:';
-$_['entry_secret_help']     = 'Hemlig nyckel för att använda Billmates tjänster (fås av Billmate).';
+$_['entry_secret_help']     = 'Billmatenyckel (Secret) för att använda Billmates tjänster';
 $_['entry_server']          = 'Testläge:';
 $_['entry_mintotal']           = 'Minimum Totalbelopp:';
 $_['entry_mintotal_help']   = 'Kundvagnens totalbelopp måste vara minst detta belopp för att aktivera betalningsmetoden.';

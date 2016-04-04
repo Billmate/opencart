@@ -127,6 +127,7 @@ function ajax_load(udata)
 		success: function(json) {
 			if (json['error']) {
 				jQuery('#payment').before('<div class="warning">' + json['error'] + '</div>');
+                jQuery('#button-confirm').attr('disabled', false);
 			}
 			if(json['address'])
 			{ 

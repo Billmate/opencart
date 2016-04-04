@@ -24,9 +24,9 @@ $_['entry_logo']         = 'Logo to be displayed in the invoice';
 $_['entry_logo_help']         = 'Enter the name of the logo (shown in Billmate Online). Leave empty if you only have one logo.';
 
 $_['entry_merchant']        = 'Billmate ID:';
-$_['entry_merchant_help']   = '(estore id) to use for the Billmate service (provided by Billmate).';
+$_['entry_merchant_help']   = 'To use Billmates services, you\'ll need a Billmate ID';
 $_['entry_secret']          = 'Billmate Key:';
-$_['entry_secret_help']     = 'Shared secret to use with the Billmate service (provided by Billmate).';
+$_['entry_secret_help']     = 'To use Billmates services, you\'ll need a Billmate Key';
 $_['entry_server']          = 'Testmode:';
 $_['entry_mintotal']           = 'Minimum Total:';
 $_['entry_mintotal_help']   = 'The minimum checkout total the order must reach before this payment method becomes active.';
