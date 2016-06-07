@@ -22,12 +22,17 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         $data['description'] = $this->config->get('billmate_cardpay_description');
 
+
         if(version_compare(VERSION,'2.0.0','>=')){
 
+            $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+            $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
+
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_bankpay.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_bankpay.tpl',$data);
+                return $this->load->view($preTemplate. 'payment/oc2/billmate_bankpay.tpl',$data);
             } else {
-                return $this->load->view('default/template/payment/oc2/billmate_bankpay.tpl',$data);
+
+                return $this->load->view($prefix.'payment/oc2/billmate_bankpay.tpl',$data);
             }
         } else {
             $this->data = $data;
@@ -39,6 +44,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
             $this->render();
         }
+
 
 
 	}
@@ -137,11 +143,13 @@ class ControllerPaymentBillmateBankpay extends Controller {
                             $data['content_top'] = $this->load->controller('common/content_top');
                             $data['content_bottom'] = $this->load->controller('common/content_bottom');
                             $data['column_right'] = $this->load->controller('common/column_right');
+                            $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+                            $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
 
                             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
-                                return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl',$data);
+                                return $this->load->view($preTemplate . 'payment/billmate_bankpay_failure.tpl',$data);
                             } else {
-                                return $this->load->view('default/template/payment/billmate_bankpay_failure.tpl',$data);
+                                return $this->load->view($prefix.'payment/billmate_bankpay_failure.tpl',$data);
                             }
                         } else {
                             $this->data = $data;
@@ -182,11 +190,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
                     $data['content_top'] = $this->load->controller('common/content_top');
                     $data['content_bottom'] = $this->load->controller('common/content_bottom');
                     $data['column_right'] = $this->load->controller('common/column_right');
-
+                    $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+                    $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
                     if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl')) {
-                        return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay_failure.tpl',$data);
+                        return $this->load->view($preTemplate . 'payment/billmate_bankpay_failure.tpl',$data);
                     } else {
-                        return $this->load->view('default/template/payment/billmate_bankpay_failure.tpl',$data);
+                        return $this->load->view($prefix.'payment/billmate_bankpay_failure.tpl',$data);
                     }
                 } else {
                     $this->data = $data;
@@ -283,10 +292,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
         }
 
         if(version_compare(VERSION,'2.0.0','>=')){
+            $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+            $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl');
+                return $this->load->view($preTemplate . 'payment/billmate_bankpay_callback.tpl');
             } else {
-                return $this->load->view('default/template/payment/billmate_bankpay_callback.tpl');
+                return $this->load->view($prefix.'payment/billmate_bankpay_callback.tpl');
             }
         }else {
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/billmate_bankpay_callback.tpl')) {

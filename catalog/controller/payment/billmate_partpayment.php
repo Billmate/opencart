@@ -218,11 +218,12 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			//$data['description'] = $billmate_partpayment['SWE']['description'];
 
             if(version_compare(VERSION,'2.0.0','>=')){
-
+                $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+                $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_partpayment.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_partpayment.tpl',$data);
+                    return $this->load->view($preTemplate . 'payment/oc2/billmate_partpayment.tpl',$data);
                 } else {
-                    return $this->load->view('default/template/payment/oc2/billmate_partpayment.tpl',$data);
+                    return $this->load->view($prefix.'payment/oc2/billmate_partpayment.tpl',$data);
                 }
             } else {
                 $this->data = $data;
