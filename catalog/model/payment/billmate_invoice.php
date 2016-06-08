@@ -34,6 +34,7 @@ class ModelPaymentBillmateInvoice extends Model {
 			'DNK' => 'DKK',
 			'DEU' => 'EUR',
 			'NLD' => 'EUR',
+            'GBR' => 'GBP'
 		);				
         if(isset($billmate_invoice['SWE'])){
             if(isset($billmate_invoice['SWE']['mintotal']) && ($billmate_invoice['SWE']['mintotal'] != '' || $billmate_invoice['SWE']['mintotal'] != 0)){

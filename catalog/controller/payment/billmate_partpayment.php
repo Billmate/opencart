@@ -99,6 +99,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				'DNK' => 'DKK',
 				'DEU' => 'EUR',
 				'NLD' => 'EUR',
+                'GBR' => 'GBP'
 			);
 						
 			if ($order_info['payment_iso_code_3'] == 'DEU' || $order_info['payment_iso_code_3'] == 'NLD') {

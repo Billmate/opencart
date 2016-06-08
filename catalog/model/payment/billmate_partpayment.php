@@ -70,7 +70,9 @@ class ModelPaymentBillmatePartpayment extends Model {
 			'FIN' => 'EUR',
 			'DNK' => 'DKK',
 			'DEU' => 'EUR',
-			'NLD' => 'EUR'
+			'NLD' => 'EUR',
+			'GBR' => 'GBP'
+
 		);
 		$payment_option = array();
 		if ($status) {
