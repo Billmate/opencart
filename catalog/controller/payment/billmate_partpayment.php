@@ -123,7 +123,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$data['iso_code_3'] = $countryData['iso_code_3'];
 			
 			$payment_option = array();
-			$total = $this->currency->format($order_info['total'], $country_to_currency[$countryData['iso_code_3']], '', false);
+			$total = $this->currency->format($order_info['total'],$store_currency/*$country_to_currency[$countryData['iso_code_3']]*/, '', false);
 			foreach ($countryRates as $pclass) {                
 				// 0 - Campaign
 				// 1 - Account
@@ -211,7 +211,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$data['payment_options'][] = array(
 					'code'  => $payment_option['pclass_id'],
 					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['months'],
-                        preg_replace('/[.,].0+/','',$this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->session->data['currency']), 1, 1)))
+                        preg_replace('/[.,].0+/','',$this->currency->format($this->currency->convert($payment_option['monthly_cost'], $store_currency/* $country_to_currency[$countryData['iso_code_3']]*/, $this->session->data['currency']), 1, 1)))
 				);
 			}
 			//$this->document->addStyle($style);
