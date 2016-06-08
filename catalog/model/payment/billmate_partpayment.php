@@ -14,11 +14,13 @@ class ModelPaymentBillmatePartpayment extends Model {
 			'SEK'
 		);
 		if(!in_array($this->session->data['currency'],$allowedCurrencies))
-			$status = false;
+			return false;
 		if (!isset($billmate_partpayment['SWE'])) {
 			$status = false;
+			return false;
 		} elseif (!$billmate_partpayment['SWE']['status']) {
 			$status = false;
+			return false;
 		}
 
 		if(isset($billmate_partpayment['SWE'])){
