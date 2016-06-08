@@ -12,7 +12,7 @@ class ModelPaymentBillmateInvoice extends Model {
             'USD',
             'GBP'
         );
-        if(!in_array($this->currency->getCode(),$allowedCurrencies))
+        if(!in_array($this->session->data['currency'],$allowedCurrencies))
             $status = false;
 		$billmate_invoice = $this->config->get('billmate_invoice');
 		$store_currency = $this->config->get('config_currency');
@@ -34,6 +34,7 @@ class ModelPaymentBillmateInvoice extends Model {
 			'DNK' => 'DKK',
 			'DEU' => 'EUR',
 			'NLD' => 'EUR',
+            'GBR' => 'GBP'
 		);				
         if(isset($billmate_invoice['SWE'])){
             if(isset($billmate_invoice['SWE']['mintotal']) && ($billmate_invoice['SWE']['mintotal'] != '' || $billmate_invoice['SWE']['mintotal'] != 0)){

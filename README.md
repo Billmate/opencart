@@ -24,6 +24,11 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 
 ##Changelog
 
+### 2.1.8 (2016-06-08)
+* Fix - Get address Opencart 2.* Own template
+* Fix - Fixes for Opencart 2.2 
+* Enhancement - Partpayment default country/currency.
+
 ### 2.1.7 (2016-04-04)
 * Fix - Partpayment on product page improved calculations.
 * Fix - Bankpay order statuses Opencart 1.5

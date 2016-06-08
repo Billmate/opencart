@@ -98,11 +98,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			$data['description'] = $billmate_invoice['SWE']['description'];
 
             if(version_compare(VERSION,'2.0.0','>=')){
-
+                $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+                $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_invoice.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_invoice.tpl',$data);
+                    return $this->load->view($preTemplate . 'payment/oc2/billmate_invoice.tpl',$data);
                 } else {
-                    return $this->load->view('default/template/payment/oc2/billmate_invoice.tpl',$data);
+                    return $this->load->view($prefix.'payment/oc2/billmate_invoice.tpl',$data);
                 }
             } else {
                 $this->data = $data;
@@ -164,7 +165,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
                 $values['PaymentData'] = array(
                     'method' => 1,
-                    'currency' => $this->currency->getCode(),
+                    'currency' => $this->session->data['currency'],
                     'language' => ($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,

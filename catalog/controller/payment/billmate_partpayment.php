@@ -99,6 +99,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				'DNK' => 'DKK',
 				'DEU' => 'EUR',
 				'NLD' => 'EUR',
+                'GBR' => 'GBP'
 			);
 						
 			if ($order_info['payment_iso_code_3'] == 'DEU' || $order_info['payment_iso_code_3'] == 'NLD') {
@@ -122,7 +123,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$data['iso_code_3'] = $countryData['iso_code_3'];
 			
 			$payment_option = array();
-			$total = $this->currency->format($order_info['total'], $country_to_currency[$countryData['iso_code_3']], '', false);
+			$total = $this->currency->format($order_info['total'],$store_currency/*$country_to_currency[$countryData['iso_code_3']]*/, '', false);
 			foreach ($countryRates as $pclass) {                
 				// 0 - Campaign
 				// 1 - Account
@@ -210,7 +211,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 				$data['payment_options'][] = array(
 					'code'  => $payment_option['pclass_id'],
 					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['months'],
-                        preg_replace('/[.,].0+/','',$this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)))
+                        preg_replace('/[.,].0+/','',$this->currency->format($this->currency->convert($payment_option['monthly_cost'], $store_currency/* $country_to_currency[$countryData['iso_code_3']]*/, $this->session->data['currency']),$store_currency, 1)))
 				);
 			}
 			//$this->document->addStyle($style);
@@ -218,11 +219,12 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			//$data['description'] = $billmate_partpayment['SWE']['description'];
 
             if(version_compare(VERSION,'2.0.0','>=')){
-
+                $prefix = (version_compare(VERSION,'2.2.0','>=')) ? '' : 'default/template/';
+                $preTemplate = (version_compare(VERSION,'2.2.0','>=')) ? '' : $this->config->get('config_template') . '/template/';
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/oc2/billmate_partpayment.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/template/payment/oc2/billmate_partpayment.tpl',$data);
+                    return $this->load->view($preTemplate . 'payment/oc2/billmate_partpayment.tpl',$data);
                 } else {
-                    return $this->load->view('default/template/payment/oc2/billmate_partpayment.tpl',$data);
+                    return $this->load->view($prefix.'payment/oc2/billmate_partpayment.tpl',$data);
                 }
             } else {
                 $this->data = $data;
@@ -286,7 +288,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                 $values['PaymentData'] = array(
                     'method' => 4,
                     'paymentplanid' => isset($this->request->post['code']) ? $this->request->post['code'] : '',
-                    'currency' => $this->currency->getCode(),
+                    'currency' => $this->session->data['currency'],
                     'language' => ($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,

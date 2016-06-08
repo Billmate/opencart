@@ -40,7 +40,7 @@
         </add>
         </operation>
     </file>
-    <file path="catalog/controller/checkout/guest.php,catalog/controller/checkout/register.php">
+    <file path="catalog/controller/checkout/guest.php|catalog/controller/checkout/register.php">
         <operation>
             <search><![CDATA[$data['text_loading'] = $this->language->get('text_loading');]]></search>
             <add position="after">
@@ -54,7 +54,7 @@
     </file>
 
 
-    <file path="catalog/view/theme/default/template/checkout/guest.tpl,catalog/view/theme/default/template/checkout/register.tpl">
+    <file path="catalog/view/theme/default/template/checkout/guest.tpl|catalog/view/theme/default/template/checkout/register.tpl">
         <operation>
             <search index="0"><![CDATA[<div class="form-group required">]]></search>
             <add position="before">

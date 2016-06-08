@@ -23,7 +23,7 @@
 	    <operation info="add personnumber title">
 	    	<search position="after">
 	    		<![CDATA[
-	    			$_['text_title']          = 'Billmate faktura';
+	    			$_['text_title']          = 'Billmate Invoice';
 	    		]]>
 	    	</search>
 	    	<add>
@@ -50,7 +50,7 @@
     		</add>
     	</operation>
     </file>
-    <file name="catalog/view/theme/default/template/checkout/guest.tpl,catalog/view/theme/default/template/checkout/register.tpl">
+    <file name="catalog/view/theme/*/template/checkout/guest.tpl,catalog/view/theme/*/template/checkout/register.tpl">
     	<operation info="mod view for button with pno">
     		<search position="after">
     			<![CDATA[
@@ -60,7 +60,7 @@
     		<add>
     			<![CDATA[
     			<?php echo $entry_personnumber; ?><br/>
-                                </label><input id="payment_address_pno" type="text" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" name="pno"/>
+                                </label><input id="payment_address_pno" type="text" value="<?php echo isset($billmate_pno) ? $billmate_pno : ''; ?>" name="pno"/>
 								<a class="button" id="fetch_address" href="#">
                                     <?php echo $fetchaddress; ?>
                                 </a>
@@ -70,7 +70,7 @@
     		</add>
     	</operation>
     </file>
-    <file name="catalog/view/theme/default/template/payment/billmate_invoice.tpl">
+    <file name="catalog/view/theme/*/template/payment/billmate_invoice.tpl">
     	<operation info="Add jquery that fetches pnumber field">
     		<search position="after">
     		<![CDATA[<td><?php echo $entry_phone_no; ?></td>]]>
@@ -87,7 +87,7 @@
     		</add>
     	</operation>
     </file>
-    <file name="catalog/view/theme/default/template/payment/billmate_partpayment.tpl">
+    <file name="catalog/view/theme/*/template/payment/billmate_partpayment.tpl">
     	<operation info="Add jquery that fetches pnumber field">
     		<search position="after">
     		<![CDATA[<td><?php echo $entry_phone_no; ?></td>]]>

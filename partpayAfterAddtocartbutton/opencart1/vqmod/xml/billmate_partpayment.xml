@@ -91,7 +91,7 @@
     </file>
     <file name="catalog/controller/product/category.php">
         <operation>
-            <search position="before">
+            <search position="before" index="1">
                 <![CDATA[
                 if ($this->config->get('config_review_status')) {
             ]]>
@@ -100,6 +100,7 @@
                 <![CDATA[
                 $this->load->model('payment/billmate_partpayment');
                 $this->load->language('payment/billmate_partpayment');
+                $spPart = 0;
                 if($special)
                      $spPart = $this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax'));
                 $prPart = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
