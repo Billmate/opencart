@@ -7,8 +7,7 @@ class ModelPaymentBillmateBankPay extends Model {
 		$allowedCurrencies = array(
 			'SEK'
 		);
-		$this->log->write('currency'.$this->currency->getCode());
-		if(!in_array($this->currency->getCode(),$allowedCurrencies))
+		if(!in_array($this->session->data['currency'],$allowedCurrencies))
 			$status = false;
 		$zone_id = $this->config->get('billmate_bankpay_geo_zone_id');
 		if ($this->config->get('billmate_bankpay_total') > $total) {

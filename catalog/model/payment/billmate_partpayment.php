@@ -13,7 +13,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 		$allowedCurrencies = array(
 			'SEK'
 		);
-		if(!in_array($this->currency->getCode(),$allowedCurrencies))
+		if(!in_array($this->session->data['currency'],$allowedCurrencies))
 			$status = false;
 		if (!isset($billmate_partpayment['SWE'])) {
 			$status = false;
@@ -190,13 +190,13 @@ class ModelPaymentBillmatePartpayment extends Model {
 			if(version_compare(VERSION,'2.0','<')){
 				$method = array(
 					'code'       => 'billmate_partpayment',
-					'title'      => sprintf($this->language->get('text_no_fee'),$description, preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
+					'title'      => sprintf($this->language->get('text_no_fee'),$description, preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->session->data['currency']), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
 					'sort_order' => $billmate_partpayment['SWE']['sort_order']
 				);
 			} else {
 				$method = array(
 					'code'       => 'billmate_partpayment',
-					'title'      => sprintf($this->language->get('text_no_fee2'),$description, preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->currency->getCode()), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
+					'title'      => sprintf($this->language->get('text_no_fee2'),$description, preg_replace('/[.,]0+/','',$this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$countryData['iso_code_3']], $this->session->data['currency']), 1, 1)), $billmate_partpayment['SWE']['merchant'], strtolower($countryData['iso_code_2'])),
 					'sort_order' => $billmate_partpayment['SWE']['sort_order'],
 					'terms' => ''
 				);

@@ -165,7 +165,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                 $k = new BillMate($eid,$key,$ssl,$billmate_invoice['SWE']['server'] == 'beta' ,$debug);
                 $values['PaymentData'] = array(
                     'method' => 1,
-                    'currency' => $this->currency->getCode(),
+                    'currency' => $this->session->data['currency'],
                     'language' => ($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'),
                     'country' => 'SE',
                     'autoactivate' => 0,

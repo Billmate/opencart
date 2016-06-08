@@ -284,7 +284,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
         $values['PaymentData'] = array(
             'method' => 8,
-            'currency' => $this->currency->getCode(),
+            'currency' => $this->session->data['currency'],
             'language' => ($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'),
             'country' => 'SE',
             'autoactivate' => ($this->config->get('billmate_cardpay_transaction_method') == 'sale') ? 1 : 0,
