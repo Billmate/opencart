@@ -5,6 +5,35 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 class ControllerPaymentBillmateCardpay extends Controller {
 	public function cancel(){
 
+        $post = empty($_POST)? $_GET : $_POST;
+        $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
+
+        $key = $this->config->get('billmate_cardpay_secret');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+        $k = new BillMate($eid,$key);
+        if(is_array($post))
+        {
+            foreach($post as $key => $value)
+                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
+        }
+
+        $post = $k->verify_hash($post);
+        $this->language->load('payment/billmate_cardpay');
+        if(isset($post['code'])){
+            $this->session->data['error'] = $this->language->get('billmate_card_failed');
+        }
+        if(isset($post['status'])){
+            switch(strtolower($post['status'])){
+                case 'cancelled':
+                    $this->session->data['error'] = $this->language->get('billmate_card_cancelled');
+                    break;
+                case 'failed':
+                    $this->session->data['error'] = $this->language->get('billmate_card_failed');
+                    break;
+            }
+        }
+
         if(version_compare(VERSION,'2.0.0','>='))
             $this->response->redirect($this->url->link('checkout/checkout'));
         else
