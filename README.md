@@ -22,7 +22,10 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 If currency setting is 0 decimal places, then it's better to use Myoc Price Rounding plugin for this.
 
 
-##Changelog
+## Changelog
+
+### 2.1.9 (2016-07-14)
+* Enhancement - Improved messages in checkout when order is cancelled or failed for Cardpayment.
 
 ### 2.1.8 (2016-06-08)
 * Fix - Get address Opencart 2.* Own template

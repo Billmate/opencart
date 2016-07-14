@@ -297,7 +297,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		if( !empty( $this->session->data["shipping_method"] ) )
 		$shipping_method = $this->session->data["shipping_method"];
-		
+
 		require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 		
 		$eid = (int)$this->config->get('billmate_cardpay_merchant_id');
@@ -307,7 +307,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		$debug = false;
 
-        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.9');
         if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.7');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
