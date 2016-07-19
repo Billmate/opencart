@@ -9,3 +9,5 @@ $_['text_failed']         = 'Billmate Card Transaction Failed';
 $_['text_com']		= 'Billmate Card Communication Error';	
 $_['text_error_msg']	= '<p>Unfortunately there was an error processing your payment.</p><p><b>Warning: </b>%s</p>';
 $_['tax_discount'] = '% tax';
+$_['billmate_card_failed'] = 'Unfortunately your card payment was not processed with the provided card details. Please try again or choose another payment method.';
+$_['billmate_card_cancelled'] = 'The card payment has been canceled before it was processed. Please try again or choose a different payment method.';

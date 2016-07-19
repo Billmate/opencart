@@ -5,6 +5,35 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 class ControllerPaymentBillmateCardpay extends Controller {
 	public function cancel(){
 
+        $post = empty($_POST)? $_GET : $_POST;
+        $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
+
+        $key = $this->config->get('billmate_cardpay_secret');
+
+        require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
+        $k = new BillMate($eid,$key);
+        if(is_array($post))
+        {
+            foreach($post as $key => $value)
+                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
+        }
+
+        $post = $k->verify_hash($post);
+        $this->language->load('payment/billmate_cardpay');
+        if(isset($post['code'])){
+            $this->session->data['error'] = $this->language->get('billmate_card_failed');
+        }
+        if(isset($post['status'])){
+            switch(strtolower($post['status'])){
+                case 'cancelled':
+                    $this->session->data['error'] = $this->language->get('billmate_card_cancelled');
+                    break;
+                case 'failed':
+                    $this->session->data['error'] = $this->language->get('billmate_card_failed');
+                    break;
+            }
+        }
+
         if(version_compare(VERSION,'2.0.0','>='))
             $this->response->redirect($this->url->link('checkout/checkout'));
         else
@@ -268,7 +297,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		if( !empty( $this->session->data["shipping_method"] ) )
 		$shipping_method = $this->session->data["shipping_method"];
-		
+
 		require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 		
 		$eid = (int)$this->config->get('billmate_cardpay_merchant_id');
@@ -278,7 +307,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		$debug = false;
 
-        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.9');
         if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.7');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
