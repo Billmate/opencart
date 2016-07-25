@@ -280,7 +280,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                         $func = create_function('','');
                         $oldhandler = set_error_handler($func);
-                        @$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                        if(version_compare(VERSION,'2.2.0','>='))
+                            $this->{'model_total_'.$result['code']}->getTotal(array($total_data, $total, $taxes));
+                        else
+                            $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
                         set_error_handler($oldhandler);
 
                         $amount = 0;
@@ -392,8 +395,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                 if ($this->config->get($shipping['code'].'_status'))
                                 {
                                     $this->load->model('total/'.$shipping['code']);
-
-                                    $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+                                    if(version_compare(VERSION,'2.2.0','>='))
+                                        $this->{'model_total_'.$shipping['code']}->getTotal(array($shiptotal_data, $shiptotal, $shiptax));
+                                    else
+                                        $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
 
                                     foreach ($shiptax as $key => $value)
                                     {
@@ -499,7 +504,10 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         {
                             $this->load->model('total/'.$shipping['code']);
 
-                            $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+                            if(version_compare(VERSION,'2.2.0','>='))
+                                $this->{'model_total_'.$shipping['code']}->getTotal(array($shiptotal_data, $shiptotal, $shiptax));
+                            else
+                                $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
 
                             foreach ($shiptax as $key => $value)
                             {
