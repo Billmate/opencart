@@ -1,11 +1,32 @@
 <?php
+if (version_compare(VERSION, '2.2', '<')) {
+	class BillmateTotalHelper extends Model
+	{
+		public function getTotal(&$total_data, &$total, &$taxes)
+		{
+			$data = array('totals' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
 
-class ModelTotalBillmateFee extends Model {
+			$this->calculateTotal($data);
+		}
+	}
+} else {
+	class BillmateTotalHelper extends Model
+	{
+		public function getTotal($data)
+		{
+			$this->calculateTotal($data);
+		}
+	}
+}
 
-    public function getTotal(&$total_data, &$total, &$taxes) {
-		if(is_array($total_data) && isset($total_data['total_data']))
-			extract($total_data);
-		
+class ModelTotalBillmateFee extends BillmateTotalHelper {
+
+    public function calculateTotal($data) {
+
+		$total_data =& $data['totals'];
+		$total =& $data['total'];
+		$taxes =& $data['taxes'];
+
         $this->language->load('total/billmate_fee');
 
 		$status = true;
