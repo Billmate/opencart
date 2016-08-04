@@ -1,6 +1,11 @@
 <?php
+
 class ModelTotalBillmateFee extends Model {
+
     public function getTotal(&$total_data, &$total, &$taxes) {
+		if(is_array($total_data) && isset($total_data['total_data']))
+			extract($total_data);
+		
         $this->language->load('total/billmate_fee');
 
 		$status = true;

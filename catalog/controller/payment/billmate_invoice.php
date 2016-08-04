@@ -388,19 +388,19 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             {
                                 $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
                                 $shipping = $shipping->row;
-                                $shiptax = array();
-                                $shiptotal = 0;
-                                $shiptotal_data = array();
+                                $taxes = array();
+                                $total = 0;
+                                $total_data = array();
                                 $shippingtax = 0;
                                 if ($this->config->get($shipping['code'].'_status'))
                                 {
                                     $this->load->model('total/'.$shipping['code']);
                                     if(version_compare(VERSION,'2.2.0','>='))
-                                        $this->{'model_total_'.$shipping['code']}->getTotal(array($shiptotal_data, $shiptotal, $shiptax));
+                                        $this->{'model_total_'.$shipping['code']}->getTotal(array($total_data, $total, $taxes));
                                     else
-                                        $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+                                        $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
-                                    foreach ($shiptax as $key => $value)
+                                    foreach ($taxes as $key => $value)
                                     {
                                         $shippingtax += $value;
                                     }
@@ -496,20 +496,20 @@ class ControllerPaymentBillmateInvoice extends Controller {
                     {
                         $shipping = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'shipping' AND order_id = ".$this->session->data['order_id']);
                         $shipping = $shipping->row;
-                        $shiptax = array();
-                        $shiptotal = 0;
-                        $shiptotal_data = array();
+                        $taxes = array();
+                        $total = 0;
+                        $total_data = array();
                         $shippingtax = 0;
                         if ($this->config->get($shipping['code'].'_status'))
                         {
                             $this->load->model('total/'.$shipping['code']);
 
                             if(version_compare(VERSION,'2.2.0','>='))
-                                $this->{'model_total_'.$shipping['code']}->getTotal(array($shiptotal_data, $shiptotal, $shiptax));
+                                $this->{'model_total_'.$shipping['code']}->getTotal(array($total_data, $total, $taxes));
                             else
-                                $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $shiptotal, $shiptax);
+                                $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
-                            foreach ($shiptax as $key => $value)
+                            foreach ($taxes as $key => $value)
                             {
                                 $shippingtax += $value;
                             }
