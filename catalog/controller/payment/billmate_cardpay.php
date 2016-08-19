@@ -437,7 +437,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
                 $func = create_function('','');
                 $oldhandler = set_error_handler($func);
-                if(version_compare(VERSION,'2.2.0','>='))
+                if(version_compare(VERSION,'2.2','>='))
                     $this->{'model_total_'.$result['code']}->getTotal(array($total_data, $total, $taxes));
                 else
                     $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
@@ -553,7 +553,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                         {
                             $this->load->model('total/'.$shipping['code']);
 
-                            if(version_compare(VERSION,'2.2.0','>='))
+                            if(version_compare(VERSION,'2.2','>='))
                                 $this->{'model_total_'.$shipping['code']}->getTotal(array($shiptotal_data, $total, $taxes));
                             else
                                 $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $total, $taxes);
@@ -662,7 +662,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 {
                     $this->load->model('total/'.$shipping['code']);
 
-                    if(version_compare(VERSION,'2.2.0','>='))
+                    if(version_compare(VERSION,'2.2','>='))
                         $this->{'model_total_'.$shipping['code']}->getTotal(array($shiptotal_data, $total, $taxes));
                     else
                         $this->{'model_total_'.$shipping['code']}->getTotal($shiptotal_data, $total, $taxes);
