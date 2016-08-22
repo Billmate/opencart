@@ -447,7 +447,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 set_error_handler($oldhandler);
 
                 $amount = 0;
-                if(isset($totalArr))
+                if(isset($totalArr) && $totalArr != false)
                     extract($totalArr);
                 foreach ($taxes as $tax_id => $value) {
                     $amount += $value;
