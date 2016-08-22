@@ -404,15 +404,43 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                         $func = create_function('','');
                         $oldhandler = set_error_handler($func);
-                        if(version_compare(VERSION,'2.2','>='))
-                            $this->{'model_total_'.$result['code']}->getTotal(array($total_data, $total, $taxes));
+                        $totalArr = false;
+                        if(version_compare(VERSION,'2.2','>=')){
+                            foreach ($totals as $result) {
+                                if ($this->config->get($result['code'] . '_status')) {
+                                    $this->load->model('total/' . $result['code']);
+
+                                    $taxes = array();
+
+                                    $func = create_function('','');
+                                    $oldhandler = set_error_handler($func);
+                                    $totalArr = false;
+                                    if(version_compare(VERSION,'2.2','>=')){
+                                        $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
+                                        $this->{'model_total_'.$result['code']}->getTotal($totalArr);
+                                    }
+                                    else
+                                        $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                                    set_error_handler($oldhandler);
+
+                                    $amount = 0;
+                                    if(isset($totalArr))
+                                        extract($totalArr);
+                                    foreach ($taxes as $tax_id => $value) {
+                                        $amount += $value;
+                                    }
+
+                                    $billmate_tax[$result['code']] = $amount;
+                                }
+                            }
+                        }
                         else
                             $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
-
                         set_error_handler($oldhandler);
 
                         $amount = 0;
-
+                        if(isset($totalArr))
+                            extract($totalArr);
                         foreach ($taxes as $tax_id => $value) {
                             $amount += $value;
                         }
@@ -521,11 +549,16 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                                 {
                                     $this->load->model('total/'.$shipping['code']);
 
-                                    if(version_compare(VERSION,'2.2','>='))
-                                        $this->{'model_total_'.$shipping['code']}->getTotal(array($total_data, $total, $taxes));
+                                    if(version_compare(VERSION,'2.2','>=')){
+                                        $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
+                                        $this->{'model_total_'.$result['code']}->getTotal($totalArr);
+                                    }
+                                        
                                     else
                                         $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
+                                    if(isset($totalArr))
+                                        extract($totalArr);
                                     foreach ($taxes as $key => $value)
                                     {
                                         $shippingtax += $value;
@@ -630,11 +663,15 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         {
                             $this->load->model('total/'.$shipping['code']);
 
-                            if(version_compare(VERSION,'2.2','>='))
-                                $this->{'model_total_'.$shipping['code']}->getTotal(array($total_data, $total, $taxes));
+                            if(version_compare(VERSION,'2.2','>=')) {
+                                $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
+                                $this->{'model_total_' . $result['code']}->getTotal($totalArr);
+                            }
                             else
                                 $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
+                            if(isset($totalArr))
+                                extract($totalArr);
                             foreach ($taxes as $key => $value)
                             {
                                 $shippingtax += $value;
