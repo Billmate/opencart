@@ -349,7 +349,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		$debug = false;
 
         if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
-        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.1.7');
+        if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.2.0');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
 		$k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_bankpay_test') == 1 ,$debug);
 		$values['PaymentData'] = array(
