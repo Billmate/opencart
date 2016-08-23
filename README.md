@@ -13,6 +13,9 @@ When the order is passed to Billmate for Invoice and part payment, a credit reco
 Billmate is a great payment alternative for merchants and customers in Sweden.
 
 
+## COMPATIBILITY OpenCart versions
+1.5.4 1.5.6 2.0 2.1 2.2
+
 ##INSTALLATION
 
 1. Download and unzip the latest release zip file.
