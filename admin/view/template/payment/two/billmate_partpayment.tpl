@@ -181,7 +181,7 @@
                         <div class="tab-pane" id="tab-pclasses">
                             <table class="form">
                                 <?php
-                                    if(isset($all_pclasses)){
+                                    if(isset($all_pclasses) AND is_array($all_pclasses) AND isset($all_pclasses[$lang_code][0])) {
 			$head = array();
 			if( is_array( $all_pclasses )){
 				$head = array_keys($all_pclasses[$lang_code][0]);
