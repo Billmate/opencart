@@ -483,8 +483,9 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 set_error_handler($oldhandler);
 
                 $amount = 0;
-                if(isset($totalArr) && $totalArr != false)
+                if(isset($totalArr) && $totalArr != false) {
                     extract($totalArr);
+                }
                 foreach ($taxes as $tax_id => $value) {
                     $amount += $value;
                 }
@@ -600,8 +601,9 @@ class ControllerPaymentBillmateBankpay extends Controller {
                             else
                                 $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
-                            if(isset($totalArr))
+                            if(isset($totalArr) && $totalArr != false) {
                                 extract($totalArr);
+                            }
                             
                             foreach ($taxes as $key => $value)
                             {
@@ -714,8 +716,9 @@ class ControllerPaymentBillmateBankpay extends Controller {
                     else
                         $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
-                    if(isset($totalArr))
+                    if(isset($totalArr) && $totalArr != false) {
                         extract($totalArr);
+                    }
                     foreach ($taxes as $key => $value)
                     {
                         $shippingtax += $value;
