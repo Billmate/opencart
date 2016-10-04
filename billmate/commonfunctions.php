@@ -1,6 +1,6 @@
 <?php
 if(!function_exists('getCountryID')){
-	define('PLUGIN_VERSION', '2.2.0');
+	define('PLUGIN_VERSION', '2.2.1');
 	define('BILLMATE_VERSION',  'PHP:Opencart:'.PLUGIN_VERSION );
 	define('BILLMATE_CLIENT','PHP:Opencart:'.PLUGIN_VERSION);
 	function getCountryID(){
