@@ -30,6 +30,9 @@ We are currently not supporting Opencart 2.3! Our plugin will not work if you ar
 
 ## Changelog
 
+### 2.2.1 (2016-10-04)
+* Fix - Order id in callback.
+
 ### 2.2.0 (2016-08-23)
 * Fix - Opencart 2.2 compatibility. 
 * Enhancement - Improved paymentplan logic in admin configurations for partpayment plugin. 
