@@ -17,6 +17,7 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 1.5.4 1.5.6 2.0 2.1 2.2
 
 ## Checkout Compatibility
+* OpenCart default checkout 1.5.4 1.5.6 2.0 2.1 2.2
 * Dreamvention Quickcheckout
 * And more, feel free to contact us to discuss your checkout.
 
