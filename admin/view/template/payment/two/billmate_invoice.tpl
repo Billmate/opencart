@@ -190,5 +190,5 @@
 <script type="text/javascript">
     var token = '<?php echo $token; ?>';
 </script>
-<script src="/billmate/js/billmate.js"></script>
+<script src="../billmate/js/billmate.js"></script>
 <?php echo $footer; ?>
