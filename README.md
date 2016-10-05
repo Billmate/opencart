@@ -16,6 +16,10 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 ## COMPATIBILITY OpenCart versions
 1.5.4 1.5.6 2.0 2.1 2.2
 
+## Checkout Compatibility
+* Dreamvention Quickcheckout
+* And more, feel free to contact us to discuss your checkout.
+
 ##INSTALLATION
 
 1. Download and unzip the latest release zip file.
@@ -32,6 +36,7 @@ We are currently not supporting Opencart 2.3! Our plugin will not work if you ar
 
 ### 2.2.1 (2016-10-04)
 * Fix - Order id in callback.
+* Fix - Javascript in Admin
 
 ### 2.2.0 (2016-08-23)
 * Fix - Opencart 2.2 compatibility. 
