@@ -1,8 +1,9 @@
 <?php
 if(!function_exists('getCountryID')){
-	define('PLUGIN_VERSION', '2.2.0');
+	define('PLUGIN_VERSION', '2.2.1');
 	define('BILLMATE_VERSION',  'PHP:Opencart:'.PLUGIN_VERSION );
-	define('BILLMATE_CLIENT','PHP:Opencart:'.PLUGIN_VERSION);
+	$ocVersion = defined('VERSION') ? VERSION : 'No-Value';
+	define('BILLMATE_CLIENT','PHP:Opencart:'. $ocVersion.':PluginVersion:'.PLUGIN_VERSION);
 	function getCountryID(){
 		return 209;
 		$country = strtoupper(shopp_setting('base_operations'));

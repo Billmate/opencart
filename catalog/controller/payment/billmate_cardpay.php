@@ -114,9 +114,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                             $msg .= 'status: '. $post['status'] . "\n";
                                     }
                                     if(version_compare(VERSION,'2.0.0','>='))
-                                        $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
+                                        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
                                     else
-                                        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
+                                        $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
 
                                 } else {
                                     $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
@@ -249,9 +249,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 $msg .= 'status: '. $post['status'] . "\n";
 
                 if(version_compare(VERSION,'2.0.0','>='))
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
+                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
                 else
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
+                    $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
 
                 $this->cache->delete('order'.$post['orderid']);
             }
