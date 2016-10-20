@@ -31,6 +31,9 @@
         <?php } ?>
         <div class="panel panel-default">
             <div class="panel-heading">
+                <a href="https://online.billmate.se" target="_BLANK" style="float:right;margin-top:-4px;">
+                    <img src="http://billmate.se/wp-content/uploads/billmatelogo.png" alt="Billmate" title="Billmate" style="max-height:30px;">
+                </a>
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $heading_title.' - '.$billmate_version; ?></h3>
             </div>
             <div class="panel-body">
