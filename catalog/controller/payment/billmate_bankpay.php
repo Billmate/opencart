@@ -220,18 +220,31 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		}
 	}
 
+    public function fixStupidOpencartClean($data){
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                unset($data[$key]);
+
+                $data[$key] = $this->fixStupidOpencartClean($value);
+            }
+        } else {
+            $data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
+        }
+        return $data;
+    }
 	public function callback() {
 
-        $post = file_get_contents('php://input');
+        $_POST = file_get_contents('php://input');
 
-        $post = !isset($post['data']) ? $this->request->get : $post;
-        $post = !isset($post['data']) ? $_REQUEST : $post;
-        if(is_array($post))
-        {
-            foreach($post as $key => $value)
-                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
-        }
-        $this->request->post = $post;
+        $_POST = empty($_POST) ? $_GET : $_POST;
+
+
+        $_POST = $this->fixStupidOpencartClean($_POST);
+
+
+
+
+        $this->request->post = $_POST;
         $this->load->model('checkout/order');
         $eid = (int)$this->config->get('billmate_bankpay_merchant_id');
 
@@ -239,7 +252,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        $post = $k->verify_hash($post);
+        $post = $k->verify_hash($_POST);
 
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
 

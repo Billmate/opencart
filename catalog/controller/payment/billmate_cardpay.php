@@ -225,15 +225,34 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}
 	}
 
+    public function fixStupidOpencartClean($data){
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                unset($data[$key]);
+
+                $data[$key] = $this->fixStupidOpencartClean($value);
+            }
+        } else {
+            $data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
+        }
+        return $data;
+    }
+    
 	public function callback() {
-        $post = json_decode(file_get_contents('php://input'),true);
+        $_POST = file_get_contents('php://input');
+
+        $_POST = empty($_POST) ? $_GET : $_POST;
+
+
+        $_POST = $this->fixStupidOpencartClean($_POST);
+        
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
         $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        $post = $k->verify_hash($post);
+        $post = $k->verify_hash($_POST);
         $this->request->post = $post;
         $this->load->model('checkout/order');
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
