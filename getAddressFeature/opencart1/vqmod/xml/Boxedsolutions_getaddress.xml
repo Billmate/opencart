@@ -46,6 +46,7 @@
     			$this->language->load('payment/billmate_invoice');
     			$this->data['fetchaddress'] = $this->language->get('fetchaddress');
      			$this->data['entry_personnumber'] = $this->language->get('personnumber');
+     			$this->data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
     		]]>
     		</add>
     	</operation>
