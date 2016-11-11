@@ -439,7 +439,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         set_error_handler($oldhandler);
 
                         $amount = 0;
-                        if(isset($totalArr))
+                        if(isset($totalArr) AND is_array($totalArr) AND count($totalArr) > 0)
                             extract($totalArr);
                         foreach ($taxes as $tax_id => $value) {
                             $amount += $value;

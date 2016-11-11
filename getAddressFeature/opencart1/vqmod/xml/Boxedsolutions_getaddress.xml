@@ -116,4 +116,99 @@
     		]]></add>
     	</operation>
     </file>
+
+    <!-- Ajax Quick Checkout get address in checkout support -->
+    <file name="catalog/controller/d_quickcheckout/payment_address.php">
+        <operation info="Add personnumber field">
+            <search position="before">
+            <![CDATA[
+                $this->data['text_address_new'] = $this->language->get('text_address_new');
+            ]]>
+            </search>
+            <add>
+            <![CDATA[
+                $this->language->load('payment/billmate_invoice');
+                $this->data['fetchaddress'] = $this->language->get('fetchaddress');
+                $this->data['entry_personnumber'] = $this->language->get('personnumber');
+                $this->data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
+            ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/view/theme/*/template/d_quickcheckout/payment_address.tpl">
+        <operation info="mod view for button with pno">
+            <search position="before">
+                <![CDATA[
+                    <form id="payment_address_form"
+                ]]>
+            </search>
+            <add>
+                <![CDATA[
+                    <form class="form-horizontal">
+                    <div class="text-input form-group">
+                        <div class="col-xs-5">
+                            <label class="control-label" for="payment_address_pno">
+                                <span class="text" title="<?php echo $entry_personnumber; ?>">
+                                    <?php echo $entry_personnumber; ?>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="col-xs-7">
+                            <input id="payment_address_pno" type="text" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" name="pno" autocomplete="off"
+                                class="form-control"
+                                style="background-repeat: repeat; background-image: none; background-position: 0% 0%;"
+                            />
+                        </div>
+                    </div>
+                    <div class="text-input form-group">
+                        <div class="col-xs-12">
+                            <a class="btn btn-primary btn-block" id="fetch_address" href="#">
+                                <?php echo $fetchaddress; ?>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-input form-group">
+                        <div class="col-xs-12">
+                            <!-- empty row for space -->
+                        </div>
+                    </div>
+                    </form>
+                    <style>
+                        #payment .content input[name=pno] {
+                            display:none;
+                        }
+                        .trBillmateInvoicePno {
+                            display:none !important;
+                        }
+                        .trBillmatePartPaymentPno * {
+                            display:none !important;
+                        }
+                        .content .radio input[type=radio] {
+                            margin-left: 4px !important;
+                            margin-top: -10px !important;
+                            position:relative !important;
+                        }
+                    </style>
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file name="catalog/view/theme/*/template/d_quickcheckout/payment_address.tpl">
+        <operation info="Add personnumber field">
+            <search position="after">
+            <![CDATA[
+                $(document).ready( function() {
+            ]]>
+            </search>
+            <add>
+            <![CDATA[
+                $(document).on("change", "#payment_address_pno", function() {
+                    $(document).find("#payment .content input[name=pno]").val($(this).val());
+                });
+            ]]>
+            </add>
+        </operation>
+    </file>
+    <!-- Ajax Quick Checkout -->
+
 </modification>

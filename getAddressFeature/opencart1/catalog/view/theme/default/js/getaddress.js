@@ -35,35 +35,59 @@ $(document).ready(function(){
     									var result = JSON.parse(response);
     									
     									if(result.success){
+
+                                            /* Prefix for checkouts */
+                                            var checkoutInputAddressPrefix = "";
+
+                                            /* Ajax Quick Checkout by Dreamvention */
+                                            if($(document).find('input[name="payment_address.firstname"]').length) {
+                                                checkoutInputAddressPrefix = "payment_address.";
+                                            }
+
     										if(result.data.firstname != ''){
-    										$('input[name="firstname"]').val(result.data.firstname);
-    										$('input[name="lastname"]').val(result.data.lastname);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'firstname"]').val(result.data.firstname);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'lastname"]').val(result.data.lastname);
     										} else {
-    											$('input[name="company"]').val(result.data.lastname);
-    											$('input[name="firstname"]').val('');
-        										$('input[name="lastname"]').val('');
+                                                $('input[name="' + checkoutInputAddressPrefix + 'company"]').val(result.data.lastname);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'firstname"]').val('');
+                                                $('input[name="' + checkoutInputAddressPrefix + 'lastname"]').val('');
     										}
-    										$('input[name="address_1"]').val(result.data.street);
-    										$('input[name="postcode"]').val(result.data.zip);
-    										$('input[name="city"]').val(result.data.city);
-    										$('input[name="email"]').val(result.data.email);
-    										$('input[name="telephone"]').val(result.data.phone);
-    										$('select[name="country_id"]').val(result.data.country_id);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'address_1"]').val(result.data.street);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'postcode"]').val(result.data.zip);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'city"]').val(result.data.city);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'email"]').val(result.data.email);
+                                                $('input[name="' + checkoutInputAddressPrefix + 'telephone"]').val(result.data.phone);
+                                                $('select[name="' + checkoutInputAddressPrefix + 'country_id"]').val(result.data.country_id);
+
+                                            if(checkoutInputAddressPrefix == "payment_address.") {
+                                                checkoutInputFieldNames = ["firstname", "lastname", "company", "lastname", "address_1", "postcode", "city", "email", "telephone", "country_id"];
+                                                jQuery.each(checkoutInputAddressPrefix, function(checkoutInputFieldName) {
+                                                    $('select[name="' + checkoutInputAddressPrefix + checkoutInputFieldName + ']').change();
+                                                });
+                                            }
 
 
-    										if($('input[name="pno"]').length > 0){
-    											$('input[name="pno"]').val(pno);
+                                            if($('input[name="' + checkoutInputAddressPrefix + 'pno"]').length > 0){
+                                                $('input[name="' + checkoutInputAddressPrefix + 'pno"]').val(pno);
     										}
     										if($('span.pno_error').length > 0){
     											$('span.pno_error').remove();
     										}
     									} else {
-    										$('input[name="company"]').val('');
-    										$('input[name="firstname"]').val('');
-    										$('input[name="lastname"]').val('');
-    										$('input[name="address_1"]').val('');
-    										$('input[name="postcode"]').val('');
-    										$('input[name="city"]').val('');
+                                            $('input[name="' + checkoutInputAddressPrefix + 'company"]').val('');
+                                            $('input[name="' + checkoutInputAddressPrefix + 'firstname"]').val('');
+                                            $('input[name="' + checkoutInputAddressPrefix + 'lastname"]').val('');
+                                            $('input[name="' + checkoutInputAddressPrefix + 'address_1"]').val('');
+                                            $('input[name="' + checkoutInputAddressPrefix + 'postcode"]').val('');
+                                            $('input[name="' + checkoutInputAddressPrefix + 'city"]').val('');
+
+                                            if(checkoutInputAddressPrefix == "payment_address.") {
+                                                checkoutInputFieldNames = ["company", "firstname", "lastname", "address_1", "postcode", "city"];
+                                                jQuery.each(checkoutInputAddressPrefix, function(checkoutInputFieldName) {
+                                                    $('select[name="' + checkoutInputAddressPrefix + checkoutInputFieldName + ']').change();
+                                                });
+                                            }
+
     										var html = $('div#pno_input').html();
     										var message = '<span class="pno_error">'+result.message+'</span>';
     										$('div#pno_input').html(message+html);

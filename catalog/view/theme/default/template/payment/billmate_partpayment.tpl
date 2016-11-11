@@ -48,13 +48,13 @@
           </select></td>
       </tr>
       <?php } else { ?>
-      <tr>
+      <tr class="trBillmatePartPaymentPno">
         <td><?php echo $entry_pno; ?><br /><span class="help"><?php echo $help_pno; ?></span></td>
         <td><input type="text" name="pno" value="" /></td>
       </tr>
       <?php } ?>
       <?php } else { ?>
-      <tr>
+      <tr class="trBillmatePartPaymentPno">
         <td><?php echo $entry_company; ?></td>
         <td><input type="text" name="pno" value="" /></td>
       </tr>
