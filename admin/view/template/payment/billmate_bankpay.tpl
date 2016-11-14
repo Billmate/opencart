@@ -27,7 +27,18 @@
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         <table class="form">
-
+          <tr>
+            <td><?php echo $entry_status; ?></td>
+            <td><select name="billmate_bankpay_status">
+                <?php if ($billmate_bankpay_status) { ?>
+                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                <option value="0"><?php echo $text_disabled; ?></option>
+                <?php } else { ?>
+                <option value="1"><?php echo $text_enabled; ?></option>
+                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_merchant_id; ?></td>
             <td><input type="text" name="billmate_bankpay_merchant_id" value="<?php echo $billmate_bankpay_merchant_id; ?>" />
@@ -113,18 +124,6 @@
                 <script src="/billmate/js/legacy-billmate.js"></script>
             <?php endif; ?>
             <tr>
-          <tr>
-            <td><?php echo $entry_status; ?></td>
-            <td><select name="billmate_bankpay_status">
-                <?php if ($billmate_bankpay_status) { ?>
-                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                <option value="0"><?php echo $text_disabled; ?></option>
-                <?php } else { ?>
-                <option value="1"><?php echo $text_enabled; ?></option>
-                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                <?php } ?>
-              </select></td>
-          </tr>
           <tr>
             <td><?php echo $entry_sort_order; ?></td>
             <td><input type="text" name="billmate_bankpay_sort_order" value="<?php echo $billmate_bankpay_sort_order; ?>" size="1" /></td>
