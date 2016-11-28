@@ -118,6 +118,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                     else
                                         $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
 
+                                } elseif($post['status'] == 'Failed'){
+                                    $error_msg = $this->language->get('text_failed');
                                 } else {
                                     $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
                                 }
@@ -126,7 +128,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				}
 
 		} else {
-			$error_msg = $this->language->get('text_fail');
+			$error_msg = $this->language->get('text_failed');
 		}
 
         if($post['status']== 'Cancelled' ){
@@ -326,7 +328,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		$debug = false;
 
-        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.9');
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.10');
         if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.2.0');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
