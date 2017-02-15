@@ -23,8 +23,12 @@ class ControllerTotalBillmateFee extends Controller {
             $this->model_setting_setting->editSetting('billmate_fee', array_merge($this->request->post, array('billmate_fee_status' => $status)));
 
             $this->session->data['success'] = $this->language->get('text_success');
-            if(version_compare(VERSION,'2.0.0','>='))
-                $this->response->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
+            if(version_compare(VERSION,'2.0.0','>=')) {
+                if (version_compare(VERSION, '2.3', '<'))
+                    $this->response->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
+                else
+                    $this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'));
+            }
             else
                 $this->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
@@ -71,7 +75,11 @@ class ControllerTotalBillmateFee extends Controller {
                 
 		$data['action'] = $this->url->link('total/billmate_fee', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
+
+        if(version_compare(VERSION,'2.3','<'))
+            $data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
+        else
+            $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
 
 		$data['countries'] = array();
 		
@@ -111,10 +119,15 @@ class ControllerTotalBillmateFee extends Controller {
     }
 
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'total/billmate_fee')) {
-            $this->error['warning'] = $this->language->get('error_permission');
+        if(version_compare(VERSION,'2.3','<')) {
+            if (!$this->user->hasPermission('modify', 'total/billmate_fee')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
+        } else {
+            if (!$this->user->hasPermission('modify', 'extension/total/billmate_fee')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
         }
-
         if (!$this->error) {
             return true;
         } else {

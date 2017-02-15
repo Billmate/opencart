@@ -23,9 +23,13 @@ class ControllerPaymentBillmateBankpay extends Controller {
 			$this->model_setting_setting->editSetting('billmate_bankpay', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
-            if(version_compare(VERSION,'2.0.0','>='))
-                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
-            else
+            if(version_compare(VERSION,'2.0.0','>=')) {
+				if (version_compare(VERSION, '2.3', '<'))
+					$this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+				else
+					$this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'));
+			}
+			else
                 $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 		
@@ -106,7 +110,11 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		
 		$data['action'] = $this->url->link('payment/billmate_bankpay', 'token=' . $this->session->data['token'], 'SSL');
 
-		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+		if(version_compare(VERSION,'2.3','<'))
+			$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+		else
+			$data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
+		
 
 		if (isset($this->request->post['billmate_bankpay_merchant_id'])) {
 				$data['billmate_bankpay_merchant_id'] = $this->request->post['billmate_bankpay_merchant_id'];
@@ -193,9 +201,17 @@ class ControllerPaymentBillmateBankpay extends Controller {
 	}
 	
 	private function validate() {
-		if (!$this->user->hasPermission('modify', 'payment/billmate_bankpay')) {
-			$this->error['warning'] = $this->language->get('error_permission');
+		if(version_compare(VERSION,'2.3','<')){
+		
+			if (!$this->user->hasPermission('modify', 'payment/billmate_bankpay')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
+		} else {
+			if (!$this->user->hasPermission('modify', 'extension/payment/billmate_cardpay')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
 		}
+		
 
 		if (!$this->request->post['billmate_bankpay_merchant_id']) {
 				$this->error['merchant'] = $this->language->get('error_merchant_id');
