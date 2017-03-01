@@ -109,7 +109,13 @@
                 $prPart = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
                 $payfrom = $this->model_payment_billmate_partpayment->getLowestPaymentFromTotal(($special) ? $special : $prPart);
                 if($payfrom){
-                    $billmate_payfrom = sprintf($this->language->get('billmate_payfrom'),$this->currency->getSymbolLeft(),$payfrom['monthly_cost'],$this->currency->getSymbolRight());
+                    if(version_compare(VERSION,'2.3.0.0','>=')){
+                        $data['billmate_payfrom'] = sprintf($this->language->get('billmate_payfrom'),$this->currency->getSymbolLeft($this->session->data['currency']),$payfrom['monthly_cost'],$this->currency->getSymbolRight($this->session->data['currency']));
+
+                    } else {
+                        $data['billmate_payfrom'] = sprintf($this->language->get('billmate_payfrom'),$this->currency->getSymbolLeft(),$payfrom['monthly_cost'],$this->currency->getSymbolRight());
+
+                    }
                 } else {
                     $billmate_payfrom = false;
                 }
