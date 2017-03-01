@@ -80,7 +80,7 @@ class BillMate{
 	function verify_hash($response) {
 		$response_array = is_array($response)?$response:json_decode($response,true);
 		//If it is not decodable, the actual response will be returnt.
-		if((!$response_array && !is_array($response)) || (is_array($response) && !isset($response['credentials']) || !isset($response['data'])))
+		if((!$response_array && !is_array($response)) || (is_array($response) && (!isset($response['credentials']) || !isset($response['data']))))
 			return $response;
 		if(is_array($response)) {
 			$response_array['credentials'] = json_decode($response['credentials'], true);
