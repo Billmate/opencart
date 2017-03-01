@@ -8,7 +8,7 @@
   <div style="margin-bottom: 3px;"><b><?php echo $text_additional; ?></b></div>
   <div class="content">
 	  <form id="payment" class="form-horizontal">
-	  <div class="form-group required">
+	  <div class="form-group required trBillmateInvoicePno">
 		  <label for="pno" class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_pno; ?>"><?php echo $entry_pno; ?></span></label>
 		<div class="col-sm-3">
 			<input type="text" name="pno" id="pno" class="form-control" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" />

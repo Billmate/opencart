@@ -35,8 +35,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
 			$this->model_setting_setting->editSetting('billmate_invoice', array_merge($this->request->post, $data));
 			
 			$this->session->data['success'] = $this->language->get('text_success');
-            if(version_compare(VERSION,'2.0.0','>='))
-                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            if(version_compare(VERSION,'2.0.0','>=')) {
+                if (version_compare(VERSION, '2.3', '<'))
+                    $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+                else
+                    $this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'));
+            }
             else
                 $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
@@ -128,8 +132,11 @@ class ControllerPaymentBillmateInvoice extends Controller {
 		}
 		
         $data['action'] = $this->url->link('payment/billmate_invoice', 'token=' . $this->session->data['token'], 'SSL');
-       
-	    $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+
+        if(version_compare(VERSION,'2.3','<'))
+            $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        else
+            $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
 
 		$data['countries'] = array();
 		
@@ -289,10 +296,15 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
 
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/billmate_invoice')) {
-            $this->error['warning'] = $this->language->get('error_permission');
+        if(version_compare(VERSION,'2.3','<')) {
+            if (!$this->user->hasPermission('modify', 'payment/billmate_invoice')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
+        } else {
+            if (!$this->user->hasPermission('modify', 'extension/payment/billmate_invoice')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
         }
-
         $billmateInvoice = $this->request->post['billmate_invoice'];
 
         if(!$billmateInvoice['SWE']['merchant']){

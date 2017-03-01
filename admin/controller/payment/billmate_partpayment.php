@@ -53,8 +53,12 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 			$this->model_setting_setting->editSetting('billmate_partpayment', array_merge($this->request->post, $data));
 
 
-            if(version_compare(VERSION,'2.0.0','>='))
-                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            if(version_compare(VERSION,'2.0.0','>=')) {
+                if (version_compare(VERSION, '2.3', '<'))
+                    $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+                else
+                    $this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'));
+            }
             else
                 $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
@@ -163,8 +167,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 		}
 		
         $data['action'] = $this->url->link('payment/billmate_partpayment', 'token=' . $this->session->data['token'], 'SSL');
-       
-	    $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+
+        if(version_compare(VERSION,'2.3','<'))
+            $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        else
+            $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
 
 		$data['countries'] = array();
 		
@@ -235,10 +242,15 @@ class ControllerPaymentBillmatePartpayment extends Controller {
     }
 
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/billmate_partpayment')) {
-            $this->error['warning'] = $this->language->get('error_permission');
+        if(version_compare(VERSION,'2.3','<')) {
+            if (!$this->user->hasPermission('modify', 'payment/billmate_partpayment')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
+        } else {
+            if (!$this->user->hasPermission('modify', 'extension/payment/billmate_partpayment')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
         }
-
         $billmatePartpayment = $this->request->post['billmate_partpayment'];
 
         if(!$billmatePartpayment['SWE']['merchant']){

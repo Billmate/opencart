@@ -1,8 +1,9 @@
 <?php 
+require_once(dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php');
 class ModelPaymentBillmateCardpay extends Model {
   	public function getMethod($address, $total) {
 		$this->load->language('payment/billmate_cardpay');
-		
+		$total = billmateCleanTotal($total);
 		$status = true;
 
 		if ($this->config->get('billmate_cardpay_total') > $total) {

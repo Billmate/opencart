@@ -398,7 +398,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                 foreach ($totals as $result) {
                     if ($this->config->get($result['code'] . '_status')) {
-                        $this->load->model('total/' . $result['code']);
+                        if(version_compare(VERSION,'2.3','<')) {
+                            $this->load->model('total/' . $result['code']);
+                        } else {
+                            $this->load->model('extension/total/' . $result['code']);
+                        }
 
                         $taxes = array();
 
@@ -406,32 +410,13 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         $oldhandler = set_error_handler($func);
                         $totalArr = false;
                         if(version_compare(VERSION,'2.2','>=')){
-                            foreach ($totals as $result) {
-                                if ($this->config->get($result['code'] . '_status')) {
-                                    $this->load->model('total/' . $result['code']);
+                            $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
+                            if(version_compare(VERSION,'2.3','>=')){
+                                $this->{'model_extension_total_'.$result['code']}->getTotal($totalArr);
 
-                                    $taxes = array();
+                            } else {
+                                $this->{'model_total_'.$result['code']}->getTotal($totalArr);
 
-                                    $func = create_function('','');
-                                    $oldhandler = set_error_handler($func);
-                                    $totalArr = false;
-                                    if(version_compare(VERSION,'2.2','>=')){
-                                        $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
-                                        $this->{'model_total_'.$result['code']}->getTotal($totalArr);
-                                    }
-                                    else
-                                        $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
-                                    set_error_handler($oldhandler);
-
-                                    $amount = 0;
-                                    if(isset($totalArr) && $totalArr != false)
-                                        extract($totalArr);
-                                    foreach ($taxes as $tax_id => $value) {
-                                        $amount += $value;
-                                    }
-
-                                    $billmate_tax[$result['code']] = $amount;
-                                }
                             }
                         }
                         else
@@ -439,7 +424,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         set_error_handler($oldhandler);
 
                         $amount = 0;
-                        if(isset($totalArr))
+                        if(isset($totalArr) && $totalArr != false)
                             extract($totalArr);
                         foreach ($taxes as $tax_id => $value) {
                             $amount += $value;

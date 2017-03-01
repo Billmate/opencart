@@ -118,6 +118,8 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                     else
                                         $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
 
+                                } elseif($post['status'] == 'Failed'){
+                                    $error_msg = $this->language->get('text_failed');
                                 } else {
                                     $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_cardpay_order_status_id')) ? '' :$this->language->get('text_declined');
                                 }
@@ -126,7 +128,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 				}
 
 		} else {
-			$error_msg = $this->language->get('text_fail');
+			$error_msg = $this->language->get('text_failed');
 		}
 
         if($post['status']== 'Cancelled' ){
@@ -225,15 +227,34 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}
 	}
 
+    public function fixStupidOpencartClean($data){
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                unset($data[$key]);
+
+                $data[$key] = $this->fixStupidOpencartClean($value);
+            }
+        } else {
+            $data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
+        }
+        return $data;
+    }
+    
 	public function callback() {
-        $post = json_decode(file_get_contents('php://input'),true);
+        $_POST = file_get_contents('php://input');
+
+        $_POST = empty($_POST) ? $_GET : $_POST;
+
+
+        $_POST = $this->fixStupidOpencartClean($_POST);
+        
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
         $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        $post = $k->verify_hash($post);
+        $post = $k->verify_hash($_POST);
         $this->request->post = $post;
         $this->load->model('checkout/order');
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
@@ -307,7 +328,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 		$debug = false;
 
-        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.9');
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.10');
         if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.2.0');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
         $k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_cardpay_test') == 1 ,$debug);
@@ -431,7 +452,11 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
         foreach ($totals as $result) {
             if ($this->config->get($result['code'] . '_status')) {
-                $this->load->model('total/' . $result['code']);
+                if(version_compare(VERSION,'2.3','<')) {
+                    $this->load->model('total/' . $result['code']);
+                } else {
+                    $this->load->model('extension/total/' . $result['code']);
+                }
 
                 $taxes = array();
 
@@ -440,7 +465,13 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 $totalArr = false;
                 if(version_compare(VERSION,'2.2','>=')){
                     $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
-                    $this->{'model_total_'.$result['code']}->getTotal($totalArr);
+                    if(version_compare(VERSION,'2.3','>=')){
+                        $this->{'model_extension_total_'.$result['code']}->getTotal($totalArr);
+
+                    } else {
+                        $this->{'model_total_'.$result['code']}->getTotal($totalArr);
+
+                    }
                 }
                 else
                     $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);

@@ -115,6 +115,8 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
 
                                     $this->cache->delete('order'.$order_id);
+                                } else if($post['status'] == 'Failed'){
+                                    $error_msg = $this->language->get('text_failed');
                                 }
                                 else {
                                     $error_msg = ($order_info['order_status_id'] == $this->config->get('billmate_bankpay_order_status_id')) ? '' :$this->language->get('text_declined');
@@ -124,7 +126,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 				}
 
 		} else {
-			$error_msg = $this->language->get('text_fail');
+			$error_msg = $this->language->get('text_failed');
 		}
 
         if($post['status'] == 'Cancelled'){
@@ -220,18 +222,31 @@ class ControllerPaymentBillmateBankpay extends Controller {
 		}
 	}
 
+    public function fixStupidOpencartClean($data){
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                unset($data[$key]);
+
+                $data[$key] = $this->fixStupidOpencartClean($value);
+            }
+        } else {
+            $data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
+        }
+        return $data;
+    }
 	public function callback() {
 
-        $post = file_get_contents('php://input');
+        $_POST = file_get_contents('php://input');
 
-        $post = !isset($post['data']) ? $this->request->get : $post;
-        $post = !isset($post['data']) ? $_REQUEST : $post;
-        if(is_array($post))
-        {
-            foreach($post as $key => $value)
-                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
-        }
-        $this->request->post = $post;
+        $_POST = empty($_POST) ? $_GET : $_POST;
+
+
+        $_POST = $this->fixStupidOpencartClean($_POST);
+
+
+
+
+        $this->request->post = $_POST;
         $this->load->model('checkout/order');
         $eid = (int)$this->config->get('billmate_bankpay_merchant_id');
 
@@ -239,7 +254,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        $post = $k->verify_hash($post);
+        $post = $k->verify_hash($_POST);
 
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
 
@@ -348,7 +363,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
 		$debug = false;
 
-        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.7');
+        if(!defined('BILLMATE_SERVER')) define('BILLMATE_SERVER','2.1.10');
         if(!defined('BILLMATE_CLIENT')) define('BILLMATE_CLIENT','Opencart:Billmate:2.2.0');
         if(!defined('BILLMATE_LANGUAGE')) define('BILLMATE_LANGUAGE',($this->language->get('code') == 'se') ? 'sv' : $this->language->get('code'));
 		$k = new BillMate($eid,$key,$ssl,$this->config->get('billmate_bankpay_test') == 1 ,$debug);
@@ -467,7 +482,11 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         foreach ($totals as $result) {
             if ($this->config->get($result['code'] . '_status')) {
-                $this->load->model('total/' . $result['code']);
+                if(version_compare(VERSION,'2.3','<')) {
+                    $this->load->model('total/' . $result['code']);
+                } else {
+                    $this->load->model('extension/total/' . $result['code']);
+                }
 
                 $taxes = array();
 
@@ -476,7 +495,13 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $totalArr = false;
                 if(version_compare(VERSION,'2.2','>=')){
                     $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
-                    $this->{'model_total_'.$result['code']}->getTotal($totalArr);
+                    if(version_compare(VERSION,'2.3','>=')){
+                        $this->{'model_extension_total_'.$result['code']}->getTotal($totalArr);
+
+                    } else {
+                        $this->{'model_total_'.$result['code']}->getTotal($totalArr);
+
+                    }
                 }
                 else
                     $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);

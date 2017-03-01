@@ -5,7 +5,7 @@
     <link>http://www.billmate.se</link>
     <version>1.1.1</version>
     <code>billmate_getaddress</code>
-    <file path="catalog/language/english/checkout/checkout.php">
+    <file path="catalog/language/english/checkout/checkout.php|catalog/language/en-gb/checkout/checkout.php">
         <operation>
         <search><![CDATA[$_['entry_shipping'] 	             = 'My delivery and billing addresses are the same.';]]></search>
         <add position="after">
@@ -103,4 +103,164 @@
             </add>
         </operation>
     </file>
+
+    <!-- Ajax Quick Checkout get address in checkout support -->
+    <file path="catalog/controller/d_quickcheckout/payment_address.php">
+        <operation>
+            <search index="0"><![CDATA[$data['text_address_new'] = $this->language->get('text_address_new');]]></search>
+            <add position="after">
+                <![CDATA[
+                    $data['entry_pno'] = $this->language->get('entry_pno');
+                    $data['entry_getaddress_button'] = $this->language->get('entry_getaddress_button');
+                    $data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/d_quickcheckout/payment_address.tpl">
+        <operation>
+            <search index="0"><![CDATA[<form id="payment_address_form" class="form-horizontal">]]></search>
+            <add position="before">
+                <![CDATA[
+                <style>
+                    #payment .content input[name=pno] {
+                        display:none;
+                    }
+                    .trBillmateInvoicePno {
+                        display:none !important;
+                    }
+                    .trBillmatePartPaymentPno {
+                        display:none !important;
+                    }
+                </style>
+            ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/d_quickcheckout/field.php">
+        <operation>
+            <search index="0"><![CDATA[$data['settings'] =  $this->settings;]]></search>
+            <add position="after">
+                <![CDATA[
+                    $data['entry_pno'] = $this->language->get('entry_pno');
+                    $data['entry_getaddress_button'] = $this->language->get('entry_getaddress_button');
+                    $data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
+                ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/d_quickcheckout/field.tpl">
+        <operation>
+            <search index="0"><![CDATA[<% _.each(model.config.fields,  function(f){ %>]]></search>
+            <add position="before">
+                <![CDATA[
+                    <% var ii = 0; %>
+                    <%
+                    var paymentAddressBillmateSsn = '<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>';
+                    if(typeof model['payment_address'] !== 'undefined' && typeof model['payment_address']['billmate_ssn'] !== 'undefined') {
+                        paymentAddressBillmateSsn = model['payment_address']['billmate_ssn'];
+                    }
+                    %>
+            ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/d_quickcheckout/field.tpl">
+        <operation>
+            <search index="0"><![CDATA[<% _.each(model.config.fields,  function(f){ %>]]></search>
+            <add position="after">
+                <![CDATA[
+                   <% if(ii < 1 && model.config.id == 'payment_address') { %>
+                        <div class="text-input form-group">
+                            <div class="col-xs-12">
+                                <label class="control-label" for="input-payment-pno">
+                                    <span class="text">
+                                        <?php echo $entry_pno; ?>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="text-input form-group">
+                            <div class="col-xs-12">
+                                <input type="text" name="payment_address.billmate_ssn" value="<%= paymentAddressBillmateSsn %>" placeholder="<?php echo $entry_pno; ?>" id="input-payment-pno" class="form-control not-required billmate_ssn" />
+                            </div>
+                       </div>
+
+                       <div class="text-input form-group">
+                            <div class="col-xs-12">
+                                <button class="btn btn-primary btn-block" type="button" id="getaddress"><?php echo $entry_getaddress_button; ?></button>
+                            </div>
+                        </div>
+
+                        <!-- empty row as space -->
+                        <div class="text-input form-group">
+                            <div class="col-xs-12">
+                            </div>
+                        </div>
+                <% } %>
+                <% ii++; %>
+            ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/d_quickcheckout/payment_address.tpl">
+        <operation>
+            <search index="0"><![CDATA[$(function() {]]></search>
+            <add position="after">
+                <![CDATA[
+                    $(document).on("change", "#payment_address_pno", function() {
+                        $(document).find("#payment .content input[name=pno]").val($(this).val());
+                    });
+
+                    $(document).on('click', '#getaddress', function(){
+                        var pno = $(document).find('#input-payment-pno').val();
+                        if(pno != ''){
+                            $.ajax({
+                                url: 'index.php?route=payment/billmate_invoice/getaddress',
+                                data: {pno: pno},
+                                type: 'post',
+                                success: function(response){
+                                    var result = JSON && JSON.parse(response) || $.parseJSON(response);
+                                    if(result.success){
+                                        if(typeof result.data.company == 'undefined'){
+                                            $(document).find("#payment_address_firstname").val(result.data.firstname);
+                                            $(document).find("#payment_address_firstname").change();
+                                            $(document).find("#payment_address_lastname").val(result.data.lastname);
+                                            $(document).find("#payment_address_lastname").change();
+                                        } else {
+                                            $(document).find("#payment_address_company").val(result.data.company);
+                                            $(document).find("#payment_address_company").change();
+                                        }
+                                        $(document).find('#input-payment-pno').val(pno);
+                                        $(document).find('#input-payment-pno').change();
+
+                                        $(document).find("#payment_address_email").val(result.data.email);
+                                        $(document).find("#payment_address_email").change();
+                                        $(document).find("#payment_address_telephone").val(result.data.telephone);
+                                        $(document).find("#payment_address_telephone").change();
+                                        $(document).find("#payment_address_address_1").val(result.data.street);
+                                        $(document).find("#payment_address_address_1").change();
+                                        $(document).find("#payment_address_city").val(result.data.city);
+                                        $(document).find("#payment_address_city").change();
+                                        $(document).find("#payment_address_postcode").val(result.data.zip);
+                                        $(document).find("#payment_address_postcode").change();
+
+                                        $(document).find('select[name="payment_address.country_id"]').val(result.data.country_id);
+                                        $(document).find('select[name="payment_address.country_id"]').change();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <!-- Ajax Quick Checkout -->
+
 </modification>

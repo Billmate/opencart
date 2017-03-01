@@ -1,10 +1,11 @@
 <?php
+require_once(dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php');
 class ModelPaymentBillmatePartpayment extends Model {
     public function getMethod($address, $total) {
 
 		$this->language->load('payment/billmate_partpayment');
 		$status = true;
-		
+		$total = billmateCleanTotal($total);
 		$billmate_partpayment = $this->config->get('billmate_partpayment');
 		$store_currency = $this->config->get('config_currency');
 		$store_country  = $this->config->get('config_country_id');

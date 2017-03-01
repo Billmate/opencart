@@ -14,7 +14,7 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 
 
 ## COMPATIBILITY OpenCart versions
-1.5.4 1.5.6 2.0 2.1 2.2
+1.5.4 1.5.6 2.0 2.1 2.2 2.3
 
 ## Checkout Compatibility
 * OpenCart default checkout 1.5.4 1.5.6 2.0 2.1 2.2
@@ -25,15 +25,21 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 
 1. Download and unzip the latest release zip file.
 
+2. Make sure you have set permissions to edit our plugin in Admin. Permissions are found in System -> Users -> User Group.
+
 
 ##KNOWN ISSUES
 If currency setting is 0 decimal places, then it's better to use Myoc Price Rounding plugin for this.
 
 # Important
-We are currently not supporting Opencart 2.3! Our plugin will not work if you are using Opencart 2.3
+This plugin will not work with php lower than PHP 5
 
 
 ## Changelog
+
+### 2.2.2 (2017-03-01)
+* Compatibility - Php 7.0
+* Compatibility - Opencart 2.3
 
 ### 2.2.1 (2016-10-04)
 * Fix - Order id in callback.
