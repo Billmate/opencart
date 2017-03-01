@@ -25,7 +25,7 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 
 1. Download and unzip the latest release zip file.
 
-2. Make sure you have set permissions to edit our plugin in the menu System -> Users -> User Group.
+2. Make sure you have set permissions to edit our plugin in Admin. Permissions are found in System -> Users -> User Group.
 
 
 ##KNOWN ISSUES
