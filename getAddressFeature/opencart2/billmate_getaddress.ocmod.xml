@@ -5,7 +5,7 @@
     <link>http://www.billmate.se</link>
     <version>1.1.1</version>
     <code>billmate_getaddress</code>
-    <file path="catalog/language/english/checkout/checkout.php,catalog/language/en-gb/checkout/checkout.php">
+    <file path="catalog/language/english/checkout/checkout.php|catalog/language/en-gb/checkout/checkout.php">
         <operation>
         <search><![CDATA[$_['entry_shipping'] 	             = 'My delivery and billing addresses are the same.';]]></search>
         <add position="after">
