@@ -17,7 +17,7 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 1.5.4 1.5.6 2.0 2.1 2.2 2.3
 
 ## Checkout Compatibility
-* OpenCart default checkout 1.5.4 1.5.6 2.0 2.1 2.2
+* OpenCart default checkout 1.5.4 1.5.6 2.0 2.1 2.2 2.3
 * Dreamvention Quickcheckout
 * And more, feel free to contact us to discuss your checkout.
 
@@ -34,8 +34,10 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 # Important
 This plugin will not work with php lower than PHP 5
 
-OpenCart V1 USERS Attention
-Before uploading the new plugin you will need to delete the folder "extension" in both catalog and admin in our plugin.
+# OpenCart V1 USERS Attention
+Before uploading the new plugin you will need to delete those folders:
+* admin/controller/extension
+* catalog/controller/extension
 
 
 ## Changelog
