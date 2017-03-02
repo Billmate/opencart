@@ -398,10 +398,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                 foreach ($totals as $result) {
                     if ($this->config->get($result['code'] . '_status')) {
-                        if(version_compare(VERSION,'2.3','<')) {
-                            $this->load->model('total/' . $result['code']);
-                        } else {
+                        if(version_compare(VERSION,'2.3','>=') && $result['code'] != 'billmate_fee') {
                             $this->load->model('extension/total/' . $result['code']);
+                        } else {
+                            $this->load->model('total/' . $result['code']);
+
                         }
 
                         $taxes = array();
@@ -411,7 +412,7 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         $totalArr = false;
                         if(version_compare(VERSION,'2.2','>=')){
                             $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
-                            if(version_compare(VERSION,'2.3','>=')){
+                            if(version_compare(VERSION,'2.3','>=') && $result['code'] != 'billmate_fee'){
                                 $this->{'model_extension_total_'.$result['code']}->getTotal($totalArr);
 
                             } else {
