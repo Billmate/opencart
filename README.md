@@ -27,6 +27,10 @@ Billmate is a great payment alternative for merchants and customers in Sweden.
 
 2. Make sure you have set permissions to edit our plugin in Admin. Permissions are found in System -> Users -> User Group.
 
+# Attention OpenCart below 2.1
+Before uploading the new plugin you will need to delete those folders:
+* admin/controller/extension
+* catalog/controller/extension
 
 ##KNOWN ISSUES
 If currency setting is 0 decimal places, then it's better to use Myoc Price Rounding plugin for this.
@@ -34,13 +38,11 @@ If currency setting is 0 decimal places, then it's better to use Myoc Price Roun
 # Important
 This plugin will not work with php lower than PHP 5
 
-# OpenCart V1 USERS Attention
-Before uploading the new plugin you will need to delete those folders:
-* admin/controller/extension
-* catalog/controller/extension
-
 
 ## Changelog
+
+### 2.2.2.2 (2017-03-02)
+* Enhancement - Update readme for OpenCart 2.0.3.1
 
 ### 2.2.2.1 (2017-03-02)
 * Fix - Legacy opencart total model paths.
