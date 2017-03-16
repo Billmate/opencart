@@ -73,34 +73,7 @@
                             <textarea cols="84" rows="10" name="billmate_cardpay_description"><?php echo $billmate_cardpay_description; ?></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="input-prompt" class="col-sm-2 control-label"><?php echo $prompt_name_entry; ?></label>
-                        <div class="col-sm-10">
-                            <select name="billmate_cardpay_prompt_name" class="form-control" id="input-prompt">
-                                <?php if ($billmate_prompt_name == 'YES') { ?>
-                                <option value="YES" selected="selected"><?php echo $text_yes; ?></option>
-                                <option value="NO"><?php echo $text_no; ?></option>
-                                <?php } else { ?>
-                                <option value="YES"><?php echo $text_yes; ?></option>
-                                <option value="NO"  selected="selected"><?php echo $text_no; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-prompt" class="col-sm-2 control-label"><?php echo $enable_3dsecure; ?></label>
-                        <div class="col-sm-10">
-                            <select name="billmate_cardpay_enable_3dsecure" class="form-control" id="input-prompt">
-                                <?php if ($billmate_enable_3dsecure == 'YES') { ?>
-                                <option value="YES" selected="selected"><?php echo $text_yes; ?></option>
-                                <option value="NO"><?php echo $text_no; ?></option>
-                                <?php } else { ?>
-                                <option value="YES"><?php echo $text_yes; ?></option>
-                                <option value="NO"  selected="selected"><?php echo $text_no; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
+
                     <div class="form-group">
                         <label for="input-prompt" class="col-sm-2 control-label"><?php echo $entry_transaction_method; ?></label>
                         <div class="col-sm-10">

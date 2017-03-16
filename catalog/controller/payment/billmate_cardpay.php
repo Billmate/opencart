@@ -346,12 +346,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $values['PaymentInfo'] = array(
             'paymentdate' => date('Y-m-d')
         );
-        $do3dsecure = ($this->config->get('billmate_cardpay_enable_3dsecure') == 'YES') ? 1 : 0;
-        $prompt_name = ($this->config->get('billmate_cardpay_prompt_name') == 'YES') ? 1 : 0;
         $values['Card'] = array(
-
-            '3dsecure' => $do3dsecure,
-            'promptname' => $prompt_name,
             'callbackurl' => $this->url->link('payment/billmate_cardpay/callback'),
             'accepturl' => $this->url->link('payment/billmate_cardpay/accept'),
             'cancelurl' => $this->url->link('payment/billmate_cardpay/cancel'),
