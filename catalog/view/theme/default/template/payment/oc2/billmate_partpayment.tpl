@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/js/billmatepopup.js"></script>
+<script type="text/javascript" src="<?php echo (defined('HTTPS_SERVER')?HTTPS_SERVER : HTTP_SERVER); ?>/billmate/js/billmatepopup.js"></script>
 <link rel="stylesheet" href="<?php echo (defined('HTTP_IMAGE')?dirname(HTTP_IMAGE) : HTTP_SERVER); ?>/billmate/css/billmatepopup.css"/>
 <?php if ($error_warning) { ?>
 <div class="warning"><?php echo $error_warning; ?></div>

@@ -132,20 +132,10 @@ class ControllerPaymentBillmateCardpay extends Controller {
                 $data['billmate_cardpay_secret'] = $this->config->get('billmate_cardpay_secret');
         }
 
-        if (isset($this->request->post['billmate_prompt_name'])) {
-                $data['billmate_prompt_name'] = $this->request->post['billmate_cardpay_prompt_name'];
-        } else {
-                $data['billmate_prompt_name'] = $this->config->get('billmate_cardpay_prompt_name');
-        }
        if (isset($this->request->post['billmate_cardpay_description'])) {
                 $data['billmate_cardpay_description'] = $this->request->post['billmate_cardpay_description'];
         } else {
                 $data['billmate_cardpay_description'] = $this->config->get('billmate_cardpay_description');
-        }
-        if (isset($this->request->post['billmate_enable_3dsecure'])) {
-                $data['billmate_enable_3dsecure'] = $this->request->post['billmate_cardpay_enable_3dsecure'];
-        } else {
-                $data['billmate_enable_3dsecure'] = $this->config->get('billmate_cardpay_enable_3dsecure');
         }
 
         if (isset($this->request->post['billmate_cardpay_test'])) {

@@ -864,8 +864,45 @@ $db->query($sql);
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
 
-        $eid = (int)$billmate_invoice['SWE']['merchant'];
-        $key = $billmate_invoice['SWE']['secret'];
+        /* Get eid and key from Billmate payment options in order Invoice, Partpayment, card, bank
+         * Use use the first installed and active payment method eid and key
+         */
+
+        $eid = 0;
+        $key = "";
+
+        // Invoice
+        if( isset($billmate_invoice['SWE']['status']) AND $billmate_invoice['SWE']['status'] == 1 AND
+                isset($billmate_invoice['SWE']['merchant']) AND (int)$billmate_invoice['SWE']['merchant'] > 0 AND
+                isset($billmate_invoice['SWE']['secret']) AND $billmate_invoice['SWE']['secret'] != ""
+            ) {
+            $eid = (int)$billmate_invoice['SWE']['merchant'];
+            $key = $billmate_invoice['SWE']['secret'];
+        }
+
+        // Partpayment
+        if($eid == 0 OR $key == "") {
+            $billmate_partpayment = $this->config->get('billmate_partpayment');
+            if( isset($billmate_partpayment['SWE']['status']) AND $billmate_partpayment['SWE']['status'] == 1 AND
+                isset($billmate_partpayment['SWE']['merchant']) AND (int)$billmate_partpayment['SWE']['merchant'] > 0 AND
+                isset($billmate_partpayment['SWE']['secret']) AND $billmate_partpayment['SWE']['secret'] != ""
+            ) {
+                $eid = (int)$billmate_partpayment['SWE']['merchant'];
+                $key = $billmate_partpayment['SWE']['secret'];
+            }
+        }
+
+        // Card
+        if(($eid == 0 OR $key == "") AND (int)$this->config->get('billmate_cardpay_status') == 1) {
+            $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
+            $key = $this->config->get('billmate_cardpay_secret');
+        }
+
+        // Bank
+        if(($eid == 0 OR $key == "") AND (int)$this->config->get('billmate_bankpay_status') == 1) {
+            $eid = (int)$this->config->get('billmate_bankpay_merchant_id');
+            $key = $this->config->get('billmate_bankpay_secret');
+        }
 
         $ssl = true;
         $debug = false;
