@@ -795,6 +795,8 @@ $db->query($sql);
                         'zip'             => $order_info_updated['shipping_postcode'],
                         'city'            => $order_info_updated['shipping_city'],
                         'country'         => $order_info_updated['shipping_iso_code_2'],
+                        'phone'           => $order_info_updated['telephone']
+
                     );
                     $values['Customer']['Billing'] = array(
                         'email'           => $order_info_updated['email'],
@@ -805,6 +807,8 @@ $db->query($sql);
                         'zip'             => $order_info_updated['shipping_postcode'],
                         'city'            => $order_info_updated['shipping_city'],
                         'country'         => $order_info_updated['shipping_iso_code_2'],
+                        'phone'           => $order_info_updated['telephone']
+
                     );
 
 					$func = create_function('','');

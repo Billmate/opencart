@@ -51,18 +51,24 @@ class ModelPaymentBillmatePartpayment extends Model {
 
 		$countryRates = $this->config->get('billmate_partpayment_pclasses');
 		$countryRates = $countryRates['SWE'][0];
-		$lang = $this->language->get('code');
+		$lang = strtolower($this->language->get('code'));
         if($lang == 'se')
             $lang = 'sv';
 		if($lang == 'sv' || $lang == 'en'){
 			$selectedLanguage = $lang;
 		} else {
-			$selectedLanguage = 'en';
+			$selectedLanguage = 'sv';
 		}
-		$countryRates = $countryRates[$selectedLanguage];
+	    if(isset($countryRates[$selectedLanguage]))
+			$countryRates = $countryRates[$selectedLanguage];
+	    else if(isset($countryRates['en']))
+		    $countryRates = $countryRates['en'];
+	    else
+		    return false;
 
 
-       $method = array();
+
+	    $method = array();
 
 		// Maps countries to currencies
 		$country_to_currency = array(
