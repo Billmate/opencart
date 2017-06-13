@@ -43,6 +43,7 @@ This plugin will not work with php lower than PHP 5
 
 ### 2.2.4(2017-06-16)
 * Fix - Phone number on order.
+* Fix - Mixed content https.
 
 ### 2.2.2.2 (2017-03-02)
 * Enhancement - Update readme for OpenCart 2.0.3.1
