@@ -397,6 +397,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 			'zip'             => $order_info['shipping_postcode'],
 			'city'            => $order_info['shipping_city'],
 			'country'         => $order_info['shipping_iso_code_2'],
+            'phone'           => $order_info['telephone']
 		);
 		
 		$values['Customer']['Billing'] = array(
@@ -408,7 +409,10 @@ class ControllerPaymentBillmateBankpay extends Controller {
 			'zip'             => $order_info['payment_postcode'],
 			'city'            => $order_info['payment_city'],
 			'country'         => $order_info['payment_iso_code_2'],
-		);
+            'phone'           => $order_info['telephone']
+
+
+        );
 
 		$products = $this->cart->getProducts();
 		$prepareDiscount = array();
