@@ -5,20 +5,16 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 class ControllerPaymentBillmateCardpay extends Controller {
 	public function cancel(){
 
-        $post = empty($_POST)? $_GET : $_POST;
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
         $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        if(is_array($post))
-        {
-            foreach($post as $key => $value)
-                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
-        }
 
+        $post = $this->getRequestData();
         $post = $k->verify_hash($post);
+
         $this->language->load('payment/billmate_cardpay');
         if(isset($post['code'])){
             $this->session->data['error'] = $this->language->get('billmate_card_failed');
@@ -76,21 +72,16 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		$this->language->load('payment/billmate_cardpay');
 
 		$error_msg = '';
-
-		$post = empty($_POST)? $_GET : $_POST;
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
         $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        if(is_array($post))
-        {
-            foreach($post as $key => $value)
-                $post[$key] = htmlspecialchars_decode($value,ENT_COMPAT);
-        }
 
+        $post = $this->getRequestData();
         $post = $k->verify_hash($post);
+
 		if(isset($post['orderid']) && isset($post['status']) ) {
 
 
@@ -227,6 +218,23 @@ class ControllerPaymentBillmateCardpay extends Controller {
 		}
 	}
 
+    public function getRequestData() {
+        if (empty($_POST)) {
+            $post = $_GET;
+            foreach ($post AS $key => $val) {
+                $post[$key] = urldecode($val);
+            }
+        } else {
+            $post = $_POST;
+        }
+        if (is_array($post)) {
+            foreach($post as $key => $value) {
+                $post[$key] = htmlspecialchars_decode($value, ENT_COMPAT);
+            }
+        }
+        return $post;
+    }
+
     public function fixStupidOpencartClean($data){
         if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -241,20 +249,25 @@ class ControllerPaymentBillmateCardpay extends Controller {
     }
     
 	public function callback() {
-        $_POST = file_get_contents('php://input');
+        if (empty($_POST)) {
+            $post = $_GET;
+            foreach ($post AS $key => $val) {
+                $post[$key] = urldecode($val);
+            }
+        } else {
+            $_POST = $this->fixStupidOpencartClean($_POST);
+            $post = $_POST;
+        }
 
-        $_POST = empty($_POST) ? $_GET : $_POST;
-
-
-        $_POST = $this->fixStupidOpencartClean($_POST);
-        
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
 
         $key = $this->config->get('billmate_cardpay_secret');
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        $post = $k->verify_hash($_POST);
+
+        $post = $k->verify_hash($post);
+
         $this->request->post = $post;
         $this->load->model('checkout/order');
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
@@ -347,9 +360,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
             'paymentdate' => date('Y-m-d')
         );
         $values['Card'] = array(
-            'callbackurl' => $this->url->link('payment/billmate_cardpay/callback'),
-            'accepturl' => $this->url->link('payment/billmate_cardpay/accept'),
-            'cancelurl' => $this->url->link('payment/billmate_cardpay/cancel'),
+            'callbackurl' => $this->url->link('payment/billmate_cardpay/callback', '', true),
+            'accepturl' => $this->url->link('payment/billmate_cardpay/accept', '', true),
+            'cancelurl' => $this->url->link('payment/billmate_cardpay/cancel', '', true),
             'returnmethod' => 'GET'
         );
         $values['Customer']['nr'] = $this->customer->getId();
