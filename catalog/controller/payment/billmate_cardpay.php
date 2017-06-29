@@ -249,6 +249,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
     }
     
 	public function callback() {
+        $_POST = file_get_contents('php://input');
         if (empty($_POST)) {
             $post = $_GET;
             foreach ($post AS $key => $val) {
