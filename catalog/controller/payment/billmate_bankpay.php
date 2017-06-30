@@ -237,16 +237,17 @@ class ControllerPaymentBillmateBankpay extends Controller {
 	public function callback() {
 
         $_POST = file_get_contents('php://input');
+        if (empty($_POST)) {
+            $post = $_GET;
+            foreach ($post AS $key => $val) {
+                $post[$key] = urldecode($val);
+            }
+        } else {
+            $_POST = $this->fixStupidOpencartClean($_POST);
+            $post = $_POST;
+        }
 
-        $_POST = empty($_POST) ? $_GET : $_POST;
-
-
-        $_POST = $this->fixStupidOpencartClean($_POST);
-
-
-
-
-        $this->request->post = $_POST;
+        $this->request->post = $post;
         $this->load->model('checkout/order');
         $eid = (int)$this->config->get('billmate_bankpay_merchant_id');
 
@@ -254,7 +255,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         require_once dirname(DIR_APPLICATION).'/billmate/Billmate.php';
         $k = new BillMate($eid,$key);
-        $post = $k->verify_hash($_POST);
+        $post = $k->verify_hash($post);
 
         if(isset($post['orderid']) && isset($post['status']) && isset($post['number'])){
 
@@ -382,9 +383,9 @@ class ControllerPaymentBillmateBankpay extends Controller {
         );
 
         $values['Card'] = array(
-            'callbackurl' => $this->url->link('payment/billmate_bankpay/callback'),
-            'accepturl' => $this->url->link('payment/billmate_bankpay/accept'),
-            'cancelurl' => $this->url->link('payment/billmate_bankpay/cancel'),
+            'callbackurl' => $this->url->link('payment/billmate_bankpay/callback', '', true),
+            'accepturl' => $this->url->link('payment/billmate_bankpay/accept', '', true),
+            'cancelurl' => $this->url->link('payment/billmate_bankpay/cancel', '', true),
             'returnmethod' => 'GET'
         );
         $values['Customer']['nr'] = $this->customer->getId();
