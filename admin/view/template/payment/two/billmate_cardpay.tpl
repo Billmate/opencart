@@ -145,6 +145,10 @@
             </div>
         </div>
     </div>
+    <div class="container-fluid">
+        <a href="https://billmate.se/plugins/manual/Installationsmanual_Opencart_Billmate.pdf" target="_blank">Installationsmanual Billmate Modul ( Manual Svenska )</a><br />
+        <a href="https://billmate.se/plugins/manual/Installation_Manual_Opencart_Billmate.pdf" target="_blank">Installation Manual Billmate ( Manual English )</a>
+    </div>
 </div>
 <script type="text/javascript">
     var token = '<?php echo $token; ?>';
