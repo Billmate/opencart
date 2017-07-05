@@ -718,10 +718,15 @@ class ControllerPaymentBillmateBankpay extends Controller {
 
         if(isset($this->session->data['coupon'])){
             $coupon = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE code = 'coupon' AND order_id = ".$this->session->data['order_id']);
-            $total = $coupon->row;
+            $coupon_total = $coupon->row;
             if(version_compare(VERSION,'2.1.0','>=')){
-                $this->load->model('total/coupon');
-                $coupon_info = $this->model_total_coupon->getCoupon($this->session->data['coupon']);
+                if (version_compare(VERSION,'2.3.0','>=')) {
+                    $this->load->model('extension/total/coupon');
+                    $coupon_info = $this->model_extension_total_coupon->getCoupon($this->session->data['coupon']);
+                } else {
+                    $this->load->model('total/coupon');
+                    $coupon_info = $this->model_total_coupon->getCoupon($this->session->data['coupon']);
+                }
             } else {
                 $this->load->model('checkout/coupon');
                 $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
@@ -736,11 +741,19 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $shippingtax = 0;
                 if ($this->config->get($shipping['code'].'_status'))
                 {
-                    $this->load->model('total/'.$shipping['code']);
+                    if (version_compare(VERSION,'2.3.0','>=')) {
+                        $this->load->model('extension/total/'.$shipping['code']);
+                    } else {
+                        $this->load->model('total/'.$shipping['code']);
+                    }
 
                     if(version_compare(VERSION,'2.2','>=')){
                         $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
-                        $this->{'model_total_' . $result['code']}->getTotal($totalArr);
+                        if (version_compare(VERSION,'2.3.0','>=')) {
+                            $this->{'model_extension_total_' . $result['code']}->getTotal($totalArr);
+                        } else {
+                            $this->{'model_total_' . $result['code']}->getTotal($totalArr);
+                        }
                     }
                     else
                         $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
@@ -754,13 +767,22 @@ class ControllerPaymentBillmateBankpay extends Controller {
                     $shippingtax = $shippingtax / $shipping['value'];
 
                 }
-                if($total['value'] < $shipping['value'])
-                {
 
+                // If code above return 0, use shipping taxrate from $values
+                if ($shippingtax < 1 AND isset($values['Cart']['Shipping']['taxrate'])) {
+                    $shippingtax = $values['Cart']['Shipping']['taxrate'];
+                    if ($shippingtax > 0) {
+                        $shippingtax = $shippingtax / 100;
+                    }
+                }
+
+                if($coupon_total['value'] < $shipping['value'])
+                {
+                    /* Free shipping have additional discount */
                     foreach ($prepareProductDiscount as $tax => $value)
                     {
 
-                        $discountValue = $total['value'] + $shipping['value'];
+                        $discountValue = $coupon_total['value'] + $shipping['value'];
                         $percent       = $value / $productTotal;
 
                         $discountIncl = $percent * ($discountValue);
@@ -772,11 +794,11 @@ class ControllerPaymentBillmateBankpay extends Controller {
                             $values['Articles'][] = array(
                                 'quantity' => 1,
                                 'artnr' => '',
-                                'title' => $total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
-                                'aprice' => $discountToArticle,
+                                'title' => $coupon_total['title'] .' '.$coupon_info['name'].' ' . $tax . $this->language->get('tax_discount'),
+                                'aprice' => (0 -abs($discountToArticle)),
                                 'taxrate' => $tax,
                                 'discount' => 0.0,
-                                'withouttax' => $discountToArticle
+                                'withouttax' => (0 -abs($discountToArticle))
 
                             );
                             $orderTotal += $discountToArticle;
@@ -791,11 +813,11 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 $values['Articles'][] = array(
                     'quantity'   => 1,
                     'artnr'    => '',
-                    'title'    => $total['title'].' Free Shipping',
-                    'aprice'    => $freeshipTotal,
+                    'title'    => $coupon_total['title'].' Free Shipping',
+                    'aprice'    => (0 -abs($freeshipTotal)),
                     'taxrate'      => $shippingtax * 100,
-                    'discount' => 0.0,
-                    'withouttax'    => $freeshipTotal
+                    'discount' => 0,
+                    'withouttax'    => (0 -abs($freeshipTotal))
 
                 );
                 $orderTotal += $freeshipTotal;
@@ -808,13 +830,13 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 {
 
                     $percent      = $value / $productTotal;
-                    $discount     = $percent * ($total['value']);
+                    $discount     = $percent * ($coupon_total['value']);
                     $discountToArticle = $this->currency->format($discount, $order_info['currency_code'],$order_info['currency_value'], false) * 100;
                     //$discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
                     $values['Articles'][] = array(
                         'quantity'   => 1,
                         'artnr'    => '',
-                        'title'    => $total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
+                        'title'    => $coupon_total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
                         'aprice'    => $discountToArticle,
                         'taxrate'      => $tax,
                         'discount' => 0.0,
