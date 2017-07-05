@@ -543,7 +543,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             else
                                 $this->{'model_total_'.$shipping['code']}->getTotal($total_data, $total, $taxes);
 
-                            if(isset($totalArr))
+                            if (isset($totalArr) AND is_array($totalArr))
                                 extract($totalArr);
                             foreach ($taxes as $key => $value)
                             {
@@ -577,6 +577,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                                 $discountToArticle = $this->currency->format($discountIncl, $order_info['currency_code'], $order_info['currency_value'], false) * 100;
                                 //$discountToArticle = $this->currency->convert($discountIncl,$this->config->get('config_currency'),$this->session->data['currency']);
                                 if($discountToArticle != 0) {
+                                    $discountToArticle = round($discountToArticle);
                                     $values['Articles'][] = array(
                                         'quantity' => 1,
                                         'artnr' => '',
@@ -596,6 +597,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         $freeshipTotal =  $this->currency->format(-$shipping['value'] * 100, $order_info['currency_code'], $order_info['currency_value'], false);
                         //$freeshipTotal = $this->currency->convert(-$shipping['value'] * 100,$this->config->get('config_currency'),$this->session->data['currency']);
 
+                        $freeshipTotal = round($freeshipTotal);
                         $values['Articles'][] = array(
                             'quantity'   => 1,
                             'artnr'    => '',
@@ -619,14 +621,16 @@ class ControllerPaymentBillmateInvoice extends Controller {
                             $discount     = $percent * ($coupon_total['value']);
                             $discountToArticle = $this->currency->format($discount, $order_info['currency_code'],$order_info['currency_value'], false) * 100;
                             //$discountToArticle = $this->currency->convert($discount,$this->config->get('config_currency'),$this->session->data['currency']);
+
+                            $discountToArticle = round($discountToArticle);
                             $values['Articles'][] = array(
                                 'quantity'   => 1,
                                 'artnr'    => '',
                                 'title'    => $coupon_total['title'].' '.$coupon_info['name'].' ' .$tax.$this->language->get('tax_discount'),
-                                'aprice'    => $discountToArticle,
+                                'aprice'    => (0 - abs($discountToArticle)),
                                 'taxrate'      => $tax,
                                 'discount' => 0.0,
-                                'withouttax'    => $discountToArticle
+                                'withouttax'    => (0 - abs($discountToArticle))
 
                             );
                             $orderTotal += $discountToArticle;
