@@ -62,7 +62,7 @@
                <div class="form-group">
                   <label class="control-label" for="input-payment-pno"><?php echo $entry_pno; ?></label>
                   <div>
-                    <input type="text" name="billmate_pno" style="display:inline-block;width:70%;" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" placeholder="<?php echo $entry_pno; ?>" id="input-payment-pno" class="form-control" />
+                    <input type="text" name="billmate_pno" autocomplete="off" style="display:inline-block;width:70%;" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" placeholder="<?php echo $entry_pno; ?>" id="input-payment-pno" class="form-control" />
                     <button class="btn btn-primary" type="button" id="getaddress"><?php echo $entry_getaddress_button; ?></button>
                   </div>
                </div>

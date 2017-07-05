@@ -50,13 +50,13 @@
       <?php } else { ?>
       <tr class="trBillmatePartPaymentPno">
         <td><?php echo $entry_pno; ?><br /><span class="help"><?php echo $help_pno; ?></span></td>
-        <td><input type="text" name="pno" value="" /></td>
+        <td><input type="text" name="pno" autocomplete="off" value="" /></td>
       </tr>
       <?php } ?>
       <?php } else { ?>
       <tr class="trBillmatePartPaymentPno">
         <td><?php echo $entry_company; ?></td>
-        <td><input type="text" name="pno" value="" /></td>
+        <td><input type="text" name="pno" autocomplete="off" value="" /></td>
       </tr>
       <?php } ?>
       <?php if ($iso_code_3 == 'DEU' || $iso_code_3 == 'NLD') { ?>
