@@ -476,7 +476,10 @@ class ModelPaymentBillmate extends Model {
         curl_close($ch);
 
         $result = json_decode($result,true);
-        if(version_compare($version,$result['tag_name'],'<')){
+        if (    is_array($result)
+                AND isset($result['tag_name'])
+                AND version_compare($version,$result['tag_name'],'<')
+        ) {
             return false;
         }
 

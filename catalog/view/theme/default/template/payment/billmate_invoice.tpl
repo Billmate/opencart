@@ -10,7 +10,7 @@
     <table class="form">
 	  <tr class="trBillmateInvoicePno">
         <td><?php echo $entry_pno; ?><br /><span class="help"><?php echo $help_pno; ?></span></td>
-        <td><input type="text" name="pno" value="" /></td>
+        <td><input type="text" name="pno" autocomplete="off" value="" /></td>
       </tr>
       <tr>
         <td><input type="checkbox" checked="checked" name="confirm_verify_email" value="on" /></td>
