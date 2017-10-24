@@ -390,6 +390,36 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                 }
 
 
+                /** Gift vouchers */
+                if (    isset($this->session->data['vouchers']) AND
+                        is_array($this->session->data['vouchers']) AND
+                        count($this->session->data['vouchers']) > 0
+                ) {
+                    foreach ($this->session->data['vouchers'] as $key => $voucher) {
+                        if (    isset($voucher['amount']) AND
+                                isset($voucher['description']) AND
+                                $voucher['amount'] > 0 AND
+                                $voucher['description'] != ''
+                        ) {
+                            /**
+                             * Have 1 quantity, 0 tax and is not affected by discounts and only increase value of $orderTotal
+                             */
+                            $_aprice = $voucher['amount'] * 100;
+                            $values['Articles'][] = array(
+                                'quantity'      => 1,
+                                'artnr'         => $key,
+                                'title'         => $voucher['description'],
+                                'aprice'        => round($_aprice),
+                                'taxrate'       => 0,
+                                'discount'      => 0,
+                                'withouttax'    => $_aprice
+                            );
+                            $orderTotal += $_aprice;
+                        }
+                    }
+                }
+
+
                 $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = ".$order_id);
                 $billmate_tax = array();
                 $total_data = array();
