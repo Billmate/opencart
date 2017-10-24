@@ -41,6 +41,10 @@ This plugin will not work with php lower than PHP 5
 
 ## Changelog
 
+### 2.2.6(2017-07-05)
+* Fix - Display part payment on product / category page for OC 2.x
+* Enhancement - Add support for bought voucher on order as article
+
 ### 2.2.5(2017-07-05)
 * Fix - Rounding when coupon with free shipping and additional discount
 * Enhancement - Add links to manuals in admin
