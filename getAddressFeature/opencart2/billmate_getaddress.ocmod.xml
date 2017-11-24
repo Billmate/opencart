@@ -152,6 +152,19 @@
         </operation>
     </file>
 
+    <file path="catalog/controller/extension/d_quickcheckout/field.php">
+        <operation>
+            <search index="0"><![CDATA[$data['settings'] =  $this->settings;]]></search>
+            <add position="after">
+                <![CDATA[
+                    $data['entry_pno'] = $this->language->get('entry_pno');
+                    $data['entry_getaddress_button'] = $this->language->get('entry_getaddress_button');
+                    $data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
+                ]]>
+            </add>
+        </operation>
+    </file>
+
     <file path="catalog/view/theme/*/template/d_quickcheckout/field.tpl">
         <operation>
             <search index="0"><![CDATA[<% _.each(model.config.fields,  function(f){ %>]]></search>
