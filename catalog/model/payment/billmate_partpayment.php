@@ -93,7 +93,7 @@ class ModelPaymentBillmatePartpayment extends Model {
 				// 1 - Account
 				// 2 - Special
 				// 3 - Fixed
-				if (!in_array($pclass['type'], array(0, 2, 1, 3, 4))) {
+				if (!isset($pclass['type']) || !in_array($pclass['type'], array(0, 2, 1, 3, 4))) {
 					continue;
 				}
 
