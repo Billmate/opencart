@@ -313,7 +313,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                         $taxes = array();
 
-                        if (function_exists('create_function')) {
+                        if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
                             // Temporarily disable error handling
                             $func = create_function('','');
                             $oldhandler = set_error_handler($func);
@@ -333,7 +333,7 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         else
                             $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
 
-                        if (function_exists('create_function')) {
+                        if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
                             // Re-enable error handling
                             set_error_handler($oldhandler);
                         }
@@ -875,7 +875,7 @@ $db->query($sql);
 
                     );
 
-                    if (function_exists('create_function')) {
+                    if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
                         // Temporarily disable error handling
                         $func = create_function('','');
                         $oldhandler = set_error_handler($func);
@@ -915,7 +915,7 @@ $db->query($sql);
                         $json['redirect'] = $this->url->link('checkout/success');
 					}
 
-                    if (function_exists('create_function')) {
+                    if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
                         // Re-enable error handling
                         set_error_handler($oldhandler);
                     }
