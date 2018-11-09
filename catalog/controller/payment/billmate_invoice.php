@@ -313,8 +313,12 @@ class ControllerPaymentBillmateInvoice extends Controller {
 
                         $taxes = array();
 
-                        $func = create_function('','');
-                        $oldhandler = set_error_handler($func);
+                        if (function_exists('create_function')) {
+                            // Temporarily disable error handling
+                            $func = create_function('','');
+                            $oldhandler = set_error_handler($func);
+                        }
+
                         $totalArr = false;
                         if(version_compare(VERSION,'2.2','>=')){
                             $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
@@ -328,7 +332,11 @@ class ControllerPaymentBillmateInvoice extends Controller {
                         }
                         else
                             $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
-                        set_error_handler($oldhandler);
+
+                        if (function_exists('create_function')) {
+                            // Re-enable error handling
+                            set_error_handler($oldhandler);
+                        }
 
                         $amount = 0;
                         if(isset($totalArr) && $totalArr != false)
@@ -867,8 +875,11 @@ $db->query($sql);
 
                     );
 
-					$func = create_function('','');
-					$oldhandler = set_error_handler($func);
+                    if (function_exists('create_function')) {
+                        // Temporarily disable error handling
+                        $func = create_function('','');
+                        $oldhandler = set_error_handler($func);
+                    }
 
 					$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_invoice', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 						
@@ -903,7 +914,12 @@ $db->query($sql);
 
                         $json['redirect'] = $this->url->link('checkout/success');
 					}
-					set_error_handler($oldhandler);
+
+                    if (function_exists('create_function')) {
+                        // Re-enable error handling
+                        set_error_handler($oldhandler);
+                    }
+
 				 } catch(Exception $e) {
 					//Something went wrong
 					//$json['error'] = "{$e->getMessage()} (#{$e->getCode()})\n";
