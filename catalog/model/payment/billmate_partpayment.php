@@ -2,7 +2,7 @@
 require_once(dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php');
 class ModelPaymentBillmatePartpayment extends Model {
     public function getMethod($address, $total) {
-
+        $this->document->addScript('billmate/js/bm-pno-address.js');
 		$this->language->load('payment/billmate_partpayment');
 		$status = true;
 		$total = billmateCleanTotal($total);

@@ -274,6 +274,60 @@
             </add>
         </operation>
     </file>
+    <file path="catalog/controller/common/footer.php">
+        <operation>
+            <search><![CDATA[$data['text_newsletter'] = $this->language->get('text_newsletter');]]></search>
+            <add position="after">
+                <![CDATA[
+                   $this->language->load('payment/billmate_invoice');
+                   $data['billmate_pno'] = isset($this->session->data['billmate_pno']) ? $this->session->data['billmate_pno'] : false;
+                   $data['entry_pno'] = $this->language->get('entry_pno');
+                   $data['entry_getaddress_button'] = $this->language->get('entry_getaddress_button');
+
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/common/footer.tpl">
+        <operation>
+            <search><![CDATA[<div class="container">]]></search>
+            <add position="before">
+                <![CDATA[
+                <div id="bm-pno-address-form" style="display: none">
+                    <div class="text-input form-group  sort-item">
+                        <div class="col-xs-8">
+                            <input type="text" id="dcheckout_pno" name="billmate_pno" autocomplete="off"
+                                   value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>"
+                                   placeholder="<?php echo $entry_pno; ?>"
+                                   id="input-payment-pno"
+                                   class="form-control" />
+                            <div id="dcheckout_getaddress-error" class="text-danger"></div>
+                        </div>
+                        <div class="col-xs-4">
+                            <button class="btn btn-primary" type="button" id="dcheckout_getaddress"><?php echo $entry_getaddress_button; ?></button>
+
+                        </div>
+
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                        if (typeof(qc) == 'object') {
+                            setTimeout(function() {
+                                $.fn.bmPnoAddress.init()
+                            }, 200);
+                            qc.event.bind("update", function() {
+                                setTimeout(function() {
+                                    $.fn.bmPnoAddress.init()
+                                }, 200);
+                            });
+                        }
+                    });
+                </script>
+            ]]>
+            </add>
+        </operation>
+    </file>
     <!-- Ajax Quick Checkout -->
 
 </modification>
