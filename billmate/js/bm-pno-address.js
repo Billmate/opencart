@@ -16,9 +16,12 @@
             }
 
             bmpathis.addPnoForm();
-            bmpathis.initGetAddressListener();
+            bmpathis.initGetAddressListeners();
 
             return bmpathis;
+        },
+        triggerCheckoutUpdate: function(triggerData) {
+            bmpathis.init();
         },
         addPnoForm: function () {
             var pnoHtml = bmpathis.getPnoFormHtml();
@@ -27,17 +30,26 @@
         getPnoFormHtml: function () {
             return $(bmpathis.config.pnoAddressForm).html();
         },
-        initGetAddressListener: function() {
-            $(bmpathis.config.pnoGetAddressButton).on('click',function() {
-                var pnoValue = $(bmpathis.config.pnoField).val();
-                if (pnoValue != '') {
-                    var requestData = {
-                        pno: pnoValue
-                    };
-                    bmpathis.makeRequest(requestData);
+        initGetAddressListeners: function() {
+            $(bmpathis.config.pnoGetAddressButton).on('click', function() {
+                bmpathis.initMakeRequest();
+            });
+
+            $(bmpathis.config.pnoField).on('keypress', function(e) {
+                if (e.which == 13) {
+                    bmpathis.initMakeRequest();
                 }
             });
             return false;
+        },
+        initMakeRequest: function() {
+            var pnoValue = $(bmpathis.config.pnoField).val();
+            if (pnoValue != '') {
+                var requestData = {
+                    pno: pnoValue
+                };
+                bmpathis.makeRequest(requestData);
+            }
         },
         makeRequest: function(requestData) {
             $.ajax({
@@ -62,6 +74,7 @@
             $('#payment_address_firstname').val(pnoAddress.firstname).change();
             $('#payment_address_lastname').val(pnoAddress.lastname).change();
             $('#payment_address_email').val(pnoAddress.email).change();
+            $('#payment_address_email_confirm').val(pnoAddress.email).change();
             $('#payment_address_telephone').val(pnoAddress.phone).change();
             $('#payment_address_address_1').val(pnoAddress.street).change();
             $('#payment_address_city').val(pnoAddress.city).change();

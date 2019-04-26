@@ -294,7 +294,7 @@
             <add position="before">
                 <![CDATA[
                 <div id="bm-pno-address-form" style="display: none">
-                    <div class="text-input form-group  sort-item">
+                    <div class="text-input sort-item pno-address">
                         <div class="col-xs-8">
                             <input type="text" id="dcheckout_pno" name="billmate_pno" autocomplete="off"
                                    value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>"
@@ -305,9 +305,7 @@
                         </div>
                         <div class="col-xs-4">
                             <button class="btn btn-primary" type="button" id="dcheckout_getaddress"><?php echo $entry_getaddress_button; ?></button>
-
                         </div>
-
                     </div>
                 </div>
                 <script>
@@ -318,7 +316,7 @@
                             }, 200);
                             qc.event.bind("update", function() {
                                 setTimeout(function() {
-                                    $.fn.bmPnoAddress.init()
+                                    $.fn.bmPnoAddress.triggerCheckoutUpdate()
                                 }, 200);
                             });
                         }
