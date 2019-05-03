@@ -232,6 +232,7 @@ class ControllerPaymentBillmateBankpay extends Controller {
 			return false;
 		}	
 	}
+
     public function install()
     {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE iso_code_2 = 'SE' ORDER BY name ASC");
@@ -240,4 +241,3 @@ class ControllerPaymentBillmateBankpay extends Controller {
         $this->model_setting_setting->editSetting('billmate_bankpay',array('billmate_bankpay_version' => PLUGIN_VERSION,'billmate_bankpay_country' =>array($country['country_id'] => array('name' => $country['name']))));
     }
 }
-?>

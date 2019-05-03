@@ -1,10 +1,16 @@
-<?php 
+<?php
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'commonfunctions.php';
 
 class ControllerPaymentBillmateCardpay extends Controller {
-	private $error = array(); 
-	 
-	public function index() { 
+
+    /**
+     * @var array
+     */
+	private $error = array();
+
+
+    public function index()
+    {
 		$this->load->language('payment/billmate_cardpay');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -47,7 +53,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $data['entry_merchant_help'] = $this->language->get('entry_merchant_help');
 		$data['entry_secret'] = $this->language->get('entry_secret');
         $data['entry_secret_help'] = $this->language->get('entry_secret_help');
-        $data['entry_test'] = $this->language->get('entry_test');				
+        $data['entry_test'] = $this->language->get('entry_test');
 		$data['entry_order_status'] = $this->language->get('entry_order_status');
 		$data['entry_total'] = $this->language->get('entry_total');
         $data['help_total'] = $this->language->get('help_total');
@@ -332,7 +338,6 @@ class ControllerPaymentBillmateCardpay extends Controller {
 			return true;
 		} else {
 			return false;
-		}	
+		}
 	}
 }
-?>

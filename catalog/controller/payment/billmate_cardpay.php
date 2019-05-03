@@ -3,6 +3,7 @@ require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_S
 require_once dirname(DIR_APPLICATION).DIRECTORY_SEPARATOR.'billmate'.DIRECTORY_SEPARATOR.'JSON.php';
 
 class ControllerPaymentBillmateCardpay extends Controller {
+
 	public function cancel(){
 
         $eid = (int)$this->config->get('billmate_cardpay_merchant_id');
@@ -69,6 +70,7 @@ class ControllerPaymentBillmateCardpay extends Controller {
 
 	
 	public function accept() {
+
 		$this->language->load('payment/billmate_cardpay');
 
 		$error_msg = '';
@@ -108,6 +110,15 @@ class ControllerPaymentBillmateCardpay extends Controller {
                                         $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
                                     else
                                         $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
+
+                                    $this->load->model('payment/billmate_service');
+                                    $this->model_payment_billmate_service->addInvoiceIdToOrder(
+                                        $order_id,
+                                        $post['number']
+                                    );
+
+                                    $this->load->model('payment/billmate_service');
+                                    $this->model_payment_billmate_service->addInvoiceIdToOrder($this->session->data['order_id'], $post['number']);
 
                                 } elseif($post['status'] == 'Failed'){
                                     $error_msg = $this->language->get('text_failed');
@@ -287,6 +298,9 @@ class ControllerPaymentBillmateCardpay extends Controller {
                     $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_cardpay_order_status_id'),$msg,false);
                 else
                     $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_cardpay_order_status_id'), $msg, 1);
+
+                $this->load->model('payment/billmate_service');
+                $this->model_payment_billmate_service->addInvoiceIdToOrder($order_id, $post['number']);
 
                 $this->cache->delete('order'.$post['orderid']);
             }
@@ -900,4 +914,3 @@ class ControllerPaymentBillmateCardpay extends Controller {
         $this->response->setOutput(my_json_encode($response));
 	}
 }
-?>
