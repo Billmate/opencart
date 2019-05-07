@@ -41,6 +41,9 @@ This plugin will not work with php lower than PHP 5
 
 ## Changelog
 
+### 2.2.7(2019-05-07)
+* Enhancement - Added new Billmate logos
+
 ### 2.2.6(2017-07-05)
 * Fix - Display part payment on product / category page for OC 2.x
 * Enhancement - Add support for bought voucher on order as article
