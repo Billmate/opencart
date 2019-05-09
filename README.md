@@ -43,6 +43,7 @@ This plugin will not work with php lower than PHP 5
 
 ### 2.2.7(2019-05-07)
 * Enhancement - Added new Billmate logos
+* Fix  - Error message when you enter incorrect org/pno number
 
 ### 2.2.6(2017-07-05)
 * Fix - Display part payment on product / category page for OC 2.x
