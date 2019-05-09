@@ -41,7 +41,7 @@ This plugin will not work with php lower than PHP 5
 
 ## Changelog
 
-### 2.2.7(2019-05-07)
+### 2.2.7(2019-05-09)
 * Enhancement - Added new Billmate logos
 * Fix  - Error message when you enter incorrect org/pno number
 
