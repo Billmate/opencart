@@ -64,6 +64,7 @@
                   <div>
                     <input type="text" name="billmate_pno" autocomplete="off" style="display:inline-block;width:70%;" value="<?php echo ($billmate_pno) ? $billmate_pno : ''; ?>" placeholder="<?php echo $entry_pno; ?>" id="input-payment-pno" class="form-control" />
                     <button class="btn btn-primary" type="button" id="getaddress"><?php echo $entry_getaddress_button; ?></button>
+                    <div id="pno_error" class="text-danger"></div>
                   </div>
                </div>
                <script type="text/javascript">
@@ -78,6 +79,7 @@
                                     success: function(response){
                                         var result = JSON && JSON.parse(response) || $.parseJSON(response);
                                         if(result.success){
+                                            $('#pno_error').html('');
                                             if(typeof result.data.company == 'undefined'){
                                                 $('#input-payment-firstname').val(result.data.firstname)
                                                 $('#input-payment-lastname').val(result.data.lastname)
@@ -92,7 +94,9 @@
 
     										$('select[name="country_id"]').val(result.data.country_id);
 
-                                        }
+                                        } else {
+    										$('#pno_error').html(result.error);
+    									}
                                     }
                                 })
                             }
