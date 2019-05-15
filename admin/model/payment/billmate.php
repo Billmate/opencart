@@ -279,7 +279,7 @@ class ModelPaymentBillmate extends Model {
         $result = $billmate->getPaymentplans($values);
 
         $response = array();
-        if(isset($result['code']) && ($result['code'] == 9013 || $result['code'] == 9010 || $result['code'] == 9012)){
+        if (isset($result['code']) AND in_array($result['code'], array('9010', '9011', '9012', '9013'))) {
             return false;
         }
         else{

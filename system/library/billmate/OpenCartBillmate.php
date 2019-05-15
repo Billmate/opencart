@@ -27,11 +27,15 @@
 				"country" => 'se',
 				"language" => $language,
 			);
-			$this->pclass[$language] = $k->getPaymentplans($additionalinfo);
 
+            $result = $k->getPaymentplans($additionalinfo);
+            if (!isset($result['code'])) {
+                $this->pclass[$language] = $result;
+            }
 		}
         return $this;
     }
+
     public function getPClasses(){
         return $this->pclass;
     }

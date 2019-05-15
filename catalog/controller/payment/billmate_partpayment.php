@@ -437,8 +437,12 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                         $taxes = array();
 
-                        $func = create_function('','');
-                        $oldhandler = set_error_handler($func);
+                        if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
+                            // Temporarily disable error handling
+                            $func = create_function('','');
+                            $oldhandler = set_error_handler($func);
+                        }
+
                         $totalArr = false;
                         if(version_compare(VERSION,'2.2','>=')){
                             $totalArr = array('total_data' => &$total_data, 'total' => &$total, 'taxes' => &$taxes);
@@ -452,7 +456,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                         }
                         else
                             $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
-                        set_error_handler($oldhandler);
+
+                        if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
+                            // Re-enable error handling
+                            set_error_handler($oldhandler);
+                        }
 
                         $amount = 0;
                         if(isset($totalArr) && $totalArr != false)
@@ -1000,8 +1008,11 @@ class ControllerPaymentBillmatePartpayment extends Controller {
 
                         );
 
-                        $func = create_function('','');
-                        $oldhandler = set_error_handler($func);
+                        if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
+                            // Temporarily disable error handling
+                            $func = create_function('','');
+                            $oldhandler = set_error_handler($func);
+                        }
 
                         $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_code` = 'billmate_partpayment', `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
@@ -1035,7 +1046,12 @@ class ControllerPaymentBillmatePartpayment extends Controller {
                                 unset($this->session->data['billmate_pno']);
                             $json['redirect'] = $this->url->link('checkout/success');
                         }
-                        set_error_handler($oldhandler);
+
+                        if (function_exists('create_function') && version_compare(phpversion(), "7.2", "<")) {
+                            // Re-enable error handling
+                            set_error_handler($oldhandler);
+                        }
+
                     } catch(Exception $e) {
                         //Something went wrong
                         //$json['error'] = "{$e->getMessage()} (#{$e->getCode()})\n";
