@@ -12,6 +12,10 @@ class ModelPaymentServiceProcessorCancel extends ModelPaymentServiceProcessorSta
 
         $billmateConnection = $this->getBMConnection();
         $paymentData = $billmateConnection->getPaymentInfo($requestData);
+        
+        if (!isset($paymentData['PaymentData'])) {
+            return;
+        }
 
         $bmRequestData = [
             'PaymentData' => $requestData

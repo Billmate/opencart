@@ -13,6 +13,10 @@ class ModelPaymentServiceProcessorRefund extends ModelPaymentServiceProcessorSta
         $billmateConnection = $this->getBMConnection();
         $paymentData = $billmateConnection->getPaymentInfo($requestData);
 
+        if (!isset($paymentData['PaymentData'])) {
+            return;
+        }
+
         if ($paymentData['PaymentData']['status'] == self::BILLMATE_PAID_STATUS) {
             $bmRequestData = [
                 'PaymentData' => $requestData

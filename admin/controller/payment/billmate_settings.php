@@ -165,6 +165,4 @@ class ControllerPaymentBillmateSettings extends Controller {
     {
         return $this->model_payment_bmsetup;
     }
-
-
 }
