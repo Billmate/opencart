@@ -1,0 +1,12 @@
+{
+  "name": "billmate/opencart-billmate",
+  "description": "Billmate Payment Gateway for Opencart",
+  "type": "composer-plugin",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Billmate AB",
+      "email": "support@billmate.se"
+    }
+  ]
+}
