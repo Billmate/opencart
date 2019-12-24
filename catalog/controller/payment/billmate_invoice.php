@@ -906,9 +906,16 @@ $db->query($sql);
 
                         if(version_compare(VERSION,'2.0.0','>=')) {
                             $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $order_status, $comment, false);
-                        }else {
+                        } else {
                             $this->model_checkout_order->confirm($this->session->data['order_id'], $order_status, $comment, 1);
                         }
+
+                        $this->load->model('payment/billmate_service');
+                        $this->model_payment_billmate_service->addInvoiceIdToOrder(
+                            $this->session->data['order_id'],
+                            $result1['number']
+                        );
+
                         if(isset($this->session->data['billmate_pno']))
                             unset($this->session->data['billmate_pno']);
 

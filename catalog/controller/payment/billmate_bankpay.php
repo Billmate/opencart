@@ -94,6 +94,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
                                     else
                                         $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,true));
 
+                                    $this->load->model('payment/billmate_service');
+                                    $this->model_payment_billmate_service->addInvoiceIdToOrder(
+                                        $order_id,
+                                        $post['number']
+                                    );
+
 
                                     $this->cache->delete('order'.$order_id);
                                 } else if($post['status'] == 'Pending'){
@@ -113,6 +119,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
                                     else
                                         $this->model_checkout_order->confirm($order_id, $this->config->get('billmate_bankpay_order_status_id'), $msg, 1);
 
+
+                                    $this->load->model('payment/billmate_service');
+                                    $this->model_payment_billmate_service->addInvoiceIdToOrder(
+                                        $order_id,
+                                        $post['number']
+                                    );
 
                                     $this->cache->delete('order'.$order_id);
                                 } else if($post['status'] == 'Failed'){
@@ -279,6 +291,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
                 else
                     $this->model_checkout_order->update($order_id, $this->config->get('billmate_bankpay_order_status_id'), $msg, false);
 
+                $this->load->model('payment/billmate_service');
+                $this->model_payment_billmate_service->addInvoiceIdToOrder(
+                    $order_id,
+                    $post['number']
+                );
+
                 $this->cache->delete('order'.$post['orderid']);
 
             }else if(($post['status'] == 'Pending' && ($order_info && $order_info['order_status_id'] != $this->config->get('billmate_bankpay_order_status_id'))) && (NULL === $this->cache->get('order'.$post['orderid']))){
@@ -299,6 +317,12 @@ class ControllerPaymentBillmateBankpay extends Controller {
                     $this->model_checkout_order->update($order_id, 1,$msg, false);
                 else
                     $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('billmate_bankpay_order_status_id',$msg,false));
+
+                $this->load->model('payment/billmate_service');
+                $this->model_payment_billmate_service->addInvoiceIdToOrder(
+                    $order_id,
+                    $post['number']
+                );
 
                 $this->cache->delete('order'.$post['orderid']);
             } elseif(NULL != $this->cache->get('order'.$post['orderid'])) {
