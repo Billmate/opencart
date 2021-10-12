@@ -41,9 +41,12 @@ This plugin will not work with php lower than PHP 5
 
 ## Changelog
 
+### 2.2.9(2021-10-12)
+* Update PEM certificate
+
 ### 2.2.8(2019-08-29)
 * Enhancement - Added new Billmate logos
-* Fix  - Support for get address by Personnumber in OpenCart - Ajax checkout 
+* Fix  - Support for get address by Personnumber in OpenCart - Ajax checkout
 
 ### 2.2.7(2019-05-09)
 * Enhancement - Added new Billmate logos
@@ -77,15 +80,15 @@ This plugin will not work with php lower than PHP 5
 * Fix - Javascript in Admin
 
 ### 2.2.0 (2016-08-23)
-* Fix - Opencart 2.2 compatibility. 
-* Enhancement - Improved paymentplan logic in admin configurations for partpayment plugin. 
+* Fix - Opencart 2.2 compatibility.
+* Enhancement - Improved paymentplan logic in admin configurations for partpayment plugin.
 
 ### 2.1.9 (2016-07-14)
 * Enhancement - Improved messages in checkout when order is cancelled or failed for Cardpayment.
 
 ### 2.1.8 (2016-06-08)
 * Fix - Get address Opencart 2.* Own template
-* Fix - Fixes for Opencart 2.2 
+* Fix - Fixes for Opencart 2.2
 * Enhancement - Partpayment default country/currency.
 
 ### 2.1.7 (2016-04-04)
