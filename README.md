@@ -41,6 +41,9 @@ This plugin will not work with php lower than PHP 5
 
 ## Changelog
 
+### 2.3.0(2021-10-30)
+* Update translations
+
 ### 2.2.9(2021-10-12)
 * Update PEM certificate
 

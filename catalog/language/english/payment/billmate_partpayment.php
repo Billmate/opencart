@@ -1,9 +1,9 @@
 <?php
 // Text
 $_['text_title']           = 'Billmate Part Payment';
-$_['text_pay_month']  = 
+$_['text_pay_month']  =
 $_['text_no_fee']     = '<img src="' . (defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTP_SERVER) . 'billmate/images /bm_delbetalning_l.png" alt="Billmate Part Payment"> Billmate Partpayment - %s (Pay from %s/month) <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
-		//effectiverate=(monthlyfee*numberofmonths-1)/100 %, 
+		//effectiverate=(monthlyfee*numberofmonths-1)/100 %,
 		$("#terms-delbetalning").Terms("villkor_delbetalning",{eid: "%s",effectiverate:34});
 });</script>';
 $_['text_no_fee2']     = '<img src="' . (defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTP_SERVER) . 'billmate/images/bm_delbetalning_l.png" alt="Billmate Part Payment" > %s (Pay from %s/month) <a id="terms-delbetalning">Terms of part pay</a><script type="text/javascript">$.getScript("https://billmate.se/billmate/base.js", function(){
@@ -35,7 +35,7 @@ $_['requried_confirm_verify_email']='Please check the checkbox for confirm email
 
 // Entry
 $_['entry_gender']         = 'Gender:';
-$_['entry_pno']            = 'Personal Number:';
+$_['entry_pno']            = 'Personal Identification Number/ Organisation number:';
 $_['help_pno']  		   = 'Please enter your Social Security number here.';
 $_['entry_dob']            = 'Date of Birth:';
 $_['entry_phone_no']       = 'My email address %s is correct and can be used for invoicing purposes.';//Phone number:<br /><span class="help">Please enter your phone number.</span>';

@@ -31,7 +31,7 @@ $_['else_click']          = 'else click';
 $_['wrong_person_number'] = "You have entered a wrong number, please check if you accidentally mistype";
 // Entry
 $_['entry_gender']         = 'Gender:';
-$_['entry_pno']            = 'Personal Number:';
+$_['entry_pno']            = 'Personal Identification Number/ Organisation number:';
 $_['help_pno']  		   = 'Please enter your Social Security number here.';
 $_['entry_dob']            = 'Date of Birth:';
 $_['entry_phone_no']       = 'My email address %s is correct and can be used for invoicing purposes.';//Phone number:<br /><span class="help">Please enter your phone number.</span>';
